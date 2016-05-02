@@ -1,0 +1,22 @@
+{
+  "name" : "Counter for Messenger",
+  "description" : "",
+  "devtools_page" : "devtools.html",
+  "background" : {
+    "scripts" : ["background.js"]
+  },
+  "content_scripts" : [{
+      "js" : ["main.js"],
+      "matches" : ["*://*.messenger.com/*"],
+      "run_at" : "document_end"
+    }
+  ],
+  "icons" : {},
+  "manifest_version" : 2,
+  "content_security_policy" : "script-src 'self' https://www.google.com https://checkout.google.com; object-src 'self'",
+  "version" : "0.0.1",
+  "permissions" : [
+    "webRequest",
+    "*://*.messenger.com/*"
+  ]
+}
