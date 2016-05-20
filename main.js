@@ -1,17 +1,18 @@
 var counter = {
 
   main : function () {
-    counter.setup_token_receiver();
+    counter.setup_receiver();
     //counter.xhr();
   },
 
   grab_token : function () {},
 
-  setup_token_receiver : function () {
+  setup_receiver : function () {
     chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-      var token = message.token;
-      console.log(token);
-      counter.xhr(token);
+      if (message.token)
+        counter.xhr(message.token);
+      else if (message.cmd === refresh)
+        location.reload();
     });
   },
 
@@ -71,7 +72,7 @@ var counter = {
           return rObj
         }
       });
-    console.log(rList);
+    counter.send_to_background(rList);
   },
 
   rank : function (participants, fbid) {
@@ -89,6 +90,12 @@ var counter = {
     return Object.keys(data_json).map(function (key) {
       return encodeURIComponent(key) + ((data_json[key] !== undefined) ? ('=' + encodeURIComponent(data_json[key])) : '');
     }).join('&');
+  },
+
+  send_to_background : function (ranking) {
+    chrome.runtime.sendMessage({
+      ranking : ranking
+    }, function (response) {});
   }
 
 };
