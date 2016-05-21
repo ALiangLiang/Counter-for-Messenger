@@ -95,9 +95,19 @@ var counter = {
   send_to_background : function (ranking) {
     chrome.runtime.sendMessage({
       ranking : ranking
-    }, function (response) {});
+    }, function (response) {
+      if (response.status === 'suc')
+        window.close()
+    });
   }
 
 };
 
-counter.main();
+if (location.hash === '#counter-for-messenger') {
+  if (location.pathname === '/login.php' && location.search === "?next=https%3A%2F%2Fwww.messenger.com%2Ft%2F895691373877847%2F") {
+    location = location.href.replace(/#/, '%23');
+    alert('Please login the messenger.');
+  } else if (location.pathname.search(/\/t\//) !== -1) {
+    counter.main();
+  }
+}

@@ -5,6 +5,7 @@ var background = {
     chrome.webRequest.onBeforeRequest.addListener(function (details) {
       var str = background.arrayBuffer2utf8(details.requestBody.raw[0].bytes);
       var url = background.url_decode(str);
+      console.log(url);
       if (url.match(/counter=true/)) {
         console.log('It\'s form extension.');
         return;
@@ -43,11 +44,23 @@ var background = {
     });
   },
 
+  create_analysis_page : function () {
+    chrome.windows.create({
+      url : "analysis.html",
+      width : 1080,
+      height : 700
+    });
+  },
+
   setup_ranking_receiver : function () {
     chrome.runtime.onMessage.addListener(function (request, sender, sendResponse) {
       if (request.ranking) {
         console.log(request.ranking)
         ranking = request.ranking;
+        background.create_analysis_page();
+        sendResponse({
+          status : 'suc'
+        });
       } else if (request.cmd) {
         if (request.cmd === 'request_data') {
           console.log('receive_request_data');
@@ -59,40 +72,15 @@ var background = {
 
 };
 
-var page_action = {
-  setup_page_action : function () {
-    var rule = {
-      conditions : [
-        new chrome.declarativeContent.PageStateMatcher({
-          pageUrl : {
-            hostEquals : 'www.messenger.com',
-            schemes : ['https']
-          }
-        })
-      ],
-      actions : [new chrome.declarativeContent.ShowPageAction()]
-    };
-    chrome.runtime.onInstalled.addListener(function (details) {
-      chrome.declarativeContent.onPageChanged.removeRules(undefined, function () {
-        chrome.declarativeContent.onPageChanged.addRules([rule]);
-      });
-    });
-    chrome.tabs.query({}, function (tabs) {
-      for (var i in tabs)
-        chrome.pageAction.show(tabs[i]);
-    });
-    chrome.pageAction.onClicked.addListener(function (tab) {
-      chrome.pageAction.show(tab.id);
-      chrome.windows.create({
-        url : "analysis.html",
-        width : 1080,
-        height : 700
-      });
+var browser_action = {
+  setup_browser_action : function () {
+    chrome.browserAction.onClicked.addListener(function (tab) {
+      window.open('https://www.messenger.com/t/895691373877847/#counter-for-messenger');
     });
 
   }
 };
 
-page_action.setup_page_action();
+browser_action.setup_browser_action();
 background.setup_ranking_receiver();
 background.setup_package_listener();

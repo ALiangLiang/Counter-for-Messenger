@@ -1,14 +1,4 @@
 var analysis = {
-  initial : function () {
-    chrome.runtime.onInstalled.addListener(function (details) {
-      if (details.reason == "install" || details.reason == "update") {
-        chrome.runtime.sendMessage({
-          cmd : 'refresh'
-        }, function (responseData) {});
-      }
-    });
-
-  },
   setup : function (error, data) {
     var margin = {
       top : 20,
@@ -61,8 +51,8 @@ var analysis = {
       .selectAll("text")
       .style("text-anchor", "end")
       .attr("dx", "-.8em")
-      .attr("dy", ".15em")
-      .attr("transform", "rotate(-90)");
+      .attr("dy", ".35em")
+      .attr("transform", "rotate(-70)");
 
       svg.append("g")
       .attr("class", "y axis")
