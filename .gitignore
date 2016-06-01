@@ -1,0 +1,4 @@
+*.zip
+Thumbs.db
+/bower_components
+bower.json

@@ -1,0 +1,10 @@
+{
+	"extName":{"message":"Counter for Messenger"},
+	"MsgCount":{"message":"Message Count"},
+	"DownloadAllHistory":{"message":"Download all history"},
+	"Total":{"message":"Total"},
+	"You":{"message":"You"},
+	"OtherPeople":{"message":"OtherPeople"},
+	"AmountOfMessages":{"message":"Amount of Messages"},
+	"AmountOfCharacters":{"message":"Amount of Characters"}
+}
