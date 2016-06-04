@@ -30,9 +30,14 @@ var counter = {
     return new Promise(function (resolve) {
       for (var i = 0; i < display_max; i++) {
         (function (i) {
+          spin.show();
           var index = i;
           db.get_history(charrooms[i].fbid, i).then(function (msgs) {
-            counter.dump_history_done(msgs, index, charrooms[index].fbid);
+            counter.dump_history_done(msgs, index, charrooms[index].fbid).then(function () {
+              spin.hide();
+            });
+          }, function () {
+            spin.hide();
           });
         })(i);
       }
@@ -597,7 +602,9 @@ var spin = {
   },
 
   hide : function () {
-    spin.job_num--;
+    console.log(spin.job_num);
+    if (spin.job_num > 0)
+      spin.job_num--;
     if (spin.job_num === 0)
       spin.spinner.spin();
   }
