@@ -19,14 +19,28 @@ var counter = {
         function dump() {
           i--;
           if (i > -1)
-            counter.dump_history([], "thread_fbids", counter.data[i].fbid, 0, "", 20000, i).then(dump);
+            counter.dump_history_from_FB([], "thread_fbids", counter.data[i].fbid, 0, "", 20000, i).then(dump);
         }
         dump();
       }
     });
   },
 
-  dump_history : function (messages, type, user_ids, offset, timestamp, limit, index) {
+  dump_history_from_DB : function (charrooms) {
+    return new Promise(function (resolve) {
+      for (var i = 0; i < display_max; i++) {
+        (function (i) {
+          var index = i;
+          db.get_history(charrooms[i].fbid, i).then(function (msgs) {
+            counter.dump_history_done(msgs, index, charrooms[index].fbid);
+          });
+        })(i);
+      }
+      resolve();
+    });
+  },
+
+  dump_history_from_FB : function (messages, type, user_ids, offset, timestamp, limit, index) {
     return new Promise(function (resolve) {
       spin.show();
       var data_json_history = new counter.data_json_history(counter.token);
@@ -41,7 +55,7 @@ var counter = {
           var messages_data = data.payload.actions;
           messages = messages_data.concat(messages);
           if (!data.payload.end_of_history)
-            counter.dump_history(messages, type, user_ids, offset + limit, messages_data[0].timestamp, limit, index).then(function () {
+            counter.dump_history_from_FB(messages, type, user_ids, offset + limit, messages_data[0].timestamp, limit, index).then(function () {
               spin.hide();
               resolve();
             });
@@ -57,7 +71,6 @@ var counter = {
 
   dump_history_done : function (messages, index, user_ids) {
     return new Promise(function (resolve) {
-      console.log(messages);
       var msg_own_count = 0;
       var msg_other_count = 0;
       var char_own_count = 0;
@@ -88,7 +101,6 @@ var counter = {
   setup_receiver : function () {
     return new Promise(function (solve) {
       chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
-        console.log(message);
         if (message.token && message.userid) {
           if (counter.token)
             return;
@@ -97,12 +109,13 @@ var counter = {
 
           var title_name = chrome.i18n.getMessage("extName");
           var btn_text = chrome.i18n.getMessage("DownloadAllHistory");
-          var html_str = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + title_name + '</title></head><body><button id="dl_all">' + btn_text + '</button>提示：雙擊圖表中的長柱，可下載該訊息歷史紀錄。 提示2：對長柱右鍵，可下載歷史訊息。<canvas id="chart_msg" width="500" height="250"></canvas><canvas id="chart_char" width="500" height="250"></canvas></script></body></html>';
+          var html_str = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + title_name + '</title></head><body><button id="dl_all">' + btn_text + '</button>提示：雙擊圖表中的長柱，可匯入該訊息歷史紀錄。 提示2：對長柱右鍵，可下載歷史訊息。<canvas id="chart_msg" width="500" height="250"></canvas><canvas id="chart_char" width="500" height="250"></canvas></script></body></html>';
           document.write(html_str);
           setup_spin_lib(window);
           window.stop();
 
           spin.setup_spinner();
+          spin.show();
 
           ctx[0] = document.getElementById("chart_msg");
           ctx[1] = document.getElementById("chart_char");
@@ -119,14 +132,27 @@ var counter = {
           counter.xhr("/threadlist_info.php?dpr=1", data_json, function (response) {
             response.text().then(function (text) {
               var json = counter.res_tranformat_to_JSON(text);
-              counter.res_handle(json);
+              console.log(json);
+              counter.res_handle(json).then(function (charrooms) {
+                console.log(charrooms);
+                counter.data_handle(charrooms).then(function (charrooms) {
+                  console.log("First render done!!");
+                  var charrooms_sorted = charrooms.sort(function (a, b) {
+                      return b.count - a.count;
+                    });
+                  console.log(charrooms_sorted);
+                  counter.dump_history_from_DB(charrooms).then(function () {
+                    spin.hide();
+                  });
+                });
+              });
             });
           });
         } else if (message.info === "click_contextMenu" && message.tab) {
+          spin.show();
           var tab = message.tab;
           var bar = counter.last_right_click_bar;
           var index = counter.last_right_click_bar_index;
-          console.log(bar);
           if (bar !== undefined) {
             counter.download_history(bar, index);
           }
@@ -139,8 +165,6 @@ var counter = {
     var other_fbid = bar.fbid;
     var other_name = bar.name;
     db.get_history(other_fbid).then(function (messages) {
-      console.log(messages);
-
       var html = document.createElement("html");
       html.innerHTML = '<head><meta charset="UTF-8" /></head><body></body>';
       var body = html.getElementsByTagName("body")[0];
@@ -182,10 +206,12 @@ var counter = {
       }
       var date = new Date();
       var time = (date.getYear() + 1900) + padLeft(date.getMonth(), 2) + padLeft(date.getDate(), 2)
-      download(html_str, other_name + "-" + time + ".html", "text/html")
+      download(html_str, other_name + "-" + time + ".html", "text/html");
+      spin.hide();
     }, function () {
+      spin.hide();
       chart.chart_flash(index).then(function () {
-        chart.chart_flash(index)
+        chart.chart_flash(index);
       });
     });
   },
@@ -203,17 +229,33 @@ var counter = {
    * callback: the function you need to handle the response
    */
   xhr : function (url, data_json, callback) {
-    fetch(req_url_root + url, {
-      headers : {
-        'content-type' : 'application/x-www-form-urlencoded; charset=utf-8',
-        'x-msgr-region' : 'ATN'
-      },
-      mode : 'cors',
-      method : "POST",
-      credentials : 'include',
-      cache : 'default',
-      body : counter.json2urlencode(data_json)
-    }).then(callback);
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', req_url_root + url);
+    xhr.setRequestHeader('content-type', 'application/x-www-form-urlencoded; charset=utf-8');
+    xhr.onprogress = function (event) {
+      //console.log(event, event.lengthComputable);
+    };
+    xhr.onload = function () {
+      callback({
+        text : function () {
+          return new Promise(function (solve) {
+            solve(xhr.responseText);
+          });
+        }
+      });
+    };
+    xhr.send(counter.json2urlencode(data_json));
+    /*fetch(req_url_root + url, {
+    headers : {
+    'content-type' : 'application/x-www-form-urlencoded; charset=utf-8',
+    'x-msgr-region' : 'ATN'
+    },
+    mode : 'cors',
+    method : "POST",
+    credentials : 'include',
+    cache : 'default',
+    body : counter.json2urlencode(data_json)
+    }).then(callback);*/
   },
 
   res_tranformat_to_JSON : function (text) {
@@ -222,62 +264,64 @@ var counter = {
   },
 
   data_handle : function (responseData) {
-    console.log(responseData);
-    counter.data = responseData = responseData.splice(0, display_max);
-    var labels = [],
-    values = [];
-    responseData.forEach(function (d) {
-      labels.push(d.name);
-      values.push(d.count);
+    return new Promise(function (solve) {
+      counter.data = responseData = responseData.splice(0, display_max);
+      var labels = [],
+      values = [];
+      responseData.forEach(function (d) {
+        labels.push(d.name);
+        values.push(d.count);
+      });
+
+      chart.msg_chart_render(labels, values);
+      chart.char_chart_render(labels, values);
+
+      ctx[0].ondblclick = function (e) {
+        var bar = myBarChart[0].getElementAtEvent(e)[0];
+        if (bar) {
+          counter.dump_history_from_FB([], "thread_fbids", responseData[bar._index].fbid, 0, "", 20000, bar._index);
+        }
+      };
+
+      ctx[0].oncontextmenu = function (e) {
+        var bar = myBarChart[0].getElementAtEvent(e)[0];
+        if (bar) {
+          counter.last_right_click_bar = responseData[bar._index];
+          counter.last_right_click_bar_index = bar._index;
+        } else {
+          counter.last_right_click_bar = undefined;
+        }
+      }
+      solve(responseData);
     });
-
-    chart.msg_chart_render(labels, values);
-    chart.char_chart_render(labels, values);
-
-    ctx[0].ondblclick = function (e) {
-      var bar = myBarChart[0].getElementAtEvent(e)[0];
-      if (bar) {
-        console.log(responseData[bar._index]);
-        counter.dump_history([], "thread_fbids", responseData[bar._index].fbid, 0, "", 20000, bar._index);
-      }
-    };
-
-    ctx[0].oncontextmenu = function (e) {
-      var bar = myBarChart[0].getElementAtEvent(e)[0];
-      if (bar) {
-        console.log(responseData[bar._index]);
-        counter.last_right_click_bar = responseData[bar._index];
-        counter.last_right_click_bar_index = bar._index;
-      } else {
-        counter.last_right_click_bar = undefined;
-      }
-    }
   },
 
   res_handle : function (json) {
-    console.log(json);
-    var threads = json.payload.threads;
-    var list = threads.sort(function (a, b) {
-        return b.message_count - a.message_count
-      });
-    var participants = json.payload.participants;
-    var rList = list.map(function (obj) {
-        var rObj = {};
-        var fbid = obj.thread_fbid;
-        var other_side = counter.find_other_side(participants, fbid);
-        if (other_side) { //personal room
-          rObj.name = other_side.name;
-          rObj.fbid = fbid;
-          rObj.count = obj.message_count;
-          return rObj;
-        } else { //group room
-          rObj.name = obj.name; // Group name.
-          rObj.fbid = fbid;
-          rObj.count = obj.message_count;
-          return rObj;
-        }
-      });
-    counter.data_handle(rList);
+    return new Promise(function (solve) {
+      var threads = json.payload.threads;
+      var list = threads.sort(function (a, b) {
+          return b.message_count - a.message_count
+        });
+      var participants = json.payload.participants;
+      var rList = list.map(function (obj) {
+          var rObj = {};
+          var thread_fbid = obj.thread_fbid;
+          var other_fbid = obj.other_user_fbid;
+          var other_side = counter.find_other_side(participants, other_fbid);
+          if (obj.other_user_fbid) { //personal room
+            rObj.name = other_side.name;
+            rObj.fbid = thread_fbid;
+            rObj.count = obj.message_count;
+            return rObj;
+          } else { //group room
+            rObj.name = obj.name; // Group name.
+            rObj.fbid = thread_fbid;
+            rObj.count = obj.message_count;
+            return rObj;
+          }
+        });
+      solve(rList)
+    });
   },
 
   find_other_side : function (participants, fbid) {
@@ -453,19 +497,17 @@ var db = {
   },
 
   error_handle : function (e) {
-    console.log(e);
+    console.error(e);
   },
 
   setup : function (OS_name, data) {
     db.openDB(function (event) {
       var database = event.target.result;
       var version = parseInt(event.target.result.version);
-      console.log(version);
       database.close();
       var request = indexedDB.open(db.dbName, version + 1);
 
       request.onupgradeneeded = function (event) {
-        console.log(OS_name, ':', data);
         var db = event.target.result;
 
         if (db.objectStoreNames.contains(OS_name))
@@ -506,11 +548,11 @@ var db = {
           var request = objectStore.getAll();
           request.onerror = db.error_handle;
           request.onsuccess = function (event) {
-            //console.log(request.result);
             solve(request.result);
           };
         } catch (e) {
           console.error(e);
+          console.log(user);
           reject(user.fbid);
         }
       }, db.error_handle);
@@ -551,13 +593,11 @@ var spin = {
 
   show : function () {
     spin.job_num++;
-    console.log(spin.job_num);
     spin.spinner.spin(document.body);
   },
 
   hide : function () {
     spin.job_num--;
-    console.log(spin.job_num);
     if (spin.job_num === 0)
       spin.spinner.spin();
   }

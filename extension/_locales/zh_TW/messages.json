@@ -1,7 +1,7 @@
 {
 	"extName":{"message":"Messenger 計數器"},
 	"MsgCount":{"message":"訊息數量"},
-	"DownloadAllHistory":{"message":"下載所有訊息紀錄"},
+	"DownloadAllHistory":{"message":"匯入所有訊息紀錄"},
 	"Total":{"message":"總計"},
 	"You":{"message":"你"},
 	"OtherPeople":{"message":"其他人"},
