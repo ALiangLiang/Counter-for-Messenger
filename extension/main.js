@@ -288,8 +288,9 @@ var counter = {
         }
       };
 
-      ctx[0].oncontextmenu = function (e) {
-        var bar = myBarChart[0].getElementAtEvent(e)[0];
+      ctx[0].oncontextmenu = ctx[1].oncontextmenu = function (e) {
+        var bar = myBarChart[0].getElementAtEvent(e)[0] || myBarChart[1].getElementAtEvent(e)[0];
+        console.log(bar);
         if (bar) {
           counter.last_right_click_bar = responseData[bar._index];
           counter.last_right_click_bar_index = bar._index;
@@ -297,6 +298,7 @@ var counter = {
           counter.last_right_click_bar = undefined;
         }
       }
+      
       solve(responseData);
     });
   },

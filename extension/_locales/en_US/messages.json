@@ -6,5 +6,6 @@
 	"You":{"message":"You"},
 	"OtherPeople":{"message":"OtherPeople"},
 	"AmountOfMessages":{"message":"Amount of Messages"},
-	"AmountOfCharacters":{"message":"Amount of Characters"}
+	"AmountOfCharacters":{"message":"Amount of Characters"},
+	"dl_msg":{"message":"Download history"}
 }

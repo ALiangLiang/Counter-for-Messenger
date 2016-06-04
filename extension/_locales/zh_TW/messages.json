@@ -6,5 +6,6 @@
 	"You":{"message":"你"},
 	"OtherPeople":{"message":"其他人"},
 	"AmountOfMessages":{"message":"訊息數量"},
-	"AmountOfCharacters":{"message":"字元數量"}
+	"AmountOfCharacters":{"message":"字元數量"},
+	"dl_msg":{"message":"下載歷史訊息"}
 }

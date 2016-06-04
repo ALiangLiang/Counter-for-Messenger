@@ -38,7 +38,7 @@ var background = {
 
   set_contextMenu : function () {
     var cm_id = chrome.contextMenus.create({
-      "title" : "Download history",
+      "title" : chrome.i18n.getMessage("dl_msg"),
       "contexts" : ["all"],
       "documentUrlPatterns" : ["*://www.messenger.com/t/1070726462942749/*"],
       "onclick" : function (e, tab) {
