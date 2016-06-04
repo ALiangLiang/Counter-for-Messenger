@@ -42,12 +42,13 @@ var counter = {
           messages = messages_data.concat(messages);
           if (!data.payload.end_of_history)
             counter.dump_history(messages, type, user_ids, offset + limit, messages_data[0].timestamp, limit, index).then(function () {
+              spin.hide();
               resolve();
             });
           else
             counter.dump_history_done(messages, index, user_ids).then(function () {
-              resolve();
               spin.hide();
+              resolve();
             });
         });
       });
