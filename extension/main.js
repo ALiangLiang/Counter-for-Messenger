@@ -7,6 +7,7 @@ var counter = {
   token : undefined,
   userid : undefined,
   data : undefined,
+  last_right_click_bar : undefined,
 
   main : function () {
     counter.setup_receiver().then(function () { // receive token
@@ -42,7 +43,7 @@ var counter = {
               resolve();
             });
           else
-            counter.dump_history_done(messages, index).then(function () {
+            counter.dump_history_done(messages, index, user_ids).then(function () {
               resolve();
             });
         });
@@ -50,7 +51,7 @@ var counter = {
     });
   },
 
-  dump_history_done : function (messages, index) {
+  dump_history_done : function (messages, index, user_ids) {
     return new Promise(function (resolve) {
       console.log(messages);
       var msg_own_count = 0;
@@ -80,12 +81,14 @@ var counter = {
       myBarChart[1].data.datasets[1].data[index] = char_other_count;
       myBarChart[1].update();
       resolve();
+      db.setup(user_ids, messages);
     });
   },
 
   setup_receiver : function () {
     return new Promise(function (solve) {
       chrome.runtime.onMessage.addListener(function (message, sender, sendResponse) {
+        console.log(message);
         if (message.token && message.userid) {
           if (counter.token)
             return;
@@ -96,6 +99,7 @@ var counter = {
           var btn_text = chrome.i18n.getMessage("DownloadAllHistory");
           var html_str = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + title_name + '</title></head><body><button id="dl_all">' + btn_text + '</button><canvas id="chart_msg" width="500" height="250"></canvas><canvas id="chart_char" width="500" height="250"></canvas></script></body></html>';
           document.write(html_str);
+          window.stop()
           ctx[0] = document.getElementById("chart_msg");
           ctx[1] = document.getElementById("chart_char");
           solve();
@@ -114,8 +118,21 @@ var counter = {
               counter.res_handle(json);
             });
           });
+        } else if (message.info === "click_contextMenu" && message.tab) {
+          var tab = message.tab;
+          var bar = counter.last_right_click_bar;
+          console.log(bar);
+          if (bar !== undefined) {
+            counter.download_history(bar);
+          }
         }
       });
+    });
+  },
+
+  download_history : function (bar) {
+    db.get_history(bar.fbid).then(function(result) {
+      console.log(result);
     });
   },
 
@@ -170,6 +187,16 @@ var counter = {
         counter.dump_history([], "thread_fbids", responseData[bar._index].fbid, 0, "", 20000, bar._index);
       }
     };
+
+    ctx[0].oncontextmenu = function (e) {
+      var bar = myBarChart[0].getElementAtEvent(e)[0];
+      if (bar) {
+        console.log(responseData[bar._index]);
+        counter.last_right_click_bar = responseData[bar._index];
+      } else {
+        counter.last_right_click_bar = undefined;
+      }
+    }
   },
 
   res_handle : function (json) {
@@ -335,6 +362,73 @@ var chart = {
         data : data,
         options : options
       });
+  }
+};
+
+var db = {
+  dbName : 'msg_history',
+  request : undefined,
+
+  openDB : function (suc, fail) {
+    db.request = indexedDB.open(db.dbName);
+    db.request.onsuccess = suc;
+    db.request.onerror = fail;
+  },
+
+  error_handle : function (e) {
+    console.log(e);
+  },
+
+  setup : function (OS_name, data) {
+    db.openDB(function (event) {
+      var database = event.target.result;
+      var version = parseInt(event.target.result.version);
+      console.log(version);
+      database.close();
+      var request = indexedDB.open(db.dbName, version + 1);
+
+      request.onupgradeneeded = function (event) {
+        console.log(OS_name, ':', data);
+        var db = event.target.result;
+
+        if (db.objectStoreNames.contains(OS_name))
+          db.deleteObjectStore(OS_name);
+
+        var objStore = db.createObjectStore(OS_name, {
+            autoIncrement : true
+          });
+        for (var i in data) {
+          objStore.add(data[i]);
+        }
+      }
+    }, db.error_handle);
+  },
+
+  create_user : function (OS_name, data) {
+    db.openDB(function (event) {
+      var transaction = db.transaction([OS_name]);
+      var objectStore = transaction.objectStore(OS_name);
+      for (var i in data) {
+        var request = objectStore.add(data[i]);
+        request.onsuccess = function (event) {};
+      }
+    }, db.error_handle);
+  },
+
+  get_history : function (OS_name) {
+    return new Promise(function (solve) {
+      db.openDB(function (event) {
+        var db = event.target.result;
+        var transaction = db.transaction([OS_name]);
+        var objectStore = transaction.objectStore(OS_name);
+        var request = objectStore.getAll();
+        request.onerror = db.error_handle;
+        request.onsuccess = function (event) {
+          //console.log(request.result);
+          solve(request.result);
+        };
+      }, db.error_handle);
+    });
   }
 };
 

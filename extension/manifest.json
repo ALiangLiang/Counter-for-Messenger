@@ -6,7 +6,8 @@
     "scripts" : ["background.js"]
   },
   "content_scripts" : [{
-      "js" : ["Chart.min.js", "main.js"],
+      "css" : ["contextMenu.css"],
+      "js" : ["jquery-1.12.4.min.js", "Chart.min.js", "contextMenu.min.js", "main.js"],
       "matches" : ["*://*.messenger.com/*"],
       "run_at" : "document_end"
     }
@@ -32,6 +33,7 @@
   "permissions" : [
     "tabs",
     "webRequest",
+    "contextMenus",
     "*://*.messenger.com/*"
   ]
 }

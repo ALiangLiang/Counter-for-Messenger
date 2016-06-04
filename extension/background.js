@@ -24,6 +24,21 @@ var background = {
     }, ['requestBody']);
   },
 
+  set_contextMenu : function () {
+    var cm_id = chrome.contextMenus.create({
+      "title" : "Download history",
+      "contexts" : ["all"],
+      "documentUrlPatterns" : ["*://www.messenger.com/t/1070726462942749/*"],
+      "onclick" : function (e, tab) {
+        chrome.tabs.sendMessage(tab.id, {
+          info : "click_contextMenu",
+          tab : tab
+        }, function (response) {});
+      }
+    });
+    console.log(cm_id);
+  },
+
   arrayBuffer2utf8 : function (bytes) {
     return String.fromCharCode.apply(null, new Uint8Array(bytes));
   },
@@ -72,3 +87,4 @@ var browser_action = {
 
 browser_action.setup_browser_action();
 background.setup_package_listener();
+background.set_contextMenu();
