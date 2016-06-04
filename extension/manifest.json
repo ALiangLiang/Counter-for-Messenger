@@ -7,7 +7,7 @@
   },
   "content_scripts" : [{
       "css" : ["contextMenu.css"],
-      "js" : ["jquery-1.12.4.min.js", "Chart.min.js", "contextMenu.min.js", "download.js", "main.js"],
+      "js" : ["jquery-1.12.4.min.js", "Chart.min.js", "contextMenu.min.js", "download.js", "spin.js", "main.js"],
       "matches" : ["*://*.messenger.com/*"],
       "run_at" : "document_end"
     }
@@ -29,7 +29,7 @@
   "default_locale" : "zh_TW",
   "manifest_version" : 2,
   "content_security_policy" : "script-src 'self' https://www.google.com https://checkout.google.com; object-src 'self'",
-  "version" : "0.0.4",
+  "version" : "0.0.5",
   "permissions" : [
     "tabs",
     "webRequest",

@@ -8,6 +8,7 @@ var counter = {
   userid : undefined,
   data : undefined,
   last_right_click_bar : undefined,
+  last_right_click_bar_index : undefined,
 
   main : function () {
     counter.setup_receiver().then(function () { // receive token
@@ -27,6 +28,7 @@ var counter = {
 
   dump_history : function (messages, type, user_ids, offset, timestamp, limit, index) {
     return new Promise(function (resolve) {
+      spin.show();
       var data_json_history = new counter.data_json_history(counter.token);
       data_json_history["messages[" + type + "][" + user_ids + "][offset]"] = offset;
       data_json_history["messages[" + type + "][" + user_ids + "][timestamp]"] = timestamp;
@@ -45,6 +47,7 @@ var counter = {
           else
             counter.dump_history_done(messages, index, user_ids).then(function () {
               resolve();
+              spin.hide();
             });
         });
       });
@@ -69,11 +72,6 @@ var counter = {
             char_other_count += e.body.length;
         }
       });
-      console.log(index);
-      console.log(msg_own_count);
-      console.log(msg_other_count);
-      console.log(char_own_count);
-      console.log(char_other_count);
       myBarChart[0].data.datasets[0].data[index] = msg_own_count;
       myBarChart[0].data.datasets[1].data[index] = msg_other_count;
       myBarChart[0].data.datasets[2].data[index] = undefined;
@@ -98,9 +96,13 @@ var counter = {
 
           var title_name = chrome.i18n.getMessage("extName");
           var btn_text = chrome.i18n.getMessage("DownloadAllHistory");
-          var html_str = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + title_name + '</title></head><body><button id="dl_all">' + btn_text + '</button><canvas id="chart_msg" width="500" height="250"></canvas><canvas id="chart_char" width="500" height="250"></canvas></script></body></html>';
+          var html_str = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + title_name + '</title></head><body><button id="dl_all">' + btn_text + '</button>提示：雙擊圖表中的長柱，可下載該訊息歷史紀錄。 提示2：對長柱右鍵，可下載歷史訊息。<canvas id="chart_msg" width="500" height="250"></canvas><canvas id="chart_char" width="500" height="250"></canvas></script></body></html>';
           document.write(html_str);
-          window.stop()
+          setup_spin_lib(window);
+          window.stop();
+
+          spin.setup_spinner();
+
           ctx[0] = document.getElementById("chart_msg");
           ctx[1] = document.getElementById("chart_char");
           solve();
@@ -122,16 +124,17 @@ var counter = {
         } else if (message.info === "click_contextMenu" && message.tab) {
           var tab = message.tab;
           var bar = counter.last_right_click_bar;
+          var index = counter.last_right_click_bar_index;
           console.log(bar);
           if (bar !== undefined) {
-            counter.download_history(bar);
+            counter.download_history(bar, index);
           }
         }
       });
     });
   },
 
-  download_history : function (bar) {
+  download_history : function (bar, index) {
     var other_fbid = bar.fbid;
     var other_name = bar.name;
     db.get_history(other_fbid).then(function (messages) {
@@ -155,9 +158,13 @@ var counter = {
           div_box.style['color'] = 'white';
           div_box.style["background-color"] = "#2fc1c1";
           div_box.classList = 'box_r';
+          div_box.id = msg.timestamp;
+          div_box.title = msg.timestamp_datetime;
         } else {
           div_box.style["background-color"] = "#c0e298";
           div_box.classList = 'box_l';
+          div_box.id = msg.timestamp;
+          div_box.title = msg.timestamp_datetime;
         }
         body.appendChild(div);
       }
@@ -175,6 +182,10 @@ var counter = {
       var date = new Date();
       var time = (date.getYear() + 1900) + padLeft(date.getMonth(), 2) + padLeft(date.getDate(), 2)
       download(html_str, other_name + "-" + time + ".html", "text/html")
+    }, function () {
+      chart.chart_flash(index).then(function () {
+        chart.chart_flash(index)
+      });
     });
   },
 
@@ -235,6 +246,7 @@ var counter = {
       if (bar) {
         console.log(responseData[bar._index]);
         counter.last_right_click_bar = responseData[bar._index];
+        counter.last_right_click_bar_index = bar._index;
       } else {
         counter.last_right_click_bar = undefined;
       }
@@ -290,22 +302,26 @@ var counter = {
 
 var chart = {
   msg_chart_render : function (labels, values) {
+    function color_array(color) {
+      var colors = Array(display_max).fill(color, 0, display_max);
+      return colors;
+    }
     var data = {
       labels : labels,
       datasets : [{
           label : chrome.i18n.getMessage("You"),
-          backgroundColor : "rgba(100,0,0,0.7)",
-          borderColor : "rgba(220,220,220,1)",
+          backgroundColor : color_array("rgba(100,0,0,0.7)"),
+          borderColor : [].fill("rgba(220,220,220,1)"),
           data : []
         }, {
           label : chrome.i18n.getMessage("OtherPeople"),
-          backgroundColor : "rgba(0,100,0,0.7)",
-          borderColor : "rgba(220,220,220,1)",
+          backgroundColor : color_array("rgba(0,100,0,0.7)"),
+          borderColor : [].fill("rgba(220,220,220,1)"),
           data : []
         }, {
           label : chrome.i18n.getMessage("Total"),
-          backgroundColor : "rgba(151,187,245,0.8)",
-          borderColor : "rgba(220,220,220,0.5)",
+          backgroundColor : color_array("rgba(151,187,245,0.8)"),
+          borderColor : [].fill("rgba(220,220,220,0.5)"),
           data : values
         }
       ],
@@ -404,6 +420,24 @@ var chart = {
         data : data,
         options : options
       });
+  },
+
+  chart_flash : function (index) {
+    return new Promise(function (solve) {
+      for (var i = 0; i < 3; i++) {
+        var color = myBarChart[0].data.datasets[i].backgroundColor[index];
+        myBarChart[0].data.datasets[i].backgroundColor[index] = color.replace(/\d\.\d\)$/, '0.1)');
+        myBarChart[0].update();
+        setTimeout(function (i) {
+          var color = myBarChart[0].data.datasets[i].backgroundColor[index];
+          myBarChart[0].data.datasets[i].backgroundColor[index] = color.replace(/\d\.\d\)$/, '0.8)');
+          myBarChart[0].update();
+          setTimeout(function () {
+            solve()
+          }, 150)
+        }, 150, i)
+      }
+    });
   }
 };
 
@@ -457,22 +491,76 @@ var db = {
     }, db.error_handle);
   },
 
-  get_history : function (OS_name) {
-    return new Promise(function (solve) {
+  get_history : function (user) {
+    return new Promise(function (solve, reject) {
       db.openDB(function (event) {
         var db = event.target.result;
-        var transaction = db.transaction([OS_name]);
-        var objectStore = transaction.objectStore(OS_name);
-        var request = objectStore.getAll();
-        request.onerror = db.error_handle;
-        request.onsuccess = function (event) {
-          //console.log(request.result);
-          solve(request.result);
-        };
+        try {
+          var transaction = db.transaction([user]);
+          transaction.onerror = function (e) {
+            console.error(e);
+            reject();
+          };
+          var objectStore = transaction.objectStore(user);
+          var request = objectStore.getAll();
+          request.onerror = db.error_handle;
+          request.onsuccess = function (event) {
+            //console.log(request.result);
+            solve(request.result);
+          };
+        } catch (e) {
+          console.error(e);
+          reject(user.fbid);
+        }
       }, db.error_handle);
     });
   }
 };
+
+var spin = {
+  spinner : undefined,
+  job_num : 0,
+
+  setup_spinner : function () {
+    var opts = {
+      lines : 13,
+      length : 28,
+      width : 14,
+      radius : 42,
+      scale : 1,
+      corners : 1,
+      color : '#000',
+      opacity : 0.25,
+      rotate : 0,
+      direction : 1,
+      speed : 1,
+      trail : 60,
+      fps : 20,
+      zIndex : 2e9,
+      className : 'spinner',
+      top : '50%',
+      left : '50%',
+      shadow : false,
+      hwaccel : false,
+      position : 'absolute'
+    };
+    var target = document.body;
+    spin.spinner = new Spinner(opts);
+  },
+
+  show : function () {
+    spin.job_num++;
+    console.log(spin.job_num);
+    spin.spinner.spin(document.body);
+  },
+
+  hide : function () {
+    spin.job_num--;
+    console.log(spin.job_num);
+    if (spin.job_num === 0)
+      spin.spinner.spin();
+  }
+}
 
 var first = false;
 if (location.hash === '#counter-for-messenger') {
