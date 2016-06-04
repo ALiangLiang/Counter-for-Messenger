@@ -7,5 +7,9 @@
 	"OtherPeople":{"message":"OtherPeople"},
 	"AmountOfMessages":{"message":"Amount of Messages"},
 	"AmountOfCharacters":{"message":"Amount of Characters"},
-	"dl_msg":{"message":"Download history"}
+	"dl_msg":{"message":"Download history"},
+  
+	"toast_loading_from_local":{"message":"Loading history from local...."},
+	"toast_download_history":{"message":"Downloading history now ... Please be patient."},
+	"toast_import_msgs":{"message":"Importing messages now"}
 }

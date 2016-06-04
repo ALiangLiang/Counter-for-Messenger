@@ -14,7 +14,7 @@ var counter = {
     counter.setup_receiver().then(function () { // receive token
       var btn = document.getElementById("dl_all");
       btn.onclick = function () {
-        console.log("click");
+        Materialize.toast(chrome.i18n.getMessage("toast_import_msgs"), 4000);
         var i = counter.data.length;
         function dump() {
           i--;
@@ -145,7 +145,7 @@ var counter = {
                   var charrooms_sorted = charrooms.sort(function (a, b) {
                       return b.count - a.count;
                     });
-                  console.log(charrooms_sorted);
+                  Materialize.toast(chrome.i18n.getMessage("toast_loading_from_local"), 4000);
                   counter.dump_history_from_DB(charrooms).then(function () {
                     spin.hide();
                   });
@@ -169,6 +169,7 @@ var counter = {
   download_history : function (bar, index) {
     var other_fbid = bar.fbid;
     var other_name = bar.name;
+    Materialize.toast(chrome.i18n.getMessage("toast_download_history"), 4000);
     db.get_history(other_fbid).then(function (messages) {
       var html = document.createElement("html");
       html.innerHTML = '<head><meta charset="UTF-8" /></head><body></body>';
@@ -282,6 +283,7 @@ var counter = {
       chart.char_chart_render(labels, values);
 
       ctx[0].ondblclick = function (e) {
+        Materialize.toast(chrome.i18n.getMessage("toast_import_msgs"), 4000);
         var bar = myBarChart[0].getElementAtEvent(e)[0];
         if (bar) {
           counter.dump_history_from_FB([], "thread_fbids", responseData[bar._index].fbid, 0, "", 20000, bar._index);

@@ -6,7 +6,8 @@
     "scripts" : ["background.js"]
   },
   "content_scripts" : [{
-      "js" : ["jquery-1.12.4.min.js", "Chart.min.js", "download.js", "spin.js", "main.js"],
+      "css" : ["materialize.min.css"],
+      "js" : ["jquery-1.12.4.min.js", "Chart.min.js", "download.js", "spin.js", "main.js", "materialize.min.js"],
       "matches" : ["*://*.messenger.com/*"],
       "run_at" : "document_end"
     }
