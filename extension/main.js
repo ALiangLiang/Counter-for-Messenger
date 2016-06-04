@@ -76,6 +76,7 @@ var counter = {
       console.log(char_other_count);
       myBarChart[0].data.datasets[0].data[index] = msg_own_count;
       myBarChart[0].data.datasets[1].data[index] = msg_other_count;
+      myBarChart[0].data.datasets[2].data[index] = undefined;
       myBarChart[0].update();
       myBarChart[1].data.datasets[0].data[index] = char_own_count;
       myBarChart[1].data.datasets[1].data[index] = char_other_count;
@@ -131,8 +132,49 @@ var counter = {
   },
 
   download_history : function (bar) {
-    db.get_history(bar.fbid).then(function(result) {
-      console.log(result);
+    var other_fbid = bar.fbid;
+    var other_name = bar.name;
+    db.get_history(other_fbid).then(function (messages) {
+      console.log(messages);
+
+      var html = document.createElement("html");
+      html.innerHTML = '<head><meta charset="UTF-8" /></head><body></body>';
+      var body = html.getElementsByTagName("body")[0];
+      for (var i in messages) {
+        var msg = messages[i];
+        var content = msg.body;
+
+        var div = document.createElement("div");
+        var div_box = document.createElement("div");
+        div_box.innerText = content;
+        div.classList = 'outer';
+        div.appendChild(div_box);
+
+        if (msg.author.replace('fbid:', "") == counter.userid) {
+          div_box.style['text-align'] = 'right';
+          div_box.style['color'] = 'white';
+          div_box.style["background-color"] = "#2fc1c1";
+          div_box.classList = 'box_r';
+        } else {
+          div_box.style["background-color"] = "#c0e298";
+          div_box.classList = 'box_l';
+        }
+        body.appendChild(div);
+      }
+      var tmp = document.createElement("div");
+      tmp.appendChild(html);
+      var html_str = tmp.innerHTML;
+      function padLeft(str, len) {
+        str = '' + str;
+        if (str.length >= len) {
+          return str;
+        } else {
+          return padLeft("0" + str, len);
+        }
+      }
+      var date = new Date();
+      var time = (date.getYear() + 1900) + padLeft(date.getMonth(), 2) + padLeft(date.getDate(), 2)
+      download(html_str, other_name + "-" + time + ".html", "text/html")
     });
   },
 
