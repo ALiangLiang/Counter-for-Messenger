@@ -56,7 +56,6 @@ var counter = {
       counter.xhr("/thread_info.php?dpr=1", data_json_history, function (response) {
         response.text().then(function (text) {
           var data = counter.res_tranformat_to_JSON(text);
-          console.log(data);
           var messages_data = data.payload.actions;
           messages = messages_data.concat(messages);
           if (!data.payload.end_of_history)
@@ -172,8 +171,9 @@ var counter = {
     Materialize.toast(chrome.i18n.getMessage("toast_download_history"), 4000);
     db.get_history(other_fbid).then(function (messages) {
       var html = document.createElement("html");
-      html.innerHTML = '<head><meta charset="UTF-8" /></head><body></body>';
-      var body = html.getElementsByTagName("body")[0];
+      html.innerHTML = html_pattern;
+      var body = html.querySelector("#container");
+      console.log(body);
       for (var i in messages) {
         var msg = messages[i];
         var content = msg.body;
@@ -185,14 +185,11 @@ var counter = {
         div.appendChild(div_box);
 
         if (msg.author.replace('fbid:', "") == counter.userid) {
-          div_box.style['text-align'] = 'right';
-          div_box.style['color'] = 'white';
-          div_box.style["background-color"] = "#2fc1c1";
+          div.className += ' right';
           div_box.classList = 'box_r';
           div_box.id = msg.timestamp;
           div_box.title = msg.timestamp_datetime;
         } else {
-          div_box.style["background-color"] = "#c0e298";
           div_box.classList = 'box_l';
           div_box.id = msg.timestamp;
           div_box.title = msg.timestamp_datetime;

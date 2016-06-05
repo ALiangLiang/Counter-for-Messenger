@@ -7,7 +7,7 @@
   },
   "content_scripts" : [{
       "css" : ["materialize.min.css"],
-      "js" : ["jquery-1.12.4.min.js", "Chart.min.js", "download.js", "spin.js", "main.js", "materialize.min.js"],
+      "js" : ["jquery-1.12.4.min.js", "Chart.min.js", "download.js", "spin.js", "html_pattern.js", "main.js", "materialize.min.js"],
       "matches" : ["*://*.messenger.com/*"],
       "run_at" : "document_end"
     }
