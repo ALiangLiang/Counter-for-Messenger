@@ -148,7 +148,7 @@ var counter = {
 								"doc_id": "1780638668674992",
 								"query_params": {
 									"limit": 5000,
-									"before": 1505415952522,
+									"before": 9999999999999,
 									"tags": ["INBOX"],
 									"includeDeliveryReceipts": true,
 									"includeSeqID": false
@@ -306,7 +306,7 @@ var counter = {
 				Materialize.toast(chrome.i18n.getMessage("toast_import_msgs"), 4000);
 				var bar = myBarChart[0].getElementAtEvent(e)[0];
 				if (bar) {
-					counter.dump_history_from_FB([], "thread_fbids", responseData[bar._index].fbid, 0, "", 20000, bar._index);
+					counter.dump_history_from_FB([], "thread_fbids", responseData[bar._index].fbid, 0, null, 20000, bar._index);
 				}
 			};
 
@@ -330,6 +330,7 @@ var counter = {
 			const list = threads.sort(function (a, b) {
 					return b.messages_count - a.messages_count
 				});
+        console.log(list)
 			//const participants = json.payload.participants;
 			const rList = list.map(function (obj) {
 					const rObj = {};
@@ -382,6 +383,7 @@ var counter = {
 
 var chart = {
 	msg_chart_render: function (labels, values) {
+    console.log(values)
 		function color_array(color) {
 			var colors = Array(display_max).fill(color, 0, display_max);
 			return colors;
