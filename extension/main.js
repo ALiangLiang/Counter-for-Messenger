@@ -205,16 +205,17 @@ var counter = {
 				div_box.innerText = content;
 				div.classList = 'outer';
 				div.appendChild(div_box);
-
+        const date = new Date(Number(msg.timestamp_precise));
+        const localTimeString = date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
 				if (msg.message_sender.id == counter.userid) {
 					div.className += ' right';
 					div_box.classList = 'box_r';
 					div_box.id = msg.timestamp_precise;
-					div_box.title = msg.timestamp_precise;
+					div_box.title = localTimeString;
 				} else {
 					div_box.classList = 'box_l';
 					div_box.id = msg.timestamp_precise;
-					div_box.title = msg.timestamp_precise;
+					div_box.title = localTimeString;
 				}
 				body.appendChild(div);
 			}
