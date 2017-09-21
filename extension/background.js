@@ -1,4 +1,4 @@
-/*chrome.runtime.onInstalled.addListener(function (details) {
+chrome.runtime.onInstalled.addListener(function (details) {
   if (details.reason == "install") {
     console.log("This is a first install!");
     chrome.tabs.create({url:"firstRun.html"});
@@ -7,8 +7,7 @@
     console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
     chrome.tabs.create({url:"firstRun.html"});
   }
-});*/
-
+});
 
 var background = {
 
@@ -16,15 +15,15 @@ var background = {
 
   setup_package_listener : function () {
     chrome.webRequest.onBeforeRequest.addListener(function (details) {
-      var str = background.arrayBuffer2utf8(details.requestBody.raw[0].bytes);
-      var url = background.url_decode(str);
+		console.log(details)
+		const url = details.url;
+		const token = details.requestBody.formData.fb_dtsg[0];
+		const userid = details.requestBody.formData.__user[0];
       if (url.match(/counter=true/)) {
         console.log('It\'s form extension.');
         return;
       }
       console.log(details);
-      var token = background.token = background.toke_out_token(url),
-      userid = background.toke_out_userid(url);
       console.log(userid);
       console.log(token);
       background.send_to_tabs({
@@ -32,7 +31,7 @@ var background = {
         userid : userid
       });
     }, {
-      urls : ["*://www.messenger.com/ajax/mercury/threadlist_info.php?dpr=1"]
+      urls : ["*://www.messenger.com/api/graphqlbatch/"]
     }, ['requestBody']);
   },
 
@@ -40,7 +39,7 @@ var background = {
     var cm_id = chrome.contextMenus.create({
       "title" : chrome.i18n.getMessage("dl_msg"),
       "contexts" : ["all"],
-      "documentUrlPatterns" : ["*://www.messenger.com/t/1070726462942749/*"],
+      "documentUrlPatterns" : ["*://www.messenger.com/t/ALiangLiang.top/*"],
       "onclick" : function (e, tab) {
         chrome.tabs.sendMessage(tab.id, {
           info : "click_contextMenu",
@@ -91,7 +90,7 @@ var background = {
 var browser_action = {
   setup_browser_action : function () {
     chrome.browserAction.onClicked.addListener(function (tab) {
-      window.open('https://www.messenger.com/t/1070726462942749/#counter-for-messenger');
+      window.open('https://www.messenger.com/t/ALiangLiang.top/#counter-for-messenger');
     });
 
   }

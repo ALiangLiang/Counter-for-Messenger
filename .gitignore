@@ -2,3 +2,5 @@
 Thumbs.db
 /bower_components
 bower.json
+*.crx
+*.pem
