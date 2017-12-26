@@ -26,10 +26,10 @@
     "64" : "icon/icon64.png",
     "128" : "icon/icon128.png"
   },
-  "default_locale" : "zh_TW",
+  "default_locale" : "en_US",
   "manifest_version" : 2,
   "content_security_policy" : "script-src 'self' https://www.google.com https://checkout.google.com; object-src 'self'",
-  "version" : "0.1.3",
+  "version" : "0.1.4",
   "permissions" : [
     "tabs",
     "webRequest",
