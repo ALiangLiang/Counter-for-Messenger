@@ -6,8 +6,8 @@
     "scripts" : ["background.js"]
   },
   "content_scripts" : [{
-      "css" : ["materialize.min.css"],
-      "js" : ["jquery-1.12.4.min.js", "Chart.min.js", "download.js", "spin.js", "html_pattern.js", "main.js", "materialize.min.js"],
+      "css" : ["toastr.min.css"],
+      "js" : ["jquery-1.12.4.min.js", "Chart.min.js", "download.js", "spin.js", "html_pattern.js", "main.js", "toastr.min.js"],
       "matches" : ["*://*.messenger.com/*"],
       "run_at" : "document_end"
     }
@@ -29,7 +29,7 @@
   "default_locale" : "en_US",
   "manifest_version" : 2,
   "content_security_policy" : "script-src 'self' https://www.google.com https://checkout.google.com; object-src 'self'",
-  "version" : "0.1.4",
+  "version" : "0.1.5",
   "permissions" : [
     "tabs",
     "webRequest",

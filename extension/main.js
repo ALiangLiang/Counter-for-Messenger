@@ -13,9 +13,10 @@ var counter = {
 
   main: function() {
     counter.setup_receiver().then(function() { // receive token
+      location.hash = '#counter-for-messenger'
       var btn = document.getElementById('dl_all');
       btn.onclick = function() {
-        Materialize.toast(chrome.i18n.getMessage('toast_import_msgs'), 4000);
+        toastr['info'](chrome.i18n.getMessage('toast_import_msgs'))
         var i = counter.data.length;
 
         function dump() {
@@ -118,7 +119,7 @@ var counter = {
       .catch((err) => {
         console.error('Dump from FB error.', err);
         spin.hide();
-        Materialize.toast(err, 4000);
+        toastr['error'](err);
       });
   },
 
@@ -198,7 +199,7 @@ var counter = {
                   .then(() => db.update_objectstores(chatrooms.map((chatroom) => chatroom.fbid))) // Update DB schema.
                   .then(() => {
                     console.info('First render done!!');
-                    Materialize.toast(chrome.i18n.getMessage('toast_loading_from_local'), 4000);
+                    toastr['info'](chrome.i18n.getMessage('toast_loading_from_local'));
                     return counter.dump_history_from_DB(chatrooms); // Render chartbar with local DB data.
                   })
                   .then(() => spin.hide());
@@ -219,7 +220,7 @@ var counter = {
   download_history: function(bar, index) {
     var other_fbid = bar.fbid;
     var other_name = bar.name;
-    Materialize.toast(chrome.i18n.getMessage('toast_download_history'), 4000);
+    toastr['info'](chrome.i18n.getMessage('toast_download_history'));
     db.get_history(other_fbid)
       .then(function(messages) {
         var html = document.createElement('html');
@@ -334,7 +335,7 @@ var counter = {
       chart.char_chart_render(labels, values);
 
       ctx[0].ondblclick = function(e) {
-        Materialize.toast(chrome.i18n.getMessage('toast_import_msgs'), 4000);
+        toastr['info'](chrome.i18n.getMessage('toast_import_msgs'));
         var bar = myBarChart[0].getElementAtEvent(e)[0];
         if (bar) {
           counter.dump_history_from_FB([], 'thread_fbids', responseData[bar._index].fbid, 0, null, DEFAULT_LOAD_NUM, bar._index);

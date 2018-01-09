@@ -4,8 +4,11 @@ chrome.runtime.onInstalled.addListener(function (details) {
     chrome.tabs.create({url:"firstRun.html"});
   } else if (details.reason == "update") {
     var thisVersion = chrome.runtime.getManifest().version;
+    var previousVersion = details.previousVersion
     console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
-    chrome.tabs.create({url:"firstRun.html"});
+    if (thisVersion.replace(/\.\d*$/, '') !== previousVersion.replace(/\.\d*$/, '')) {
+      chrome.tabs.create({url:"firstRun.html"});
+    }
   }
 });
 
@@ -90,7 +93,7 @@ var background = {
 var browser_action = {
   setup_browser_action : function () {
     chrome.browserAction.onClicked.addListener(function (tab) {
-      window.open('https://www.messenger.com/t/ALiangLiang.top/#counter-for-messenger');
+      window.open('https://www.messenger.com/t/ALiangLiang.top#counter-for-messenger');
     });
 
   }
