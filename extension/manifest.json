@@ -29,7 +29,7 @@
   "default_locale" : "en_US",
   "manifest_version" : 2,
   "content_security_policy" : "script-src 'self' https://www.google.com https://checkout.google.com; object-src 'self'",
-  "version" : "0.1.5",
+  "version" : "0.1.6",
   "permissions" : [
     "tabs",
     "webRequest",

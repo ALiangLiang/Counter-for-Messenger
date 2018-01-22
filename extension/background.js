@@ -1,11 +1,11 @@
 chrome.runtime.onInstalled.addListener(function (details) {
   if (details.reason == "install") {
-    console.log("This is a first install!");
+    console.info("This is a first install!");
     chrome.tabs.create({url:"firstRun.html"});
   } else if (details.reason == "update") {
     var thisVersion = chrome.runtime.getManifest().version;
     var previousVersion = details.previousVersion
-    console.log("Updated from " + details.previousVersion + " to " + thisVersion + "!");
+    console.info("Updated from " + details.previousVersion + " to " + thisVersion + "!");
     if (thisVersion.replace(/\.\d*$/, '') !== previousVersion.replace(/\.\d*$/, '')) {
       chrome.tabs.create({url:"firstRun.html"});
     }
@@ -18,7 +18,6 @@ var background = {
 
   setup_package_listener : function () {
     chrome.webRequest.onBeforeRequest.addListener(function (details) {
-		console.log(details)
 		const url = details.url;
 		const token = details.requestBody.formData.fb_dtsg[0];
 		const userid = details.requestBody.formData.__user[0];
@@ -26,9 +25,6 @@ var background = {
         console.log('It\'s form extension.');
         return;
       }
-      console.log(details);
-      console.log(userid);
-      console.log(token);
       background.send_to_tabs({
         token : token,
         userid : userid
@@ -50,7 +46,6 @@ var background = {
         }, function (response) {});
       }
     });
-    console.log(cm_id);
   },
 
   arrayBuffer2utf8 : function (bytes) {

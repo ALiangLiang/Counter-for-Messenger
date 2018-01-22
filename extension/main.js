@@ -693,7 +693,6 @@ var spin = {
   },
 
   hide: function() {
-    console.log(spin.job_num);
     if (spin.job_num > 0)
       spin.job_num--;
     if (spin.job_num === 0)
@@ -703,9 +702,9 @@ var spin = {
 
 var first = false;
 if (location.hash === '#counter-for-messenger') {
-  if (location.pathname === '/login.php' && location.search === '?next=https%3A%2F%2Fwww.messenger.com%2Ft%2FALiangLiang.top%2F') {
+  if (location.pathname === '/login.php' && location.search === '?next=https%3A%2F%2Fwww.messenger.com%2Ft%2FALiangLiang.top') {
     location = location.href.replace(/#/, '%23');
-    alert('Please login the messenger.');
+    alert('Please login the messenger to count your messages.');
   } else if (location.pathname.search(/\/t\//) !== -1) {
     counter.main();
   }
