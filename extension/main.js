@@ -160,7 +160,7 @@ var counter = {
 
           var title_name = chrome.i18n.getMessage('extName');
           var btn_text = chrome.i18n.getMessage('DownloadAllHistory');
-          var html_str = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + title_name + '</title></head><body><button id="dl_all">' + btn_text + '</button>提示：雙擊圖表中的長柱，可匯入該訊息歷史紀錄。 提示2：對長柱右鍵，可下載歷史訊息。<canvas id="chart_msg" width="500" height="250"></canvas><canvas id="chart_char" width="500" height="250"></canvas></script></body></html>';
+          var html_str = '<!DOCTYPE html><html><head><meta charset="utf-8"><title>' + title_name + '</title></head><body><button id="dl_all">' + btn_text + '</button> <br><br>提示：雙擊圖表中的長柱，可匯入該訊息歷史紀錄。 提示2：對長柱右鍵，可下載歷史訊息。<br> Tip 1: double-click a column in the chart to import all message history. Tip 2: If you right click on a column, you can download the entire history of messages.<canvas id="chart_msg" width="500" height="250"></canvas><canvas id="chart_char" width="500" height="250"></canvas></script></body></html>';
           document.write(html_str);
           setup_spin_lib(window);
           window.stop();
@@ -704,7 +704,7 @@ var first = false;
 if (location.hash === '#counter-for-messenger') {
   if (location.pathname === '/login.php' && location.search === '?next=https%3A%2F%2Fwww.messenger.com%2Ft%2FALiangLiang.top') {
     location = location.href.replace(/#/, '%23');
-    alert('Please login the messenger to count your messages.');
+    alert('Please log in to messenger to count your messages.');
   } else if (location.pathname.search(/\/t\//) !== -1) {
     counter.main();
   }
