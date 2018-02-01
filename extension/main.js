@@ -54,6 +54,7 @@ var counter = {
 
     function dump(messages, type, user_ids, offset, timestamp, limit, index) {
       const formdata = {
+        batch_name:'MessengerGraphQLThreadFetcher',
         fb_dtsg: counter.token,
         client: 'mercury',
         __a: 1,
@@ -78,12 +79,12 @@ var counter = {
             .then((text) => {
               try {
                 const json = counter.res_tranformat_to_JSON(text);
-                if (json.o0 && json.o0.errors)
-                  throw new Error(json.o0.errors);
+                // if (json.o0 && json.o0.errors)
+                //   throw new Error(json.o0.errors);
                 return json;
               } catch (err) {
                 console.warn('Request error.')
-                return Promise.reject(err);
+                return Promise.resolve(err);
               }
             })
             .then((data) => {
