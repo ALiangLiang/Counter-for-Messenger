@@ -2,7 +2,7 @@
 
 [![Install from Chrome Web Store](https://raw.githubusercontent.com/ALiangLiang/Counter-for-Messenger/master/tryitnowbutton_small.png)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 
-![Install from Chrome Web Store](https://raw.githubusercontent.com/ALiangLiang/Counter-for-Messenger/master/screenshots/main.png)
+![DEMO](https://raw.githubusercontent.com/ALiangLiang/Counter-for-Messenger/master/screenshots/main.png)
 
 Statistics your Messenger , the number of messages with friends and rank ! !
 Take a look at what you and your best friend best friends chant !
@@ -18,4 +18,4 @@ right click chart bar, and select "Download history".
 ### Language
 
 - English
-- 正體中文 (Traditional Chinese)
+- [正體中文 (Traditional Chinese)](README-zh-TW.md)

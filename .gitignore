@@ -1,6 +1,15 @@
-*.zip
-Thumbs.db
-/bower_components
-bower.json
-*.crx
-*.pem
+# IDE
+.vscode
+
+# dependencies
+node_modules
+
+# logs
+npm-debug.log
+yarn.lock
+
+# Backpack build
+build
+
+# package zip
+build.zip
