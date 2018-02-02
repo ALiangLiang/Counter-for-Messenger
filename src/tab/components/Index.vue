@@ -21,9 +21,9 @@
       width="180">
       <template slot-scope="scope">
         <el-tag
-          :type="(scope.row.type === 'ONE_TO_ONE') ? 'primary' : 'success'"
+          :type="determineThreadType(scope.row.type).tagType"
           close-transition>
-          {{ (scope.row.type === 'ONE_TO_ONE') ? '用戶' : '群組' }}
+          {{ determineThreadType(scope.row.type).name }}
         </el-tag>
       </template>
     </el-table-column>
@@ -90,6 +90,14 @@ export default {
     getSummaries ({ columns, data }) {
       const totalMessageCount = data.reduce((sum, row) => row.messageCount + sum, 0)
       return ['Total Messages', '', '', totalMessageCount]
+    },
+    determineThreadType (type) {
+      switch (type) {
+        case 'USER': return { name: '用戶', tagType: 'primary' }
+        case 'PAGE': return { name: '粉絲專頁', tagType: 'success' }
+        case 'GROUP': return { name: '群組', tagType: 'warning' }
+      }
+      return { name: '未知', tagType: 'danger' }
     }
   }
 }

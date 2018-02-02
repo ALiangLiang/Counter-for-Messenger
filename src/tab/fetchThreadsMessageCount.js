@@ -37,14 +37,16 @@ export default async function fetchThreadsMessageCount (token) {
       if (thread.thread_type === 'ONE_TO_ONE') {
         const otherUserId = thread.other_user_id
         const participants = thread.all_participants.nodes
-        const otherUserName = participants.find((user) =>
-          user.messaging_actor.id !== otherUserId).messaging_actor.name
-        if (otherUserName === null) console.log(thread)
+        const otherUser = participants.find((user) =>
+          user.messaging_actor.id !== otherUserId)
+        const otherUserName = otherUser.messaging_actor.name
+        if (otherUserName === null) console.warn(thread)
+        if (!otherUser.messaging_actor.__typename) console.warn(otherUser.messaging_actor)
         return {
           threadId: thread.thread_key.thread_fbid || thread.thread_key.other_user_id,
           name: otherUserName,
           tooltip: otherUserName,
-          type: thread.thread_type,
+          type: (otherUser.messaging_actor.__typename) ? otherUser.messaging_actor.__typename.toUpperCase() : 'USER',
           messageCount: thread.messages_count
         }
       } else if (thread.thread_type === 'GROUP') {
