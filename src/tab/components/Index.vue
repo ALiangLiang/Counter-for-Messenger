@@ -79,13 +79,11 @@ export default {
       return info
     },
     async downloadHistory (info) {
-      console.log(this.selfId)
       downloadMessages(await this.fetchMessages(info), this.selfId)
     },
     getSummaries ({ columns, data }) {
       const totalMessageCount = data.reduce((sum, row) => row.messageCount + sum, 0)
-      console.log(totalMessageCount)
-      return ['Total Messages', '', '', 'totalMessageCount']
+      return ['Total Messages', '', '', totalMessageCount]
     }
   }
 }

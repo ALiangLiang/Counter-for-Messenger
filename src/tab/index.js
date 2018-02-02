@@ -59,7 +59,6 @@ new Vue({
 
     const { token, selfId } = await getToken()
     this.token = token
-    console.log(selfId)
     this.selfId = selfId
     this.loading.text = '抓取訊息總數中...'
     this.threadsInfo = await fetchThreadsMessageCount(this.token)
