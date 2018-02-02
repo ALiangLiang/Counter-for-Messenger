@@ -1,65 +1,29 @@
 <template>
-  <div>
-    <div class="block">
-      <span class="demonstration">滑動以查看其他排名</span>
-      <el-slider
-        v-model="rank"
-        :min="1"
-        :max="this.threadsInfo.length + 1"
-        @change="renderChart">
-      </el-slider>
-    </div>
-    <bar-chart
-     :chart-data="chartData"
-     :options="{ responsive: false, maintainAspectRatio: false }"
-     :width="800"
-     :height="HEIGHT" >
-    </bar-chart>
-  </div>
+  <el-container id="root">
+    <el-header>
+      <el-menu
+        router
+        mode="horizontal"
+        background-color="#545c64"
+        text-color="#fff"
+        active-text-color="#ffd04b">
+        <el-menu-item index="/">首頁</el-menu-item>
+        <el-menu-item index="/message">訊息量</el-menu-item>
+        <el-menu-item index="/text">字數量</el-menu-item>
+      </el-menu>
+    </el-header>
+    <el-main>
+      <router-view :threadsInfo="threadsInfo"/>
+    </el-main>
+  </el-container>
 </template>
 <script>
-import BarChart from './BarChart.js'
-import fetchThreadsMessageCount from './fetchThreadsMessageCount.js'
-
-// const __ = chrome.i18n.getMessage
-
 export default {
-  components: {
-    BarChart
-  },
-  data: () => ({
-    HEIGHT: 1200,
-    loading: null,
-    threadsInfo: [],
-    chartData: null,
-    rank: 1,
-    sliderMax: 1
-  }),
-  async created () {
-    this.loading = this.$loading({
-      lock: true,
-      text: '抓取訊息總數中...',
-      spinner: 'el-icon-loading',
-      background: 'rgba(0, 0, 0, 0.7)'
-    })
-    this.threadsInfo = await fetchThreadsMessageCount()
-    this.loading.text = '渲染中...'
-    this.renderChart()
-    this.loading.close()
-  },
-  methods: {
-    renderChart () {
-      const startSliceIndex = Number(this.rank) - 1
-      const splicedThreadsInfo = this.threadsInfo.slice(startSliceIndex, startSliceIndex + this.HEIGHT / 40)
-      this.chartData = {
-        labels: splicedThreadsInfo.map((info) => info.name),
-        datasets: [{
-          label: 'Total',
-          backgroundColor: '#f87979',
-          data: splicedThreadsInfo.map((info) => info.messageCount)
-        }]
-      }
-    }
+  name: 'Root',
+  props: ['threadsInfo'],
+  created () { console.log(this.threadsInfo) },
+  watch: {
+    threadsInfo () { console.log(this.threadsInfo) }
   }
 }
 </script>

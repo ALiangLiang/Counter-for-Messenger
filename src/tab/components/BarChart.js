@@ -6,6 +6,8 @@ export default {
   mixins: [ reactiveProp ],
   props: [ 'chartData', 'options' ],
   mounted () {
-    this.renderChart(this.chartData, this.options)
+    this.renderChart(this.chartData, {
+      barThickness: 20
+    })
   }
 }
