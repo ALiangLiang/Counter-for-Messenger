@@ -54,11 +54,10 @@ export default async function fetchThreadsMessageCount (token) {
       } else if (thread.thread_type === 'GROUP') {
       // 預設使用 thread 名稱作為顯示名稱標籤。
         let name = thread.name
-        let tooltip = thread.name
+        const tooltip = thread.all_participants.nodes
+          .map((user) => user.messaging_actor.name).join('、' || ', ')
         // 如果沒有 thread 名稱，代表是沒有設定名稱的團體。
         if (thread.name === null) {
-          tooltip = thread.all_participants.nodes
-            .map((user) => user.messaging_actor.name).join('、' || ', ')
           name = tooltip
           if (thread.all_participants.nodes.length > 3) {
             name = thread.all_participants.nodes.slice(0, 3)

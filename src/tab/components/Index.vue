@@ -12,9 +12,13 @@
       width="180">
     </el-table-column>
     <el-table-column
-      prop="name"
       label="名稱"
       width="180">
+      <template slot-scope="scope">
+        <el-tooltip :content="scope.row.tooltip" placement="top-start">
+          <div>{{ scope.row.name }}</div>
+        </el-tooltip>
+      </template>
     </el-table-column>
     <el-table-column
       label="種類"
@@ -111,5 +115,8 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
+  .el-tooltip__popper {
+    max-width: 240px;
+  }
 </style>
