@@ -27,7 +27,7 @@ export default {
   components: {
     BarChart
   },
-  props: ['threadsInfo'],
+  props: [ 'threadsInfo' ],
   data: () => ({
     HEIGHT: 1200,
     chartData: null,
@@ -35,7 +35,6 @@ export default {
     sliderMax: 1
   }),
   async created () {
-    console.log(this.threadsInfo)
     this.renderChart()
   },
   methods: {

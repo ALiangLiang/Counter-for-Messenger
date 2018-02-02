@@ -19,48 +19,63 @@
 </template>
 <script>
 import BarChart from './BarChart.js'
-import fetchThreadsMessages from './fetchThreadsMessages.js'
+import fetchThreadMessages from './fetchThreadMessages.js'
 
 // const __ = chrome.i18n.getMessage
 
 export default {
   name: 'TotalText',
-  props: ['threadsInfo'],
+  props: [ 'threadsInfo', 'token' ],
   components: {
     BarChart
   },
   data: () => ({
     HEIGHT: 1200,
     loading: null,
-    threadsInfo: [],
     chartData: null,
     rank: 1,
     sliderMax: 1
   }),
   async created () {
-    this.loading = this.$loading({
-      lock: true,
-      text: '抓取訊息總數中...',
-      spinner: 'el-icon-loading',
-      background: 'rgba(0, 0, 0, 0.7)'
-    })
-    this.threadsInfo = await fetchThreadsMessages()
-    this.loading.text = '渲染中...'
     this.renderChart()
-    this.loading.close()
   },
   methods: {
-    renderChart () {
+    async renderChart () {
+      this.loading = this.$loading({
+        lock: true,
+        text: '抓取訊息中...',
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
       const startSliceIndex = Number(this.rank) - 1
       const splicedThreadsInfo = this.threadsInfo.slice(startSliceIndex, startSliceIndex + this.HEIGHT / 40)
+      const displayThreads = []
+      let finishCount = 0
+      await Promise.all(splicedThreadsInfo.map(async (info, i) => {
+        // 如果已經 fetch 過訊息記錄，則略過
+        if (!info.messages) {
+          const messageThread = await fetchThreadMessages(this.token, info.threadId)
+          this.$set(info, 'messages', messageThread.messages)
+        }
+        const textCount = info.messages.reduce((cur, message) =>
+          ((message.text) ? message.text.length : 0) + cur, 0)
+        displayThreads[i] = {
+          name: info.name,
+          textCount
+        }
+        finishCount += 1
+        this.loading.text = `抓取訊息中... [${finishCount}/${splicedThreadsInfo.length}]`
+      }))
+      this.loading.text = '渲染中...'
       this.chartData = {
-        labels: splicedThreadsInfo.map((info) => info.name),
+        labels: displayThreads.map((info) => info.name),
         datasets: [{
           label: 'Total',
           backgroundColor: '#f87979',
-          data: splicedThreadsInfo.map((info) => info.messageCount)
+          data: displayThreads.map((info) => info.textCount)
         }]
       }
+      this.loading.close()
     }
   }
 }
