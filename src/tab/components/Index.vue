@@ -78,7 +78,9 @@ export default {
     async fetchMessages (info) {
       if (!info.messages) {
         this.$set(this.loadings, info.threadId, true)
-        const messageThread = await fetchThreadMessages(this.token, info.threadId)
+        const messageThread = await fetchThreadMessages({
+          token: this.token, threadId: info.threadId
+        })
         this.$set(info, 'messages', messageThread.messages)
         this.$delete(this.loadings, info.threadId)
       }
