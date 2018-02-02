@@ -17,9 +17,15 @@
       width="180">
     </el-table-column>
     <el-table-column
-      prop="type"
       label="種類"
       width="180">
+      <template slot-scope="scope">
+        <el-tag
+          :type="(scope.row.type === 'ONE_TO_ONE') ? 'primary' : 'success'"
+          close-transition>
+          {{ (scope.row.type === 'ONE_TO_ONE') ? '用戶' : '群組' }}
+        </el-tag>
+      </template>
     </el-table-column>
     <el-table-column
       prop="messageCount"
