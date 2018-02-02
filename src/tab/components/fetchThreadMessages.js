@@ -1,6 +1,28 @@
 import { Message } from 'element-ui'
 
-export default async function fetchThreadsMessageCount (token, threadId, messageLimit = 10000, before = null) {
+function showErrorMsg () {
+  Message({
+    type: 'error',
+    dangerouslyUseHTMLString: true,
+    message: `<p><span>Oops, cannot fetch messages. </span><a href="https://github.com/ALiangLiang/Counter-for-Messenger/issues" target="_blank">Please contact developer.</a></p>`
+  })
+}
+
+async function handleFetchError ({ token, threadId, messageLimit, before }) {
+  if (messageLimit < 1000) {
+    showErrorMsg()
+    return {
+      messages: []
+    }
+  }
+  try {
+    return fetchThreadMessages({ token, threadId, messageLimit, before })
+  } catch (err) {
+    return handleFetchError({ token, threadId, messageLimit: messageLimit / 2, before })
+  }
+}
+
+async function fetchThreadMessages ({ token, threadId, messageLimit = 10000, before = null }) {
   const dataJson = {
     batch_name: 'MessengerGraphQLThreadFetcher',
     fb_dtsg: token,
@@ -55,32 +77,18 @@ export default async function fetchThreadsMessageCount (token, threadId, message
     if (thread.messages.page_info && thread.messages.page_info.has_previous_page) {
       let result = null
       try {
-        result = await fetchThreadsMessageCount(token, threadId, messageLimit, messages[0].timestamp)
+        result = await fetchThreadMessages({ token, threadId, messageLimit, before: messages[0].timestamp })
       } catch (err) {
-        console.error(err)
-        if (messageLimit < 1000) {
-          Message({
-            type: 'error',
-            dangerouslyUseHTMLString: true,
-            message: `<p><span>Oops, cannot fetch messages. </span><a href="https://github.com/ALiangLiang/Counter-for-Messenger/issues" target="_blank">Please contact developer.</a></p>`
-          })
-          throw err
-        }
-        result = await fetchThreadsMessageCount(token, threadId, messageLimit / 2, messages[0].timestamp)
+        // 發生錯誤，已一半的擷取數量重試一次。
+        result = await handleFetchError({ token, threadId, messageLimit: messageLimit / 2, before: messages[0].timestamp })
       }
       result.messages = messages.concat(result.messages)
       return result
     } else if (!thread.messages.page_info) {
-      Message({
-        type: 'error',
-        dangerouslyUseHTMLString: true,
-        message: `<p><span>Oops, cannot fetch messages. </span><a href="https://github.com/ALiangLiang/Counter-for-Messenger/issues" target="_blank">Please contact developer.</a></p>`
-      })
-      console.error(json.o0)
-      return {
-        threadId: thread.thread_key.thread_fbid || thread.thread_key.other_user_id,
-        messages: []
-      }
+      // 發生錯誤，已一半的擷取數量重試一次。
+      const result = await handleFetchError({ token, threadId, messageLimit: messageLimit / 2, before })
+      result.messages = messages.concat(result.messages)
+      return result
     } else {
       return {
         threadId: thread.thread_key.thread_fbid || thread.thread_key.other_user_id,
@@ -89,3 +97,5 @@ export default async function fetchThreadsMessageCount (token, threadId, message
     }
   } else return null
 }
+
+export default handleFetchError

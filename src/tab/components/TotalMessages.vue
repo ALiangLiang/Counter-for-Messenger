@@ -29,7 +29,7 @@ export default {
   },
   props: [ 'threadsInfo' ],
   data: () => ({
-    HEIGHT: 1200,
+    HEIGHT: 800,
     chartData: null,
     rank: 1,
     sliderMax: 1
@@ -40,7 +40,7 @@ export default {
   methods: {
     renderChart () {
       const startSliceIndex = Number(this.rank) - 1
-      const splicedThreadsInfo = this.threadsInfo.slice(startSliceIndex, startSliceIndex + this.HEIGHT / 40)
+      const splicedThreadsInfo = this.threadsInfo.slice(startSliceIndex, startSliceIndex + this.HEIGHT / 20)
       this.chartData = {
         labels: splicedThreadsInfo.map((info) => info.name),
         datasets: [{

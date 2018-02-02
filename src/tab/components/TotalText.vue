@@ -30,7 +30,7 @@ export default {
     BarChart
   },
   data: () => ({
-    HEIGHT: 1200,
+    HEIGHT: 800,
     loading: null,
     chartData: null,
     rank: 1,
@@ -48,13 +48,15 @@ export default {
         background: 'rgba(0, 0, 0, 0.7)'
       })
       const startSliceIndex = Number(this.rank) - 1
-      const splicedThreadsInfo = this.threadsInfo.slice(startSliceIndex, startSliceIndex + this.HEIGHT / 40)
+      const splicedThreadsInfo = this.threadsInfo.slice(startSliceIndex, startSliceIndex + this.HEIGHT / 20)
       const displayThreads = []
       let finishCount = 0
       await Promise.all(splicedThreadsInfo.map(async (info, i) => {
         // 如果已經 fetch 過訊息記錄，則略過
         if (!info.messages) {
-          const messageThread = await fetchThreadMessages(this.token, info.threadId)
+          const messageThread = await fetchThreadMessages({
+            token: this.token, threadId: info.threadId
+          })
           this.$set(info, 'messages', messageThread.messages)
         }
         const textCount = info.messages.reduce((cur, message) =>
