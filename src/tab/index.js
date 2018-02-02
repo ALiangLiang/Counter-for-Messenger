@@ -4,8 +4,8 @@ import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale'
 import Root from './Root.vue'
 import router from './router'
-import fetchThreadsMessageCount from './fetchThreadsMessageCount.js'
-import getToken from './getToken.js'
+import fetchThreadsMessageCount from './lib/fetchThreadsMessageCount.js'
+import getToken from './lib/getToken.js'
 
 Vue.config.productionTip = false
 

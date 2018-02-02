@@ -47,6 +47,8 @@ export default async function fetchThreadsMessageCount (token) {
           name: otherUserName,
           tooltip: otherUserName,
           type: (otherUser.messaging_actor.__typename) ? otherUser.messaging_actor.__typename.toUpperCase() : 'USER',
+          messages: null,
+          textCount: null,
           messageCount: thread.messages_count
         }
       } else if (thread.thread_type === 'GROUP') {
@@ -70,6 +72,7 @@ export default async function fetchThreadsMessageCount (token) {
           tooltip,
           type: thread.thread_type,
           messages: null,
+          textCount: null,
           messageCount: thread.messages_count
         }
       }

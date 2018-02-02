@@ -34,6 +34,12 @@
       width="120">
     </el-table-column>
     <el-table-column
+      prop="textCount"
+      sortable
+      label="文字數量"
+      width="120">
+    </el-table-column>
+    <el-table-column
       label="操作"
       width="360">
       <template slot-scope="scope">
@@ -61,8 +67,8 @@
 import 'vue-awesome/icons/cloud-download'
 import 'vue-awesome/icons/download'
 import Icon from 'vue-awesome/components/Icon'
-import fetchThreadMessages from './fetchThreadMessages.js'
-import downloadMessages from './downloadMessages.js'
+import fetchThreadMessages from '../lib/fetchThreadMessages.js'
+import downloadMessages from '../lib/downloadMessages.js'
 // const __ = chrome.i18n.getMessage
 
 export default {
@@ -79,7 +85,7 @@ export default {
       if (!info.messages) {
         this.$set(this.loadings, info.threadId, true)
         const messageThread = await fetchThreadMessages({
-          token: this.token, threadId: info.threadId
+          token: this.token, thread: info, $set: this.$set
         })
         this.$set(info, 'messages', messageThread.messages)
         this.$delete(this.loadings, info.threadId)

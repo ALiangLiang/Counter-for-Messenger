@@ -19,7 +19,7 @@
 </template>
 <script>
 import BarChart from './BarChart.js'
-import fetchThreadMessages from './fetchThreadMessages.js'
+import fetchThreadMessages from '../lib/fetchThreadMessages.js'
 
 // const __ = chrome.i18n.getMessage
 
@@ -54,16 +54,13 @@ export default {
       await Promise.all(splicedThreadsInfo.map(async (info, i) => {
         // 如果已經 fetch 過訊息記錄，則略過
         if (!info.messages) {
-          const messageThread = await fetchThreadMessages({
-            token: this.token, threadId: info.threadId
+          await fetchThreadMessages({
+            token: this.token, thread: info, $set: this.$set
           })
-          this.$set(info, 'messages', messageThread.messages)
         }
-        const textCount = info.messages.reduce((cur, message) =>
-          ((message.text) ? message.text.length : 0) + cur, 0)
         displayThreads[i] = {
           name: info.name,
-          textCount
+          textCount: info.textCount
         }
         finishCount += 1
         this.loading.text = `抓取訊息中... [${finishCount}/${splicedThreadsInfo.length}]`
