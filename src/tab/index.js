@@ -74,6 +74,7 @@ new Vue({
     this.selfId = selfId
     this.loading.text = __('fetchingThreads')
     this.threadsInfo = await fetchThreads(this.token)
+    console.log(this.threadsInfo)
     this.loading.close()
   }
 })

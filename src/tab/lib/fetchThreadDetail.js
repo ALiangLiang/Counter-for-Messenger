@@ -50,7 +50,8 @@ async function fetchThreadDetail ({ token, thread, messageLimit = 10000, before 
   const body = Object.keys(form).map(function (key) {
     const val = (typeof form[key] === 'object')
       ? JSON.stringify(form[key]) : form[key]
-    return encodeURIComponent(key) + ((form[key] !== undefined) ? ('=' + encodeURIComponent(val)) : '')
+    return encodeURIComponent(key) +
+      ((form[key] !== undefined) ? ('=' + encodeURIComponent(val)) : '')
   }).join('&')
 
   // Fetch
@@ -87,18 +88,33 @@ async function fetchThreadDetail ({ token, thread, messageLimit = 10000, before 
     if (isPathExist(messageThread, 'messages.page_info.has_previous_page')) {
       let result = null
       try {
-        result = await fetchThreadDetail({ token, thread, messageLimit, before: messages[0].timestamp })
+        result = await fetchThreadDetail({
+          token,
+          thread,
+          messageLimit,
+          before: messages[0].timestamp
+        })
       } catch (err) {
         // 發生錯誤，已一半的擷取數量重試一次。
         // An error occurred. Use half of limit and try again.
-        result = await handleFetchError({ token, thread, messageLimit: messageLimit / 2, before: messages[0].timestamp })
+        result = await handleFetchError({
+          token,
+          thread,
+          messageLimit: messageLimit / 2,
+          before: messages[0].timestamp
+        })
       }
       result.messages = messages.concat(result.messages)
       return result
     } else if (!messageThread.messages.page_info) {
       // 發生錯誤，已一半的擷取數量重試一次。
       // An error occurred. Use half of limit and try again.
-      const result = await handleFetchError({ token, thread, messageLimit: messageLimit / 2, before })
+      const result = await handleFetchError({
+        token,
+        thread,
+        messageLimit: messageLimit / 2,
+        before
+      })
       result.messages = messages.concat(result.messages)
       return result
     } else {
@@ -130,10 +146,11 @@ export default async function (args) {
     _set(participantsStats, `${message.senderId}.messageCount`,
       _get(participantStats, 'messageCount', 0) + 1)
     _set(participantsStats, `${message.senderId}.textCount`,
-      _get(participantStats, 'textCount', 0) + (message.text || '').length)
+      _get(participantStats, 'textCount', 0) + message.textLength)
   })
   // Set statistic results on Thread Object.
-  set(thread, 'messages', result.messages)
+  // Don't let vue instance trigger "messages". Will cause memory leak.
+  thread.messages = result.messages
   set(thread, 'textCount', threadTextCount)
   Object.keys(participantsStats)
     .forEach((participantId) => {

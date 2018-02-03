@@ -42,20 +42,41 @@ export default {
   },
   watch: {
     isShowDetail (val) {
-
+      this.renderChart(val)
     }
   },
   methods: {
     renderChart (isShowDetail) {
       const startSliceIndex = Number(this.rank) - 1
-      const splicedThreadsInfo = this.threadsInfo.slice(startSliceIndex, startSliceIndex + this.HEIGHT / 20)
-      this.chartData = {
-        labels: splicedThreadsInfo.map((info) => info.name),
-        datasets: [{
-          label: __('total'),
-          backgroundColor: '#0083FF',
-          data: splicedThreadsInfo.map((info) => info.messageCount)
-        }]
+      const splicedThreads = this.threadsInfo.slice(startSliceIndex, startSliceIndex + this.HEIGHT / 20)
+      if (!isShowDetail) {
+        this.chartData = {
+          labels: splicedThreads.map((info) => info.name),
+          datasets: [{
+            label: __('total'),
+            backgroundColor: '#0083FF',
+            data: splicedThreads.map((info) => info.messageCount)
+          }]
+        }
+      } else {
+        // const allParticipants = splicedThreads.reduce((cur, thread) => {
+        //   if (!cur.find((participant) => participant.id === thread.id)) {
+        //   cur.push(thread.participants)
+        //   }
+        // }, [])
+        // this.chartData = {
+        //   labels: splicedThreads.map((info) => info.name),
+        //   datasets: splicedThreads.participants.map((participant) => ({
+        //     label: participant.name,
+        //     data: splicedThreads.map((thread) => )
+        //   }))
+        //
+        //   [{
+        //     label: __('total'),
+        //     backgroundColor: '#0083FF',
+        //     data: splicedThreads.map((info) => info.messageCount)
+        //   }]
+        // }
       }
     }
   }

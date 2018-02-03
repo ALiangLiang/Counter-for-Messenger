@@ -1,53 +1,61 @@
 import _get from 'lodash/get'
+import Threads from '../classes/Threads'
+import Thread from '../classes/Thread'
+import User from '../classes/User'
 const __ = chrome.i18n.getMessage
 
-function createThreadObject (threadNode) {
-  const participants = threadNode.all_participants.nodes
-    .map((participant) => ({
-      id: participant.messaging_actor.id,
-      name: participant.messaging_actor.name,
-      type: _get(participant, 'messaging_actor.__typename', '').toUpperCase(),
-      url: participant.messaging_actor.url,
-      messageCount: null,
-      textCount: null,
-      inGroup: true
-    }))
+function createThreadObject (threadNode, createdUsers) {
+  const participantsData = threadNode.all_participants.nodes
+    .map((participant) => {
+      // Find user we ever created.
+      const createdUser = createdUsers.find((user) => user.id === participant.messaging_actor.id)
+      // If not found, create one and push it to array "createdUsers".
+      let user = createdUser
+      if (!user) {
+        user = new User({
+          id: participant.messaging_actor.id,
+          name: participant.messaging_actor.name,
+          type: _get(participant, 'messaging_actor.__typename', '').toUpperCase(),
+          url: participant.messaging_actor.url
+        })
+        createdUsers.push(user)
+      }
+      return {
+        user,
+        messageCount: null,
+        textCount: null,
+        inGroup: true
+      }
+    })
 
   // Initial thread object.
-  const thread = {
-    id: null,
-    name: null,
-    tooltip: null,
-    type: null,
-    messages: null,
-    participants,
-    messageCount: threadNode.messages_count,
-    textCount: null
-  }
+  const thread = new Thread({
+    participants: participantsData,
+    messageCount: threadNode.messages_count
+  })
+  const { participants } = thread
 
   if (threadNode.thread_type === 'ONE_TO_ONE') {
     const otherUserId = threadNode.other_user_id
     const otherUser = participants.find((participant) =>
-      participant.id !== otherUserId)
-    const otherUserName = otherUser.name
+      participant.user.id !== otherUserId)
+    const otherUserName = otherUser.user.name
 
     if (otherUserName === null) console.warn(threadNode)
-    if (!otherUser.type) {
-      console.warn(otherUser)
-    }
+    if (!otherUser.user.type) console.warn(otherUser)
 
     Object.assign(thread, {
       id: threadNode.thread_key.thread_fbid || threadNode.thread_key.other_user_id,
       name: otherUserName,
       tooltip: otherUserName,
-      type: (otherUser.type) ? otherUser.type.toUpperCase() : 'USER'
+      type: (otherUser.user.type) ? otherUser.user.type.toUpperCase() : 'USER'
     })
   } else if (threadNode.thread_type === 'GROUP') {
     // 預設使用 thread 名稱作為顯示名稱標籤。
     // By default, use thread name as display tooltip.
     let name = threadNode.name
     const tooltip = participants
-      .map((participant) => participant.name)
+      .map((participant) => participant.user.name)
       .join(__('comma'))
     // 如果沒有 thread 名稱，代表是沒有設定名稱的團體。
     // If no thread name, means it's no setting name group.
@@ -55,8 +63,8 @@ function createThreadObject (threadNode) {
       name = tooltip
       if (participants.length > 3) {
         name = participants.slice(0, 3)
-          .map((user) => user.name).join(__('comma'))
-        name += `${__('comma')}${__('others', threadNode.all_participants.nodes.length - 3)}`
+          .map((participant) => participant.user.name).join(__('comma'))
+        name += `${__('comma')}${__('others', participants.length - 3)}`
       }
     }
 
@@ -110,9 +118,12 @@ export default async function fetchThreads (token) {
   // Response and data handle.
   const body = await response.text()
   const json = JSON.parse(body.split('\n')[0])
-  const threads = json.o0.data.viewer.message_threads.nodes
-    .map(createThreadObject)
+  const createdUsers = [] // Use to record user we created.
+  const threadsData = json.o0.data.viewer.message_threads.nodes
+    .map((threadsData) => createThreadObject(threadsData, createdUsers))
     // Sort by message count. From more to less.
     .sort((threadA, threadB) => threadB.messageCount - threadA.messageCount)
+  const threads = new Threads(threadsData)
+  process.nextTick(() => (threads[1000] = true))
   return threads
 }

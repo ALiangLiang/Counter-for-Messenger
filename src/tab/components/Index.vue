@@ -110,6 +110,7 @@ export default {
         case 'USER': return { name: __('user'), tagType: 'primary' }
         case 'PAGE': return { name: __('fanpage'), tagType: 'success' }
         case 'GROUP': return { name: __('group'), tagType: 'warning' }
+        case 'REDUCEDMESSAGINGACTOR': return { name: __('unknown'), tagType: 'danger' }
       }
       return { name: __('unknown'), tagType: 'danger' }
     }
