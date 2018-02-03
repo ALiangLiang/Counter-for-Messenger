@@ -7,6 +7,9 @@ import router from './router'
 import fetchThreadsMessageCount from './lib/fetchThreadsMessageCount.js'
 import getToken from './lib/getToken.js'
 
+const __ = chrome.i18n.getMessage
+Vue.prototype.__ = chrome.i18n.getMessage
+
 Vue.config.productionTip = false
 
 Vue.use(ElementUI, { locale })
@@ -43,16 +46,16 @@ new Vue({
   async created () {
     this.loading = this.$loading({
       lock: true,
-      text: '攔截權杖中...',
+      text: this.__('interceptingToken'),
       spinner: 'el-icon-loading',
       background: 'rgba(0, 0, 0, 0.7)'
     })
 
     if (!this.iSee) {
-      this.$confirm('Fetch data from FB maybe take a long time.', 'Please be patient', {
-        confirmButtonText: 'I see!!',
+      this.$confirm(__('openingAlertContent'), __('openingAlertTitle'), {
+        confirmButtonText: __('iSee'),
         showCancelButton: true,
-        cancelButtonText: 'Cancel',
+        cancelButtonText: __('cancel'),
         center: true
       }).then(() => (this.iSee = true), () => (this.iSee = false))
     }
@@ -60,7 +63,7 @@ new Vue({
     const { token, selfId } = await getToken()
     this.token = token
     this.selfId = selfId
-    this.loading.text = '抓取訊息總數中...'
+    this.loading.text = __('fetchingThreads')
     this.threadsInfo = await fetchThreadsMessageCount(this.token)
     this.loading.close()
   }

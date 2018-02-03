@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="block">
-      <span class="demonstration">滑動以查看其他排名</span>
+      <span class="demonstration">{{ __('drapToLookOtherUsers') }}</span>
       <el-slider
         v-model="rank"
         :min="1"
@@ -19,8 +19,7 @@
 </template>
 <script>
 import BarChart from './BarChart.js'
-
-// const __ = chrome.i18n.getMessage
+const __ = chrome.i18n.getMessage
 
 export default {
   name: 'TotalMessages',
@@ -44,7 +43,7 @@ export default {
       this.chartData = {
         labels: splicedThreadsInfo.map((info) => info.name),
         datasets: [{
-          label: 'Total',
+          label: __('total'),
           backgroundColor: '#0083FF',
           data: splicedThreadsInfo.map((info) => info.messageCount)
         }]

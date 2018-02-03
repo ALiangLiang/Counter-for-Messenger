@@ -1,11 +1,12 @@
 import { Message } from 'element-ui'
 import isPathExist from './isPathExist.js'
+const __ = chrome.i18n.getMessage
 
 function showErrorMsg () {
   Message({
     type: 'error',
     dangerouslyUseHTMLString: true,
-    message: `<p><span>Oops, cannot fetch messages. </span><a href="https://github.com/ALiangLiang/Counter-for-Messenger/issues" target="_blank">Please contact developer.</a></p>`
+    message: `<p><span>${__('fetchError')} </span><a href="https://github.com/ALiangLiang/Counter-for-Messenger/issues" target="_blank">${__('contactDevelper')}</a></p>`
   })
 }
 

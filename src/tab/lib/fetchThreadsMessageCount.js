@@ -1,3 +1,5 @@
+const __ = chrome.i18n.getMessage
+
 export default async function fetchThreadsMessageCount (token) {
   const dataJson = {
     fb_dtsg: token,
@@ -55,13 +57,13 @@ export default async function fetchThreadsMessageCount (token) {
       // 預設使用 thread 名稱作為顯示名稱標籤。
         let name = thread.name
         const tooltip = thread.all_participants.nodes
-          .map((user) => user.messaging_actor.name).join('、' || ', ')
+          .map((user) => user.messaging_actor.name).join(__('comma'))
         // 如果沒有 thread 名稱，代表是沒有設定名稱的團體。
         if (thread.name === null) {
           name = tooltip
           if (thread.all_participants.nodes.length > 3) {
             name = thread.all_participants.nodes.slice(0, 3)
-              .map((user) => user.messaging_actor.name).join('、' || ', ')
+              .map((user) => user.messaging_actor.name).join(__('comma'))
             name += `, ${thread.all_participants.nodes.length - 3} Others`
           }
         }

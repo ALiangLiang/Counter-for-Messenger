@@ -36,7 +36,7 @@ module.exports = {
     'matches': ['*://*.messenger.com/*'],
     'run_at': 'document_end'
   }],
-  default_locale: 'en_US',
+  default_locale: 'en',
   content_security_policy: "script-src 'self' 'unsafe-eval' https://www.messenger.com https://www.google.com https://checkout.google.com; object-src 'self'",
   web_accessible_resources: [ 'js/content.js' ]
 }

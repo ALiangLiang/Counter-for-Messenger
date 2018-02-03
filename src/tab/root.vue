@@ -8,9 +8,9 @@
         text-color="#fff"
         default-active="/"
         active-text-color="#ffd04b">
-        <el-menu-item index="/">首頁</el-menu-item>
-        <el-menu-item index="/message">訊息量圖表</el-menu-item>
-        <el-menu-item index="/text">字數量</el-menu-item>
+        <el-menu-item index="/">{{ __('index') }}</el-menu-item>
+        <el-menu-item index="/message">{{ __('messageChart') }}</el-menu-item>
+        <el-menu-item index="/text">{{ __('textChart') }}</el-menu-item>
       </el-menu>
     </el-header>
     <el-main>

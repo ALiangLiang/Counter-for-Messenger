@@ -3,6 +3,7 @@ const webpack = require('webpack')
 const ChromeReloadPlugin  = require('wcer')
 const { cssLoaders } = require('./tools')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const GenerateLocaleJsonPlugin = require('../plugins/GenerateLocaleJsonPlugin')
 
 let resolve = dir => path.join(__dirname, '..', 'src', dir)
 module.exports = {
@@ -91,6 +92,9 @@ module.exports = {
     new ChromeReloadPlugin({
       port: 9090,
       manifest: path.join(__dirname, '..', 'src', 'manifest.js')
+    }),
+    new GenerateLocaleJsonPlugin({
+      _locales: path.join(__dirname, '..', 'src', '_locales')
     }),
   ],
   performance: { hints: false },

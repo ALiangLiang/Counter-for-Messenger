@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="block">
-      <span class="demonstration">滑動以查看其他排名</span>
+      <span class="demonstration">{{ __('drapToLookOtherUsers') }}</span>
       <el-slider
         v-model="rank"
         :min="1"
@@ -13,15 +13,14 @@
      :chart-data="chartData"
      :options="{ responsive: false, maintainAspectRatio: false }"
      :width="800"
-     :height="HEIGHT" >
+     :height="HEIGHT">
     </bar-chart>
   </div>
 </template>
 <script>
 import BarChart from './BarChart.js'
 import fetchThreadMessages from '../lib/fetchThreadMessages.js'
-
-// const __ = chrome.i18n.getMessage
+const __ = chrome.i18n.getMessage
 
 export default {
   name: 'TotalText',
@@ -43,7 +42,7 @@ export default {
     async renderChart () {
       this.loading = this.$loading({
         lock: true,
-        text: '抓取訊息中...',
+        text: __('fetchingMessages'),
         spinner: 'el-icon-loading',
         background: 'rgba(0, 0, 0, 0.7)'
       })
@@ -63,13 +62,13 @@ export default {
           textCount: info.textCount
         }
         finishCount += 1
-        this.loading.text = `抓取訊息中... [${finishCount}/${splicedThreadsInfo.length}]`
+        this.loading.text = `${__('fetchingMessages')} [${finishCount}/${splicedThreadsInfo.length}]`
       }))
-      this.loading.text = '渲染中...'
+      this.loading.text = __('rendering')
       this.chartData = {
         labels: displayThreads.map((info) => info.name),
         datasets: [{
-          label: 'Total',
+          label: __('total'),
           backgroundColor: '#f87979',
           data: displayThreads.map((info) => info.textCount)
         }]

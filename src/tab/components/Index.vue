@@ -12,16 +12,18 @@
       width="180">
     </el-table-column>
     <el-table-column
-      label="名稱"
+      :label="__('threadName')"
       width="180">
       <template slot-scope="scope">
-        <el-tooltip :content="scope.row.tooltip" placement="top-start">
+        <el-tooltip :content="scope.row.tooltip" placement="top-start"
+          v-if="scope.row.type === 'GROUP'">
           <div>{{ scope.row.name }}</div>
         </el-tooltip>
+        <div v-else>{{ scope.row.name }}</div>
       </template>
     </el-table-column>
     <el-table-column
-      label="種類"
+    :label="__('threadType')"
       width="180">
       <template slot-scope="scope">
         <el-tag
@@ -34,17 +36,17 @@
     <el-table-column
       prop="messageCount"
       sortable
-      label="訊息數量"
+      :label="__('threadMessageCount')"
       width="120">
     </el-table-column>
     <el-table-column
       prop="textCount"
       sortable
-      label="文字數量"
+      :label="__('threadTextCount')"
       width="120">
     </el-table-column>
     <el-table-column
-      label="操作"
+      :label="__('threadOperation')"
       width="360">
       <template slot-scope="scope">
         <el-button
@@ -53,7 +55,7 @@
           :loading="loadings[scope.row.threadId]"
           type="text" size="small">
           <icon name="cloud-download"></icon>
-          {{ (!scope.row.messages) ? '載入訊息記錄' : '已載入'}}
+          {{ (!scope.row.messages) ? __('importMessageHistory') : __('importedMessageHistory')}}
         </el-button>
         <el-button
           @click="downloadHistory(scope.row)"
@@ -61,7 +63,7 @@
           type="text"
           size="small">
           <icon name="download"></icon>
-          儲存/下載訊息記錄
+          {{ __('downloadMessageHistory') }}
         </el-button>
       </template>
     </el-table-column>
@@ -73,7 +75,7 @@ import 'vue-awesome/icons/download'
 import Icon from 'vue-awesome/components/Icon'
 import fetchThreadMessages from '../lib/fetchThreadMessages.js'
 import downloadMessages from '../lib/downloadMessages.js'
-// const __ = chrome.i18n.getMessage
+const __ = chrome.i18n.getMessage
 
 export default {
   name: 'Index',
@@ -101,15 +103,15 @@ export default {
     },
     getSummaries ({ columns, data }) {
       const totalMessageCount = data.reduce((sum, row) => row.messageCount + sum, 0)
-      return ['Total Messages', '', '', totalMessageCount]
+      return [__('totalMessageCount'), '', '', totalMessageCount]
     },
     determineThreadType (type) {
       switch (type) {
-        case 'USER': return { name: '用戶', tagType: 'primary' }
-        case 'PAGE': return { name: '粉絲專頁', tagType: 'success' }
-        case 'GROUP': return { name: '群組', tagType: 'warning' }
+        case 'USER': return { name: __('user'), tagType: 'primary' }
+        case 'PAGE': return { name: __('fanpage'), tagType: 'success' }
+        case 'GROUP': return { name: __('group'), tagType: 'warning' }
       }
-      return { name: '未知', tagType: 'danger' }
+      return { name: __('unknown'), tagType: 'danger' }
     }
   }
 }
