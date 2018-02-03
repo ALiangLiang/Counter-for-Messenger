@@ -38,5 +38,7 @@ module.exports = {
   fetchError: { message: 'Oops, cannot fetch messages.' },
   contactDevelper: { message: 'Please contact developer.' },
 
-  comma: { message: ', ' }
+  comma: { message: ', ' },
+
+  loginAlert: { message: 'Please log in to messenger to count your messages.' }
 }

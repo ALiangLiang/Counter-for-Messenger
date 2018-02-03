@@ -38,5 +38,7 @@ module.exports = {
   fetchError: { message: '啊！撈取資料時發生錯誤。' },
   contactDevelper: { message: '請聯絡開發者以解決問題。' },
 
-  comma: { message: '、' }
+  comma: { message: '、' },
+
+  loginAlert: { message: '請登入 Messenger 網頁版以統計您的訊息。' }
 }
