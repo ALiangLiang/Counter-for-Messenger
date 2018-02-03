@@ -13,7 +13,7 @@ module.exports = merge(baseWebpack, {
     rules: styleLoaders({ extract: true, sourceMap: true })
   },
   plugins: [
-    htmlPage('home', 'app', ['tab']),
+    htmlPage('Counter for Messenger', 'app', ['tab']),
     htmlPage('options', 'options', ['manifest', 'vendor', 'options']),
     htmlPage('background', 'background', ['manifest', 'vendor', 'background']),
     new CleanWebpackPlugin(['build/*.*']),

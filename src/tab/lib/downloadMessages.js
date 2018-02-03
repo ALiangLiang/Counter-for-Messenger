@@ -2,7 +2,7 @@ import { Message } from 'element-ui'
 import download from 'downloadjs'
 import { htmlPattern } from './htmlPattern'
 
-export default async function fetchThreadsMessageCount (info, selfId) {
+export default async function fetchThreads (info, selfId) {
   if (!selfId) {
     return Message({
       type: 'error',

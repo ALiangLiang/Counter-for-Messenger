@@ -4,7 +4,7 @@ module.exports = {
   extDescription: { message: 'Statistics your Messenger , the number of messages with friends and rank ! ! Take a look at what you and your best friend best friends chant !' },
 
   // Router
-  index: { message: 'Index' },
+  indexPage: { message: 'Index' },
   messageChart: { message: 'Chart of Messages' },
   textChart: { message: 'Chart of Text' },
 
@@ -38,6 +38,8 @@ module.exports = {
 
   // Charts
   drapToLookOtherUsers: { message: 'Drag slider to look other users.' },
+  showDetail: { message: 'Show Detail' },
+  dontShowDetail: { message: 'Don\'t show Detail' },
   total: { message: 'Total' },
 
   // Error message
@@ -46,6 +48,17 @@ module.exports = {
 
   // Symbol
   comma: { message: ', ' },
+
+  // Thread Object
+  others: {
+    message: '$otherCount$ Others',
+    placeholders: {
+      otherCount: {
+        content: '$1',
+        example: '87 Others'
+      }
+    }
+  },
 
   // ALert message of content script
   loginAlert: { message: 'Please log in to messenger to count your messages.' }

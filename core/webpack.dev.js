@@ -12,7 +12,7 @@ module.exports = merge(baseWebpack, {
   },
   devtool: '#cheap-module-eval-source-map',
   plugins: [
-    htmlPage('home', 'app', ['tab']),
+    htmlPage('Counter for Messenger', 'app', ['tab']),
     htmlPage('options', 'options', ['options']),
     htmlPage('background', 'background', ['background']),
     new webpack.NoEmitOnErrorsPlugin(),

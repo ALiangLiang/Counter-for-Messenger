@@ -4,7 +4,7 @@ module.exports = {
   extDescription: { message: '統計你在 Messenger 中，與朋友們的訊息數量，並且排名！！' },
 
   // 路由
-  index: { message: '首頁' },
+  indexPage: { message: '首頁' },
   messageChart: { message: '訊息數量圖表' },
   textChart: { message: '文字數量圖表' },
 
@@ -38,6 +38,8 @@ module.exports = {
 
   // 圖表
   drapToLookOtherUsers: { message: '滑動以查看其他排名' },
+  showDetail: { message: '顯示詳細' },
+  dontShowDetail: { message: '不顯示詳細' },
   total: { message: '總共' },
 
   // 錯誤訊息
@@ -46,6 +48,17 @@ module.exports = {
 
   // 符號
   comma: { message: '、' },
+
+  // Thread 物件
+  others: {
+    message: '其他$otherCount$個人',
+    placeholders: {
+      otherCount: {
+        content: '$1',
+        example: '其他87個人'
+      }
+    }
+  },
 
   // Content 腳本的提示訊息
   loginAlert: { message: '請登入 Messenger 網頁版以統計您的訊息。' }

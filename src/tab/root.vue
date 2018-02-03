@@ -8,7 +8,7 @@
         text-color="#fff"
         default-active="/"
         active-text-color="#ffd04b">
-        <el-menu-item index="/">{{ __('index') }}</el-menu-item>
+        <el-menu-item index="/">{{ __('indexPage') }}</el-menu-item>
         <el-menu-item index="/message">{{ __('messageChart') }}</el-menu-item>
         <el-menu-item index="/text">{{ __('textChart') }}</el-menu-item>
       </el-menu>

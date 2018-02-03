@@ -19,7 +19,7 @@
 </template>
 <script>
 import BarChart from './BarChart.js'
-import fetchThreadMessages from '../lib/fetchThreadMessages.js'
+import fetchThreadDetail from '../lib/fetchThreadDetail.js'
 const __ = chrome.i18n.getMessage
 
 export default {
@@ -53,7 +53,7 @@ export default {
       await Promise.all(splicedThreadsInfo.map(async (info, i) => {
         // 如果已經 fetch 過訊息記錄，則略過
         if (!info.messages) {
-          await fetchThreadMessages({
+          await fetchThreadDetail({
             token: this.token, thread: info, $set: this.$set
           })
         }

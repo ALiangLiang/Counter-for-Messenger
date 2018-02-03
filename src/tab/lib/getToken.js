@@ -1,4 +1,4 @@
-export default function fetchThreadsMessageCount () {
+export default function fetchThreads () {
   /* eslint-disable promise/param-names */
   return new Promise((resolveInfo) => {
     /**

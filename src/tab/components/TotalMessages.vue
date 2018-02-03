@@ -9,6 +9,9 @@
         @change="renderChart">
       </el-slider>
     </div>
+    <el-switch v-model="isShowDetail"
+      :active-text="__('showDetail')"
+      :inactive-text="__('dontShowDetail')"></el-switch>
     <bar-chart
      :chart-data="chartData"
      :options="{ responsive: false, maintainAspectRatio: false }"
@@ -31,13 +34,19 @@ export default {
     HEIGHT: 800,
     chartData: null,
     rank: 1,
-    sliderMax: 1
+    sliderMax: 1,
+    isShowDetail: false
   }),
   async created () {
     this.renderChart()
   },
+  watch: {
+    isShowDetail (val) {
+
+    }
+  },
   methods: {
-    renderChart () {
+    renderChart (isShowDetail) {
       const startSliceIndex = Number(this.rank) - 1
       const splicedThreadsInfo = this.threadsInfo.slice(startSliceIndex, startSliceIndex + this.HEIGHT / 20)
       this.chartData = {

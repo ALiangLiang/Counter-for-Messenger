@@ -6,7 +6,7 @@
     :summary-method="getSummaries"
     style="width: 100%">
     <el-table-column
-      prop="threadId"
+      prop="id"
       sortable
       label="#"
       width="180">
@@ -52,14 +52,14 @@
         <el-button
           :disabled="!!scope.row.messages"
           @click="fetchMessages(scope.row)"
-          :loading="loadings[scope.row.threadId]"
+          :loading="loadings[scope.row.id]"
           type="text" size="small">
           <icon name="cloud-download"></icon>
           {{ (!scope.row.messages) ? __('importMessageHistory') : __('importedMessageHistory')}}
         </el-button>
         <el-button
           @click="downloadHistory(scope.row)"
-          :loading="loadings[scope.row.threadId]"
+          :loading="loadings[scope.row.id]"
           type="text"
           size="small">
           <icon name="download"></icon>
@@ -73,7 +73,7 @@
 import 'vue-awesome/icons/cloud-download'
 import 'vue-awesome/icons/download'
 import Icon from 'vue-awesome/components/Icon'
-import fetchThreadMessages from '../lib/fetchThreadMessages.js'
+import fetchThreadDetail from '../lib/fetchThreadDetail.js'
 import downloadMessages from '../lib/downloadMessages.js'
 const __ = chrome.i18n.getMessage
 
@@ -89,12 +89,12 @@ export default {
   methods: {
     async fetchMessages (info) {
       if (!info.messages) {
-        this.$set(this.loadings, info.threadId, true)
-        const messageThread = await fetchThreadMessages({
+        this.$set(this.loadings, info.id, true)
+        const messageThread = await fetchThreadDetail({
           token: this.token, thread: info, $set: this.$set
         })
         this.$set(info, 'messages', messageThread.messages)
-        this.$delete(this.loadings, info.threadId)
+        this.$delete(this.loadings, info.id)
       }
       return info
     },

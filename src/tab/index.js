@@ -4,10 +4,11 @@ import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale'
 import Root from './Root.vue'
 import router from './router'
-import fetchThreadsMessageCount from './lib/fetchThreadsMessageCount.js'
+import fetchThreads from './lib/fetchThreads.js'
 import getToken from './lib/getToken.js'
 
 const __ = chrome.i18n.getMessage
+document.title = __('extName')
 Vue.prototype.__ = chrome.i18n.getMessage
 
 Vue.config.productionTip = false
@@ -72,7 +73,7 @@ new Vue({
     this.token = token
     this.selfId = selfId
     this.loading.text = __('fetchingThreads')
-    this.threadsInfo = await fetchThreadsMessageCount(this.token)
+    this.threadsInfo = await fetchThreads(this.token)
     this.loading.close()
   }
 })
