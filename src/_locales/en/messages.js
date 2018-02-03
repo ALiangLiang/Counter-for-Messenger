@@ -10,6 +10,7 @@ module.exports = {
   fetchingThreads: { message: 'Fetching threads...' },
   fetchingMessages: { message: 'Fetching messages...' },
   rendering: { message: 'Rendering...' },
+  waitingForLogin: { message: 'Waiting for log in...' },
 
   openingAlertTitle: { message: 'Please be patient' },
   openingAlertContent: { message: 'Fetch data from FB maybe take a long time.' },

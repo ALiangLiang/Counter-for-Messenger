@@ -10,6 +10,7 @@ module.exports = {
   fetchingThreads: { message: '抓取訊息總數中...' },
   fetchingMessages: { message: '抓取訊息中...' },
   rendering: { message: '渲染中...' },
+  waitingForLogin: { message: '等待登入中...' },
 
   openingAlertTitle: { message: '請保持耐心' },
   openingAlertContent: { message: '從 FB 撈取資料可能會花費許多時間。' },

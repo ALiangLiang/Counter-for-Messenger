@@ -60,7 +60,15 @@ new Vue({
       }).then(() => (this.iSee = true), () => (this.iSee = false))
     }
 
+    /**
+     * Create a listener. Use to listen from content script injecting
+     * in Messenger login page. If need login, remind client.
+     */
+    const onNeedLogin = () => (this.loading.text = __('waitingForLogin'))
+    chrome.runtime.onMessage.addListener(onNeedLogin)
+
     const { token, selfId } = await getToken()
+    chrome.runtime.onMessage.removeListener(onNeedLogin) // Remove listener after get token.
     this.token = token
     this.selfId = selfId
     this.loading.text = __('fetchingThreads')
