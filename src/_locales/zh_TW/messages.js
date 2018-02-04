@@ -35,6 +35,7 @@ module.exports = {
   fanpage: { message: '粉絲專頁' },
   group: { message: '群組' },
   unknown: { message: '未知' },
+  fetchDetailOfselected: { message: '載入所選訊息的記錄' },
 
   // 圖表
   drapToLookOtherUsers: { message: '滑動以查看其他排名' },

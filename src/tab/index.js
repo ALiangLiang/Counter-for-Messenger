@@ -2,6 +2,8 @@ import Vue from 'vue'
 import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import locale from 'element-ui/lib/locale'
+import VueMaterial from 'vue-material'
+import 'vue-material/dist/vue-material.min.css'
 import Root from './Root.vue'
 import router from './router'
 import fetchThreads from './lib/fetchThreads.js'
@@ -14,6 +16,7 @@ Vue.prototype.__ = chrome.i18n.getMessage
 Vue.config.productionTip = false
 
 Vue.use(ElementUI, { locale })
+Vue.use(VueMaterial)
 
 /* eslint-disable no-new */
 new Vue({

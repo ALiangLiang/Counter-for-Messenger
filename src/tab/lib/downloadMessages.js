@@ -2,7 +2,7 @@ import { Message } from 'element-ui'
 import download from 'downloadjs'
 import { htmlPattern } from './htmlPattern'
 
-export default async function fetchThreads (info, selfId) {
+export default async function downloadMessages (info, selfId) {
   if (!selfId) {
     return Message({
       type: 'error',
@@ -37,9 +37,6 @@ export default async function fetchThreads (info, selfId) {
     }
     body.appendChild(div)
   }
-  const tmp = document.createElement('div')
-  tmp.appendChild(html)
-  const htmlStr = tmp.innerHTML
 
   function padLeft (str, len) {
     str = '' + str
@@ -51,5 +48,5 @@ export default async function fetchThreads (info, selfId) {
   }
   const date = new Date()
   const time = (date.getYear() + 1900) + padLeft(date.getMonth(), 2) + padLeft(date.getDate(), 2)
-  download(htmlStr, info.name + '-' + time + '.html', 'text/html')
+  download(html.outerHTML, info.name + '-' + time + '.html', 'text/html')
 }

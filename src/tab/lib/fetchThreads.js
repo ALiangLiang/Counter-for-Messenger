@@ -31,7 +31,9 @@ function createThreadObject (threadNode, createdUsers) {
   // Initial thread object.
   const thread = new Thread({
     participants: participantsData,
-    messageCount: threadNode.messages_count
+    messages: null,
+    messageCount: threadNode.messages_count,
+    textCount: null
   })
   const { participants } = thread
 
@@ -123,7 +125,6 @@ export default async function fetchThreads (token) {
     .map((threadsData) => createThreadObject(threadsData, createdUsers))
     // Sort by message count. From more to less.
     .sort((threadA, threadB) => threadB.messageCount - threadA.messageCount)
-  const threads = new Threads(threadsData)
-  process.nextTick(() => (threads[1000] = true))
-  return threads
+
+  return new Threads(threadsData)
 }

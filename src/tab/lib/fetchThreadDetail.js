@@ -2,6 +2,8 @@ import { Message } from 'element-ui'
 import _set from 'lodash/set'
 import _get from 'lodash/get'
 import isPathExist from './isPathExist.js'
+import fetchService from './fetchService.js'
+import User from '../classes/User'
 const __ = chrome.i18n.getMessage
 
 function showErrorMsg () {
@@ -13,6 +15,7 @@ function showErrorMsg () {
 }
 
 async function handleFetchError ({ token, thread, messageLimit, before }) {
+  messageLimit = messageLimit / 2
   if (messageLimit < 1000) {
     showErrorMsg()
     return {
@@ -22,11 +25,12 @@ async function handleFetchError ({ token, thread, messageLimit, before }) {
   try {
     return fetchThreadDetail({ token, thread, messageLimit, before })
   } catch (err) {
-    return handleFetchError({ token, thread, messageLimit: messageLimit / 2, before })
+    messageLimit = messageLimit / 2
+    return handleFetchError({ token, thread, messageLimit, before })
   }
 }
 
-async function fetchThreadDetail ({ token, thread, messageLimit = 10000, before = null }) {
+async function fetchThreadDetail ({ token, thread, messageLimit = 7500, before = null }) {
   // Prepare request form body.
   const form = {
     batch_name: 'MessengerGraphQLThreadFetcher',
@@ -39,7 +43,7 @@ async function fetchThreadDetail ({ token, thread, messageLimit = 10000, before 
         doc_id: '1479680738780118' || '1498317363570230', // I'm not sure what is it.
         query_params: {
           id: thread.id, // thread id
-          message_limit: messageLimit, // limit of  fetching messages
+          message_limit: Math.min(messageLimit, thread.messageCount + 1000), // limit of  fetching messages
           load_messages: 1,
           load_read_receipts: true,
           before // offset timestamp
@@ -55,7 +59,7 @@ async function fetchThreadDetail ({ token, thread, messageLimit = 10000, before 
   }).join('&')
 
   // Fetch
-  const response = await fetch('https://www.messenger.com/api/graphqlbatch/', {
+  const response = await fetchService('https://www.messenger.com/api/graphqlbatch/', {
     method: 'POST',
     credentials: 'same-origin',
     headers: {
@@ -71,6 +75,15 @@ async function fetchThreadDetail ({ token, thread, messageLimit = 10000, before 
   const messageThread = resJson.o0.data.message_thread
   if (!messageThread) {
     console.log(token, thread, form, resJson)
+    // 發生錯誤，已一半的擷取數量重試一次。
+    // An error occurred. Use half of limit and try again.
+    const result = await handleFetchError({
+      token,
+      thread,
+      messageLimit: messageLimit / 2,
+      before
+    })
+    return result.messages
   }
   if (isPathExist(messageThread, 'messages.nodes')) {
     const messages = messageThread.messages.nodes
@@ -100,7 +113,7 @@ async function fetchThreadDetail ({ token, thread, messageLimit = 10000, before 
         result = await handleFetchError({
           token,
           thread,
-          messageLimit: messageLimit / 2,
+          messageLimit,
           before: messages[0].timestamp
         })
       }
@@ -112,7 +125,7 @@ async function fetchThreadDetail ({ token, thread, messageLimit = 10000, before 
       const result = await handleFetchError({
         token,
         thread,
-        messageLimit: messageLimit / 2,
+        messageLimit,
         before
       })
       result.messages = messages.concat(result.messages)
@@ -123,15 +136,34 @@ async function fetchThreadDetail ({ token, thread, messageLimit = 10000, before 
         messages
       }
     }
-  } else return null
+  } else {
+    // 發生錯誤，已一半的擷取數量重試一次。
+    // An error occurred. Use half of limit and try again.
+    const result = await handleFetchError({
+      token,
+      thread,
+      messageLimit,
+      before
+    })
+    return result.messages
+  }
 }
 
 export default async function (args) {
-  // Fetch thread detail information.
-  const result = await fetchThreadDetail(args)
-
   const { thread, $set } = args
-  if (!$set) console.error('Less of $set.')
+
+  // If loading or loaded(has message), skip this action.
+  if (thread.messages || thread.isLoading) return thread
+
+  thread.isLoading = true
+
+  // Copy thread and use it in fetch handler.
+  const copiedThread = Object.assign({}, thread)
+
+  // Fetch thread detail information.
+  const result = await fetchThreadDetail({ thread: copiedThread, ...args })
+
+  if (!$set) console.warn('Less of $set.')
   const set = ($set)
     ? (object, key, value) => $set(object, key, value)
     : (object, key, value) => (object[key] = value)
@@ -151,21 +183,23 @@ export default async function (args) {
   // Set statistic results on Thread Object.
   // Don't let vue instance trigger "messages". Will cause memory leak.
   thread.messages = result.messages
+  // thread.textCount = threadTextCount
   set(thread, 'textCount', threadTextCount)
   Object.keys(participantsStats)
     .forEach((participantId) => {
       const participantStats = participantsStats[participantId]
-      let messageSender = thread.participants.find((participant) =>
-        participant.id === participantId)
+      let messageSender = thread.getParticipantById(participantId)
       if (messageSender) {
         set(messageSender, 'messageCount', participantStats.messageCount)
         set(messageSender, 'textCount', participantStats.textCount)
-      } else { // This sender not inside the thread.
+      } else { // This sender is not inside the thread.
         messageSender = {
-          id: participantId,
-          name: null,
-          type: null,
-          url: null,
+          user: new User({
+            id: participantId,
+            name: null,
+            type: null,
+            url: null
+          }),
           messageCount: participantStats.messageCount,
           textCount: participantStats.textCount,
           inGroup: false
@@ -174,5 +208,6 @@ export default async function (args) {
       }
     })
 
+  thread.isLoading = false
   return thread
 }

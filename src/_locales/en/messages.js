@@ -35,6 +35,7 @@ module.exports = {
   fanpage: { message: 'Fanpage' },
   group: { message: 'Group' },
   unknown: { message: 'Unknown' },
+  fetchDetailOfselected: { message: 'Import Messages of Selected Threads' },
 
   // Charts
   drapToLookOtherUsers: { message: 'Drag slider to look other users.' },
