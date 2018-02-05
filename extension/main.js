@@ -377,8 +377,13 @@ var counter = {
           rObj.fbid = thread_fbid;
           rObj.count = obj.messages_count;
           return rObj;
-        } else
+        } else {
           console.warn('Unknown message room type.', obj);
+          rObj.name = obj.name || 'Unknown'; // hotfix
+          rObj.fbid = thread_fbid || Math.random(); // hotfix
+          rObj.count = obj.messages_count || 0;
+          return rObj;
+        }
       });
       solve(rList)
     });
