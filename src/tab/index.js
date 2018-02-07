@@ -22,20 +22,9 @@ Vue.config.productionTip = false
 const mainLangName = chrome.i18n.getUILanguage().split('-')[0]
 locale.use((mainLangName === 'zh') ? zhLocale : enLocale)
 
-Vue.use(Slider, { locale })
-Vue.use(Loading, { locale })
-Vue.use(Button, { locale })
-Vue.use(Table, { locale })
-Vue.use(TableColumn, { locale })
-Vue.use(Tag, { locale })
-Vue.use(Tooltip, { locale })
-Vue.use(Pagination, { locale })
-Vue.use(Switch, { locale })
-Vue.use(Container, { locale })
-Vue.use(Header, { locale })
-Vue.use(Menu, { locale })
-Vue.use(MenuItem, { locale })
-Vue.use(Main, { locale })
+const elements = [ Slider, Loading, Message, Button, Table, TableColumn, Tag,
+  Tooltip, Pagination, Switch, Container, Header, Menu, MenuItem, Main ]
+elements.forEach((el) => Vue.use(el, { locale }))
 
 /* eslint-disable no-new */
 new Vue({
@@ -120,11 +109,9 @@ new Vue({
           if (mappingCacheThread) {
             thread.textCount = Thread.culTextCount(mappingCacheThread.messages)
           }
-          console.log(thread.messageCount, _get(mappingCacheThread, 'messages.length'))
           thread.needUpdate = (thread.messageCount !== _get(mappingCacheThread, 'messages.length'))
           return thread
         })
-        console.log(this.threadsInfo)
         this.loading.close()
       }
     } catch (err) {

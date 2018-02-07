@@ -94,6 +94,7 @@ import 'vue-awesome/icons/cloud-download'
 import 'vue-awesome/icons/download'
 import Icon from 'vue-awesome/components/Icon'
 import _get from 'lodash/get'
+import Thread from '../classes/Thread.js'
 import fetchThreadDetail from '../lib/fetchThreadDetail.js'
 import downloadMessages from '../lib/downloadMessages.js'
 const __ = chrome.i18n.getMessage
@@ -121,7 +122,7 @@ export default {
 
         const cachedThread = allCacheThreads.find((cacheThread) =>
           cacheThread.id === thread.id)
-        console.log(thread)
+
         let messageLimit
         if (cachedThread) {
           const cachedThreadMessagesLength = _get(cachedThread, 'messages.length')
@@ -132,7 +133,7 @@ export default {
             messageLimit = thread.messageCount - cachedThreadMessagesLength
           }
         }
-        console.log(messageLimit)
+
         if (!thread.messages) {
           const result = await fetchThreadDetail({
             token: this.token, thread, $set: this.$set, messageLimit
@@ -146,20 +147,21 @@ export default {
 
       results.forEach(([thread, updatedMessages]) => {
         if (updatedMessages) {
-          thread.textCount = updatedMessages.reduce((cur, message) =>
-            ((message.text) ? message.text.length : 0) + cur, 0)
+          thread.textCount = Thread.culTextCount(updatedMessages)
           thread.needUpdate = false
           thread.isLoading = false
         }
       })
     },
     async fetchMessages (thread) {
+      thread.isLoading = true
       const cachedThread = await this.db.get(thread.id)
       let messageLimit
       if (cachedThread) {
         const cachedThreadMessagesLength = _get(cachedThread, 'messages.length')
         if (cachedThreadMessagesLength !== undefined) {
           if (cachedThreadMessagesLength === thread.messageCount) { // No need to update cache.
+            thread.isLoading = false
             return
           }
           messageLimit = thread.messageCount - cachedThreadMessagesLength
@@ -167,19 +169,29 @@ export default {
       }
 
       if (!thread.messages) {
-        this.loadingCount += 1
         const result = await fetchThreadDetail({
           token: this.token, thread, $set: this.$set, messageLimit
         })
         thread.messages = (_get(cachedThread, 'messages') || []).concat(result)
+        thread.textCount = Thread.culTextCount(thread.messages)
         this.db.put({ id: thread.id, messages: thread.messages })
-        this.loadingCount -= 1
-        this.loadedCount += 1
+        thread.needUpdate = false
+        thread.isLoading = false
       }
       return thread
     },
-    async downloadHistory (info) {
-      downloadMessages(await this.fetchMessages(info), this.selfId)
+    async downloadHistory (thread) {
+      if (thread.messages) {
+        return downloadMessages(thread, this.selfId)
+      } else {
+        const cachedThread = await this.db.get(thread.id)
+        if (cachedThread) {
+          thread.messages = cachedThread.messages
+          return downloadMessages(thread, this.selfId)
+        } else {
+          return downloadMessages(await this.fetchMessages(thread), this.selfId)
+        }
+      }
     },
     getSummaries ({ columns, data }) {
       const totalMessageCount = data.reduce((sum, row) => row.messageCount + sum, 0)
