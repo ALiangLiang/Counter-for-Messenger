@@ -17,7 +17,7 @@ module.exports = {
 
   // 提醒視窗
   openingAlertTitle: { message: '請保持耐心' },
-  openingAlertContent: { message: '從 FB 撈取資料可能會花費許多時間。' },
+  openingAlertContent: { message: '1. 從 FB 撈取資料可能會花費許多時間。2. 短時間內嘗試載入大量訊息，可能造成 Messenger 與部分 FB 功能暫時無法使用，請注意。' },
   iSee: { message: '我瞭解' },
   cancel: { message: '取消' },
 
@@ -46,6 +46,7 @@ module.exports = {
   // 錯誤訊息
   fetchError: { message: '啊！撈取資料時發生錯誤。' },
   contactDevelper: { message: '請聯絡開發者以解決問題。' },
+  messengerIsDead: { message: '你的 Messenger 暫時無法使用，請稍後再試。' },
 
   // 符號
   comma: { message: '、' },

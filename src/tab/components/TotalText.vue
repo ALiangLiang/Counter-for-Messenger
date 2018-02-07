@@ -52,7 +52,7 @@ export default {
       let finishCount = 0
       await Promise.all(splicedThreadsInfo.map(async (info, i) => {
         // 如果已經 fetch 過訊息記錄，則略過
-        if (!info.messages) {
+        if (!info.textCount) {
           await fetchThreadDetail({
             token: this.token, thread: info, $set: this.$set
           })

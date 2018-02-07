@@ -1,29 +1,48 @@
 import Vue from 'vue'
-import ElementUI from 'element-ui'
+import { Slider, Loading, Message, Button, Table, TableColumn, Tag, Tooltip,
+  Pagination, Switch, Container, Header, Menu, MenuItem, Main } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
+import enLocale from 'element-ui/lib/locale/lang/en'
+import zhLocale from 'element-ui/lib/locale/lang/zh-TW'
 import locale from 'element-ui/lib/locale'
-import VueMaterial from 'vue-material'
-import 'vue-material/dist/vue-material.min.css'
+import _get from 'lodash/get'
 import Root from './Root.vue'
 import router from './router'
 import fetchThreads from './lib/fetchThreads.js'
 import getToken from './lib/getToken.js'
+import Indexeddb from '../ext/Indexeddb.js'
+import Thread from './classes/Thread.js'
 
 const __ = chrome.i18n.getMessage
+Vue.prototype.__ = __
 document.title = __('extName')
-Vue.prototype.__ = chrome.i18n.getMessage
 
 Vue.config.productionTip = false
 
-Vue.use(ElementUI, { locale })
-Vue.use(VueMaterial)
+const mainLangName = chrome.i18n.getUILanguage().split('-')[0]
+locale.use((mainLangName === 'zh') ? zhLocale : enLocale)
+
+Vue.use(Slider, { locale })
+Vue.use(Loading, { locale })
+Vue.use(Button, { locale })
+Vue.use(Table, { locale })
+Vue.use(TableColumn, { locale })
+Vue.use(Tag, { locale })
+Vue.use(Tooltip, { locale })
+Vue.use(Pagination, { locale })
+Vue.use(Switch, { locale })
+Vue.use(Container, { locale })
+Vue.use(Header, { locale })
+Vue.use(Menu, { locale })
+Vue.use(MenuItem, { locale })
+Vue.use(Main, { locale })
 
 /* eslint-disable no-new */
 new Vue({
   el: '#root',
   router,
   components: { Root },
-  template: '<Root :threads-info="threadsInfo" :token="token" :self-id="selfId"></Root>',
+  template: '<Root :threads-info="threadsInfo" :token="token" :self-id="selfId" :db="db"></Root>',
   data () {
     let iSee = false
     try {
@@ -39,6 +58,7 @@ new Vue({
       threadsInfo: [],
       token: null,
       selfId: null,
+      db: null,
       iSee
     }
   },
@@ -71,13 +91,44 @@ new Vue({
     const onNeedLogin = () => (this.loading.text = __('waitingForLogin'))
     chrome.runtime.onMessage.addListener(onNeedLogin)
 
-    const { token, selfId } = await getToken()
-    chrome.runtime.onMessage.removeListener(onNeedLogin) // Remove listener after get token.
-    this.token = token
-    this.selfId = selfId
-    this.loading.text = __('fetchingThreads')
-    this.threadsInfo = await fetchThreads(this.token)
-    console.log(this.threadsInfo)
-    this.loading.close()
+    try {
+      const { token, selfId } = await getToken()
+      chrome.runtime.onMessage.removeListener(onNeedLogin) // Remove listener after get token.
+      this.token = token
+      this.selfId = selfId
+      this.db = new Indexeddb(selfId)
+    } catch (err) {
+      console.error(err)
+      this.loading.text = __('messengerIsDead')
+      Message({
+        type: 'error',
+        message: __('messengerIsDead')
+      })
+      throw err
+    }
+
+    try {
+      this.loading.text = __('fetchingThreads')
+      this.db.onload = async () => {
+        const [ threads, cachedThreads ] = await Promise.all([
+          fetchThreads(this.token),
+          this.db.getAll()
+        ])
+        this.threadsInfo = threads.map((thread) => {
+          const mappingCacheThread = cachedThreads.find((cachedThread) =>
+            cachedThread.id === thread.id)
+          if (mappingCacheThread) {
+            thread.textCount = Thread.culTextCount(mappingCacheThread.messages)
+          }
+          console.log(thread.messageCount, _get(mappingCacheThread, 'messages.length'))
+          thread.needUpdate = (thread.messageCount !== _get(mappingCacheThread, 'messages.length'))
+          return thread
+        })
+        console.log(this.threadsInfo)
+        this.loading.close()
+      }
+    } catch (err) {
+      console.error(err)
+    }
   }
 })

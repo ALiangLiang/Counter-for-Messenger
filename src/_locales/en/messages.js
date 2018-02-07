@@ -17,7 +17,7 @@ module.exports = {
 
   // Alert model
   openingAlertTitle: { message: 'Please be patient' },
-  openingAlertContent: { message: 'Fetch data from FB maybe take a long time.' },
+  openingAlertContent: { message: '1. Fetch data from FB maybe take a long time. 2. If you fetch a lot of messages in a short time, may cause some functions of your FB and Messenger can not be used.' },
   iSee: { message: 'I see!!' },
   cancel: { message: 'Cancel' },
 
@@ -46,6 +46,7 @@ module.exports = {
   // Error message
   fetchError: { message: 'Oops, cannot fetch messages.' },
   contactDevelper: { message: 'Please contact developer.' },
+  messengerIsDead: { message: 'Your Messenger is temporarily unavailable. Please take a while to use again.' },
 
   // Symbol
   comma: { message: ', ' },

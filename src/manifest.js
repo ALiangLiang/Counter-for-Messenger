@@ -29,7 +29,7 @@ module.exports = {
     persistent: true,
     page: 'pages/background.html'
   },
-  // options_page: 'pages/options.html',
+  options_page: 'pages/options.html',
   content_scripts: [{
     'css': [],
     'js': ['js/content.js'],

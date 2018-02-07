@@ -6,7 +6,7 @@
         v-model="rank"
         :min="1"
         :max="this.threadsInfo.length + 1"
-        @change="renderChart">
+        @change="renderChart()">
       </el-slider>
     </div>
     <el-switch v-model="isShowDetail"
@@ -46,7 +46,7 @@ export default {
     }
   },
   methods: {
-    renderChart (isShowDetail) {
+    renderChart (isShowDetail = this.isShowDetail) {
       const startSliceIndex = Number(this.rank) - 1
       const splicedThreads = this.threadsInfo.slice(startSliceIndex, startSliceIndex + this.HEIGHT / 20)
       if (!isShowDetail) {

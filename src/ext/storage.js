@@ -1,8 +1,17 @@
 export default {
-  get (key) {
+  get (key, defaultVal) {
     try {
-      return JSON.parse(localStorage.getItem(key))
-    } catch (e) {}
+      const result = JSON.parse(localStorage.getItem(key))
+      if (result) {
+        return result
+      } else {
+        localStorage.setItem(key, JSON.stringify(defaultVal))
+        return defaultVal
+      }
+    } catch (e) {
+      localStorage.setItem(key, JSON.stringify(defaultVal))
+      return defaultVal
+    }
   },
   set (key, val) {
     try {

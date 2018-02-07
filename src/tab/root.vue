@@ -14,14 +14,14 @@
       </el-menu>
     </el-header>
     <el-main>
-      <router-view :threadsInfo="threadsInfo" :token="token" :self-id="selfId"/>
+      <router-view :threadsInfo="threadsInfo" :token="token" :self-id="selfId" :db="db"/>
     </el-main>
   </el-container>
 </template>
 <script>
 export default {
   name: 'Root',
-  props: [ 'threadsInfo', 'token', 'selfId' ]
+  props: [ 'threadsInfo', 'token', 'selfId', 'db' ]
 }
 </script>
 <style>

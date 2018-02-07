@@ -7,3 +7,9 @@ if (location.pathname === '/login.php' &&
     alert(__('loginAlert'))
   })
 }
+
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (request === 'ping') {
+    sendResponse('pong')
+  }
+})

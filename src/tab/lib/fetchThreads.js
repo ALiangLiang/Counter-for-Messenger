@@ -31,9 +31,7 @@ function createThreadObject (threadNode, createdUsers) {
   // Initial thread object.
   const thread = new Thread({
     participants: participantsData,
-    messages: null,
-    messageCount: threadNode.messages_count,
-    textCount: null
+    messageCount: threadNode.messages_count
   })
   const { participants } = thread
 
@@ -81,7 +79,7 @@ function createThreadObject (threadNode, createdUsers) {
   return thread
 }
 
-export default async function fetchThreads (token) {
+export default async function fetchThreads (token, limit = 5000) {
   // Prepare request form body.
   const dataJson = {
     fb_dtsg: token,
@@ -91,7 +89,7 @@ export default async function fetchThreads (token) {
       o0: {
         doc_id: '1475048592613093',
         query_params: {
-          limit: 5000,
+          limit,
           before: null,
           tags: ['INBOX'],
           includeDeliveryReceipts: true,
