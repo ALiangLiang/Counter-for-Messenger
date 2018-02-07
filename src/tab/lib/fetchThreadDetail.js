@@ -82,7 +82,6 @@ async function fetchThreadDetail ({ token, threadId, messageCount, messageLimit 
         token, threadId, messageCount, messageLimit, before
       })
     })
-  console.log(response)
   // Response and data handle.
   console.time('text')
   const resText = await response.text()
