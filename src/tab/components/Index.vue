@@ -106,10 +106,6 @@ export default {
     Icon
   },
   data: () => ({
-    isLoading: false,
-    loadingCount: 0,
-    loadedCount: 0,
-    lastSpendTime: 0,
     threadsPerPage: 10,
     currentPage: 1,
     selectedThreads: []
@@ -199,26 +195,6 @@ export default {
     },
     onSelect (items) {
       this.selectedThreads = items
-    },
-    selectAllThread (e) {
-      if (e.target.value === 'on') {
-        this.selectedThreads = Array.from(this.threadsInfo)
-      } else {
-        this.selectedThreads = []
-      }
-    },
-    async fetchDetailOfSelected () {
-      const startTime = new Date()
-      await Promise.all(this.selectedThreads.map(async (seletedThread) => {
-        if (seletedThread.messages || seletedThread.isLoading) return
-        this.loadingCount += 1
-        await fetchThreadDetail({
-          token: this.token, thread: seletedThread, $set: this.$set
-        })
-        this.loadingCount -= 1
-        this.loadedCount += 1
-      }))
-      this.lastSpendTime = new Date() - startTime
     },
     determineThreadType (type) {
       switch (type) {

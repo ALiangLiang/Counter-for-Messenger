@@ -42,6 +42,8 @@ module.exports = {
   showDetail: { message: '顯示詳細' },
   dontShowDetail: { message: '不顯示詳細' },
   total: { message: '總共' },
+  me: { message: '我' },
+  other: { message: '其他人' },
 
   // 錯誤訊息
   fetchError: { message: '啊！撈取資料時發生錯誤。' },

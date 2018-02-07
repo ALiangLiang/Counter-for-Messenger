@@ -8,6 +8,7 @@
   "dependencies": {
     "axios": "^0.17.0",
     "chart.js": "^2.7.1",
+    "color-hash": "^1.0.3",
     "downloadjs": "^1.4.4",
     "element-ui": "^2.1.0",
     "lodash": "^4.17.4",

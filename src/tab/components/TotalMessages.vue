@@ -14,7 +14,7 @@
       :inactive-text="__('dontShowDetail')"></el-switch>
     <bar-chart
      :chart-data="chartData"
-     :options="{ responsive: false, maintainAspectRatio: false }"
+     :options="barOption"
      :width="800"
      :height="HEIGHT" >
     </bar-chart>
@@ -29,13 +29,24 @@ export default {
   components: {
     BarChart
   },
-  props: [ 'threadsInfo' ],
+  props: [ 'threadsInfo', 'selfId' ],
   data: () => ({
     HEIGHT: 800,
     chartData: null,
     rank: 1,
     sliderMax: 1,
-    isShowDetail: false
+    isShowDetail: false,
+    barOption: { responsive: false,
+      maintainAspectRatio: false,
+      scales: {
+        xAxes: [{
+          stacked: true
+        }],
+        yAxes: [{
+          stacked: true
+        }]
+      }
+    }
   }),
   async created () {
     this.renderChart()
@@ -59,24 +70,32 @@ export default {
           }]
         }
       } else {
-        // const allParticipants = splicedThreads.reduce((cur, thread) => {
-        //   if (!cur.find((participant) => participant.id === thread.id)) {
-        //   cur.push(thread.participants)
-        //   }
-        // }, [])
-        // this.chartData = {
-        //   labels: splicedThreads.map((info) => info.name),
-        //   datasets: splicedThreads.participants.map((participant) => ({
-        //     label: participant.name,
-        //     data: splicedThreads.map((thread) => )
-        //   }))
-        //
-        //   [{
-        //     label: __('total'),
-        //     backgroundColor: '#0083FF',
-        //     data: splicedThreads.map((info) => info.messageCount)
-        //   }]
-        // }
+        const participantsStatus = splicedThreads
+          .map((thread, i) => {
+            let me = 0
+            let other = 0
+            thread.participants.forEach((participant) => {
+              if (participant.user.id === this.selfId) me = participant.messageCount
+              else other += participant.messageCount
+            })
+            return [me, other]
+          })
+          .reduce((cur, row) => {
+            cur[0].push(row[0])
+            cur[1].push(row[1])
+            return cur
+          }, [[], []])
+        const datasets = participantsStatus.map((status, i) => {
+          return {
+            label: (i === 0) ? 'Me' : 'Other',
+            backgroundColor: (i === 0) ? '#4BCC1F' : '#F03C24',
+            data: status
+          }
+        })
+        this.chartData = {
+          labels: splicedThreads.map((info) => info.name),
+          datasets
+        }
       }
     }
   }

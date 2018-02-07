@@ -26,7 +26,7 @@ module.exports = {
   threadType: { message: 'Type' },
   threadMessageCount: { message: 'Messages' },
   threadTextCount: { message: 'Texts' },
-  threadOperation: { message: 'Operation' },
+  threadOperation: { message: 'Operations' },
   importMessageHistory: { message: 'Import Messages' },
   importedMessageHistory: { message: 'Imported' },
   downloadMessageHistory: { message: 'Download Messages' },
@@ -42,6 +42,8 @@ module.exports = {
   showDetail: { message: 'Show Detail' },
   dontShowDetail: { message: 'Don\'t show Detail' },
   total: { message: 'Total' },
+  me: { message: 'Me' },
+  other: { message: 'Other' },
 
   // Error message
   fetchError: { message: 'Oops, cannot fetch messages.' },

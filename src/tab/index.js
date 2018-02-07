@@ -11,7 +11,6 @@ import router from './router'
 import fetchThreads from './lib/fetchThreads.js'
 import getToken from './lib/getToken.js'
 import Indexeddb from '../ext/Indexeddb.js'
-import Thread from './classes/Thread.js'
 
 const __ = chrome.i18n.getMessage
 Vue.prototype.__ = __
@@ -107,7 +106,7 @@ new Vue({
           const mappingCacheThread = cachedThreads.find((cachedThread) =>
             cachedThread.id === thread.id)
           if (mappingCacheThread) {
-            thread.textCount = Thread.culTextCount(mappingCacheThread.messages)
+            thread.analyzeMessages(mappingCacheThread.messages)
           }
           thread.needUpdate = (thread.messageCount !== _get(mappingCacheThread, 'messages.length'))
           return thread
