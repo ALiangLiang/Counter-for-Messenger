@@ -22,6 +22,7 @@
 </template>
 <script>
 import BarChart from './BarChart.js'
+import fetchThreadDetail from '../lib/fetchThreadDetail.js'
 const __ = chrome.i18n.getMessage
 
 export default {
@@ -29,9 +30,10 @@ export default {
   components: {
     BarChart
   },
-  props: [ 'threadsInfo', 'selfId' ],
+  props: [ 'threadsInfo', 'selfId', 'token', 'db' ],
   data: () => ({
     HEIGHT: 800,
+    loading: null,
     chartData: null,
     rank: 1,
     sliderMax: 1,
@@ -57,7 +59,7 @@ export default {
     }
   },
   methods: {
-    renderChart (isShowDetail = this.isShowDetail) {
+    async renderChart (isShowDetail = this.isShowDetail) {
       const startSliceIndex = Number(this.rank) - 1
       const splicedThreads = this.threadsInfo.slice(startSliceIndex, startSliceIndex + this.HEIGHT / 20)
       if (!isShowDetail) {
@@ -70,6 +72,30 @@ export default {
           }]
         }
       } else {
+        this.loading = this.$loading({
+          lock: true,
+          text: __('fetchingMessages'),
+          spinner: 'el-icon-loading',
+          background: 'rgba(0, 0, 0, 0.7)'
+        })
+
+        await Promise.all(splicedThreads.map(async (thread) => {
+          if (thread.textCount) return
+          if (!thread.messages) {
+            const cachedThread = await this.db.get(thread.id)
+            if (cachedThread && cachedThread.messages) return
+            thread.isLoading = true
+            const result = await fetchThreadDetail({
+              token: this.token, thread, $set: this.$set
+            })
+            thread.isLoading = false
+            thread.needUpdate = false
+            thread.analyzeMessages(result)
+            await this.db.put({ id: thread.id, messages: result })
+          } else {
+            thread.analyzeMessages()
+          }
+        }))
         const participantsStatus = splicedThreads
           .map((thread, i) => {
             let me = 0
@@ -96,6 +122,8 @@ export default {
           labels: splicedThreads.map((info) => info.name),
           datasets
         }
+
+        this.loading.close()
       }
     }
   }
