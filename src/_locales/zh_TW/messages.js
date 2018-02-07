@@ -36,6 +36,7 @@ module.exports = {
   group: { message: '群組' },
   unknown: { message: '未知' },
   fetchDetailOfselected: { message: '載入所選訊息的記錄' },
+  searchInputPlaceholder: { message: '請輸入關鍵字' },
 
   // 圖表
   drapToLookOtherUsers: { message: '滑動以查看其他排名' },

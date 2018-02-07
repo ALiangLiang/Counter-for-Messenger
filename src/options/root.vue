@@ -4,7 +4,7 @@
       <el-form-item label="Cache Messages">
         <el-switch
           v-model="isCacheMessages"
-          :disabled="canUseIndexeddb"
+          :disabled="true"
           active-text="Cache"
           inactive-text="No cache">
         </el-switch>

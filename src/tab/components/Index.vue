@@ -2,36 +2,29 @@
   <div>
     <div style="margin: 20px">
       <el-button @click="fetchSelectedThreads()">{{ __('fetchDetailOfselected') }}</el-button>
+      <el-input
+        :placeholder="__('searchInputPlaceholder')"
+        v-model="keyword"
+        :maxlength="120"></el-input>
       <el-pagination
         @size-change="(val) => (threadsPerPage = val)"
         :current-page.sync="currentPage"
         :page-sizes="[5, 10, 20, 40]"
         :page-size="10"
         layout="total, sizes, prev, pager, next, jumper"
-        :total="threadsInfo.length">
+        :total="tableData.length">
       </el-pagination>
     </div>
     <el-table
-      :data="threadsInfo.slice((currentPage - 1) * threadsPerPage, currentPage * threadsPerPage)"
+      :data="tableData.slice((currentPage - 1) * threadsPerPage, currentPage * threadsPerPage)"
       :max-height="720"
       show-summary
       :summary-method="getSummaries"
       @selection-change="onSelect"
       style="width: 100%">
-      <el-table-column
-        type="selection"
-        width="55">
-      </el-table-column>
-      <el-table-column
-        prop="id"
-        sortable
-        label="#"
-        width="180">
-      </el-table-column>
-      <el-table-column
-        prop="name"
-        :label="__('threadName')"
-        width="180">
+      <el-table-column type="selection" width="55"> </el-table-column>
+      <el-table-column prop="id" sortable label="#" width="180"> </el-table-column>
+      <el-table-column prop="name" :label="__('threadName')" width="180">
         <template slot-scope="{ row }">
           <el-tooltip :content="row.tooltip" placement="top-start"
             v-if="row.type === 'GROUP'">
@@ -43,7 +36,10 @@
       <el-table-column
         prop="type"
         :label="__('threadType')"
-        width="180">
+        width="180"
+        :filters="typeFilters"
+        :filter-method="typeFilterMethod"
+        filter-placement="bottom-end">
         <template slot-scope="{ row }">
           <el-tag
             :type="determineThreadType(row.type).tagType"
@@ -52,21 +48,11 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column
-        prop="messageCount"
-        sortable
-        :label="__('threadMessageCount')"
-        width="120">
-      </el-table-column>
-      <el-table-column
-        prop="textCount"
-        sortable
-        :label="__('threadTextCount')"
-        width="120">
-      </el-table-column>
-      <el-table-column
-        :label="__('threadOperation')"
-        width="360">
+      <el-table-column prop="messageCount" sortable :label="__('threadMessageCount')"
+        width="120"> </el-table-column>
+      <el-table-column prop="textCount" sortable :label="__('threadTextCount')"
+        width="120"> </el-table-column>
+      <el-table-column :label="__('threadOperation')" width="360">
         <template slot-scope="{ row }">
           <el-button
             :disabled="!row.needUpdate"
@@ -105,11 +91,24 @@ export default {
   components: {
     Icon
   },
-  data: () => ({
-    threadsPerPage: 10,
-    currentPage: 1,
-    selectedThreads: []
-  }),
+  data () {
+    return {
+      keyword: '',
+      threadsPerPage: 10,
+      currentPage: 1,
+      selectedThreads: [],
+      typeFilters: [ 'GROUP', 'USER', 'PAGE', 'REDUCEDMESSAGINGACTOR' ]
+        .map((type) => ({
+          text: this.determineThreadType(type).name,
+          value: type
+        }))
+    }
+  },
+  computed: {
+    tableData () {
+      return this.threadsInfo.filter((thread) => thread.name.match(this.keyword))
+    }
+  },
   methods: {
     async fetchSelectedThreads () {
       const allCacheThreads = await this.db.getAll()
@@ -191,7 +190,8 @@ export default {
     },
     getSummaries ({ columns, data }) {
       const totalMessageCount = data.reduce((sum, row) => row.messageCount + sum, 0)
-      return ['', '', '', '', `${__('totalMessageCount')}: ${totalMessageCount}`]
+      const totalTextCount = data.reduce((sum, row) => row.textCount + sum, 0)
+      return ['', '', '', '', totalMessageCount, totalTextCount]
     },
     onSelect (items) {
       this.selectedThreads = items
@@ -204,6 +204,10 @@ export default {
         case 'REDUCEDMESSAGINGACTOR': return { name: __('unknown'), tagType: 'danger' }
       }
       return { name: __('unknown'), tagType: 'danger' }
+    },
+    typeFilterMethod (value, row, column) {
+      const property = column['property']
+      return row[property] === value
     }
   }
 }

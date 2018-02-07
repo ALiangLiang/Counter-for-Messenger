@@ -18,7 +18,7 @@ module.exports = {
   // Alert model
   openingAlertTitle: { message: 'Please be patient' },
   openingAlertContent: { message: '1. Fetch data from FB maybe take a long time. 2. If you fetch a lot of messages in a short time, may cause some functions of your FB and Messenger can not be used.' },
-  iSee: { message: 'I see!!' },
+  iSee: { message: 'Got it!' },
   cancel: { message: 'Cancel' },
 
   // Index
@@ -36,6 +36,7 @@ module.exports = {
   group: { message: 'Group' },
   unknown: { message: 'Unknown' },
   fetchDetailOfselected: { message: 'Import Messages of Selected Threads' },
+  searchInputPlaceholder: { message: 'Keyword' },
 
   // Charts
   drapToLookOtherUsers: { message: 'Drag slider to look other users.' },
