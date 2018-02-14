@@ -36,6 +36,7 @@ module.exports = {
   group: { message: '群組' },
   unknown: { message: '未知' },
   fetchDetailOfselected: { message: '載入所選訊息的記錄' },
+  searchInputLabel: { message: '搜尋' },
   searchInputPlaceholder: { message: '請輸入關鍵字' },
 
   // 圖表
@@ -53,6 +54,7 @@ module.exports = {
 
   // 符號
   comma: { message: '、' },
+  colon: { message: '：' },
 
   // Thread 物件
   others: {

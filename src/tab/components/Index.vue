@@ -1,11 +1,19 @@
 <template>
   <div>
     <div style="margin: 20px">
-      <el-button @click="fetchSelectedThreads()">{{ __('fetchDetailOfselected') }}</el-button>
-      <el-input
-        :placeholder="__('searchInputPlaceholder')"
-        v-model="keyword"
-        :maxlength="120"></el-input>
+      <el-form :inline="true">
+        <el-form-item :label="__('searchInputLabel') + __('colon')">
+          <el-input
+            :placeholder="__('searchInputPlaceholder')"
+            v-model="keyword"
+            :maxlength="120"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="fetchSelectedThreads()">
+            {{ __('fetchDetailOfselected') }}
+          </el-button>
+        </el-form-item>
+      </el-form>
       <el-pagination
         @size-change="(val) => (threadsPerPage = val)"
         :current-page.sync="currentPage"

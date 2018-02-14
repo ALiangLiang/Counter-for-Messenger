@@ -36,6 +36,7 @@ module.exports = {
   group: { message: 'Group' },
   unknown: { message: 'Unknown' },
   fetchDetailOfselected: { message: 'Import Messages of Selected Threads' },
+  searchInputLabel: { message: 'Search' },
   searchInputPlaceholder: { message: 'Keyword' },
 
   // Charts
@@ -53,6 +54,7 @@ module.exports = {
 
   // Symbol
   comma: { message: ', ' },
+  colon: { message: ': ' },
 
   // Thread Object
   others: {

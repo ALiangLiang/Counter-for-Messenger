@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import { Slider, Loading, Message, Button, Table, TableColumn, Tag, Tooltip,
   Pagination, Switch, Container, Header, Menu, MenuItem, Main, MessageBox,
-  Input } from 'element-ui'
+  Input, Form, FormItem } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import enLocale from 'element-ui/lib/locale/lang/en'
 import zhLocale from 'element-ui/lib/locale/lang/zh-TW'
@@ -23,7 +23,8 @@ const mainLangName = chrome.i18n.getUILanguage().split('-')[0]
 locale.use((mainLangName === 'zh') ? zhLocale : enLocale)
 
 const elements = [ Slider, Loading, Message, Button, Table, TableColumn, Tag,
-  Tooltip, Pagination, Switch, Container, Header, Menu, MenuItem, Main, Input ]
+  Tooltip, Pagination, Switch, Container, Header, Menu, MenuItem, Main, Input,
+  Form, FormItem ]
 elements.forEach((el) => Vue.use(el, { locale }))
 
 Vue.prototype.$confirm = MessageBox.confirm
