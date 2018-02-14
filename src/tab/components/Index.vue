@@ -114,7 +114,7 @@ export default {
   },
   computed: {
     tableData () {
-      return this.threadsInfo.filter((thread) => thread.name.match(this.keyword))
+      return this.threadsInfo.filter((thread) => thread.name.match(new RegExp(this.keyword, 'i')))
     }
   },
   methods: {

@@ -34,6 +34,7 @@ export default {
   data: () => ({
     HEIGHT: 800,
     loading: null,
+    loadingCount: 0,
     chartData: null,
     rank: 1,
     sliderMax: 1,
@@ -61,7 +62,8 @@ export default {
   methods: {
     async renderChart (isShowDetail = this.isShowDetail) {
       const startSliceIndex = Number(this.rank) - 1
-      const splicedThreads = this.threadsInfo.slice(startSliceIndex, startSliceIndex + this.HEIGHT / 20)
+      const amountOfMaxDisplay = this.HEIGHT / 20
+      const splicedThreads = this.threadsInfo.slice(startSliceIndex, startSliceIndex + amountOfMaxDisplay)
       if (!isShowDetail) {
         this.chartData = {
           labels: splicedThreads.map((info) => info.name),
@@ -72,6 +74,7 @@ export default {
           }]
         }
       } else {
+        this.loadingCount = 0
         this.loading = this.$loading({
           lock: true,
           text: __('fetchingMessages'),
@@ -95,7 +98,9 @@ export default {
           } else {
             thread.analyzeMessages()
           }
+          this.loading.text = `${__('fetchingMessages')}[${++this.loadingCount}/${amountOfMaxDisplay}]`
         }))
+        this.loading.text = __('rendering')
         const participantsStatus = splicedThreads
           .map((thread, i) => {
             let me = 0
