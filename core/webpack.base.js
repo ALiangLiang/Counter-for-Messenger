@@ -12,7 +12,6 @@ module.exports = {
     options: resolve('./options'),
     content: resolve('./content'),
     background: resolve('./backend'),
-    inject: resolve('./content/inject'),
   },
   output: {
     path: path.join(__dirname, '..', 'build'),

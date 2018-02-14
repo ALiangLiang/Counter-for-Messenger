@@ -1,5 +1,4 @@
-
-module.exports = {
+const manifest = {
   name: '__MSG_extName__',
   version: '0.2.0',
   description: '__MSG_extDescription__',
@@ -32,7 +31,9 @@ module.exports = {
   options_page: 'pages/options.html',
   content_scripts: [{
     'css': [],
-    'js': ['js/content.js'],
+    'js': [
+      'js/content.js'
+    ],
     'matches': ['*://*.messenger.com/*'],
     'run_at': 'document_end'
   }],
@@ -40,3 +41,14 @@ module.exports = {
   content_security_policy: "script-src 'self' 'unsafe-eval' https://www.messenger.com https://www.google.com https://checkout.google.com; object-src 'self'",
   web_accessible_resources: [ 'js/content.js' ]
 }
+
+if (process.env.NODE_ENV === 'production' && manifest.content_scripts) {
+  manifest.content_scripts.forEach((script) => {
+    if (script.js) {
+      script.js.unshift('js/vendor.js')
+      script.js.unshift('js/manifest.js')
+    }
+  })
+}
+
+module.exports = manifest
