@@ -47,7 +47,18 @@ function handleFetch ({ token, threadId, messageCount, messageLimit = 7500, befo
 }
 
 async function fetchThreadDetail ({ token, threadId, messageCount, messageLimit = 7500, before = null }) {
-  const response = await handleFetch({ token, threadId, messageCount, messageLimit, before })
+  const messageThread = await handleFetch({ token, threadId, messageCount, messageLimit, before })
+    .then(async (response) => {
+      // Response and data handle.
+      const resText = await response.text()
+      const resTextLines = resText.split('\n')
+      const resJson = JSON.parse(resTextLines[0])
+      const messageThread = resJson.o0.data.message_thread
+      if (!messageThread.messages.page_info) {
+        throw new Error('No page_info.')
+      }
+      return messageThread
+    })
     .catch((err) => {
       console.error(err)
       messageLimit = messageLimit / 2
@@ -57,14 +68,7 @@ async function fetchThreadDetail ({ token, threadId, messageCount, messageLimit 
         })
       } else { throw new Error('Too many error on fetch.') }
     })
-  // Response and data handle.
-  const resText = await response.text()
-  const resTextLines = resText.split('\n')
-  const resJson = JSON.parse(resTextLines[0])
-  const messageThread = resJson.o0.data.message_thread
-  if (!messageThread.messages.page_info) {
-    throw new Error('No page_info.')
-  }
+
   const messages = messageThread.messages.nodes
     .map((message) => ({
       senderId: message.message_sender.id,
