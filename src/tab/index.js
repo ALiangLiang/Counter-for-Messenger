@@ -23,9 +23,9 @@ Vue.config.productionTip = false
 const mainLangName = chrome.i18n.getUILanguage().split('-')[0]
 locale.use((mainLangName === 'zh') ? zhLocale : enLocale)
 
-const elements = [ Slider, Loading, Message, Button, Table, TableColumn, Tag,
-  Tooltip, Pagination, Switch, Container, Menu, MenuItem, Header, Main, Footer,
-  MessageBox, Input, Form, FormItem ]
+const elements = [ Slider, Loading, Button, Table, TableColumn, Tag, Tooltip,
+  Pagination, Switch, Container, Menu, MenuItem, Header, Main, Footer, Input,
+  Form, FormItem ]
 elements.forEach((el) => Vue.use(el, { locale }))
 
 Vue.prototype.$confirm = MessageBox.confirm
