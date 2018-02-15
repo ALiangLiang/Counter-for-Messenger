@@ -1,10 +1,18 @@
 import Vue from 'vue'
+// Import element-ui components.
 import { Slider, Loading, Message, Button, Table, TableColumn, Tag, Tooltip,
   Pagination, Switch, Container, Menu, MenuItem, Header, Main, Footer,
   MessageBox, Input, Form, FormItem } from 'element-ui'
+// Customize element-ui theme. Let this style more like FB.
 import '../../element-variables.scss'
+/**
+ * Languages of Element-UI
+ * Base no locales of this extension.
+ */
 import enLocale from 'element-ui/lib/locale/lang/en'
 import zhLocale from 'element-ui/lib/locale/lang/zh-TW'
+
+// Libs
 import locale from 'element-ui/lib/locale'
 import _get from 'lodash/get'
 import Root from './Root.vue'
@@ -14,8 +22,11 @@ import getToken from './lib/getToken.js'
 import Indexeddb from '../ext/Indexeddb.js'
 import storage from '../ext/storage.js'
 
+// Alias i18n function.
 const __ = chrome.i18n.getMessage
 Vue.prototype.__ = __
+
+// Change docuemnt title manually. Coz title is assign on build stage.
 document.title = __('extName')
 
 Vue.config.productionTip = false
@@ -23,6 +34,7 @@ Vue.config.productionTip = false
 const mainLangName = chrome.i18n.getUILanguage().split('-')[0]
 locale.use((mainLangName === 'zh') ? zhLocale : enLocale)
 
+// Import element-ui components.
 const elements = [ Slider, Loading, Button, Table, TableColumn, Tag, Tooltip,
   Pagination, Switch, Container, Menu, MenuItem, Header, Main, Footer, Input,
   Form, FormItem ]

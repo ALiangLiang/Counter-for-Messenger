@@ -1,4 +1,8 @@
-export default function fetchThreads () {
+/**
+ * Intercept token from Messenger page.
+ * @return {Promise<{token, selfId}>} return a Promise include "token" and "selfId"
+ */
+export default function getToken () {
   /* eslint-disable promise/param-names */
   return new Promise((resolveInfo, reject) => {
     /**

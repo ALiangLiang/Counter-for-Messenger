@@ -1,3 +1,8 @@
+/// //////////////////////////////////////////////////////
+// Let client backup(download) their messages history. //
+// Dump and wrapper to a HTML page                     //
+/// //////////////////////////////////////////////////////
+// TODO: This function maybe broken when too much messages. Coz device resource leak.
 import { Message } from 'element-ui'
 import download from 'downloadjs'
 import { htmlPattern } from './htmlPattern'

@@ -1,3 +1,6 @@
+/// //////////////////////////////////////////////////////////////////////////////
+// Fetch thread detail information (include messages). And parse every message. //
+/// //////////////////////////////////////////////////////////////////////////////
 import fetchService from './fetchService.js'
 
 function handleFetch ({ token, threadId, messageCount, messageLimit = 7500, before = null }) {

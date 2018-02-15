@@ -1,3 +1,7 @@
+/// //////////////////////////////////////////////////////////////////////
+// Fetch threads information used by Messenger native API. But this API //
+// cannot get Messages.                                                 //
+/// //////////////////////////////////////////////////////////////////////
 import _get from 'lodash/get'
 import Threads from '../classes/Threads'
 import Thread from '../classes/Thread'
