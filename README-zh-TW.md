@@ -1,6 +1,6 @@
 # Messenger 計數器
 
-[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Chrome Web Store)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
+[ ![Chrome Web Store](https://img.shields.io/chrome-web-store/v/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Chrome Web Store) ](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Users)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/rating/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Rating&colorB=dfb317)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 
@@ -13,22 +13,19 @@
 
 [![從 Chrome Web Store 安裝](.github/assets/tryitnowbutton_small.png)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 
-功能簡介：
-1. 訊息、字數排行
-2. 與對方的訊息、字數比例
-3. 下載訊息歷史紀錄
+## 特色
 
-使用說明：
-安裝完後，點擊 Chrome 右上角的圖示按鈕。
+- 統計
+  - 多少聊天室
+  - 聊天室的訊息量
+  - 聊天室的文字量
+- 將所有聊天室排名
+- 下載聊天紀錄
 
-匯入歷史訊息：
-方法1. 點擊「匯入所有訊息紀錄」
-方法2. 雙擊圖表中的長柱
-
-下載歷史訊息檔案：
-對圖表中的長柱右鍵，點選「Download history」
-
-***不會收集使用者數據***
+## 使用
+安裝完畢後，點擊 Chrome 右上角的 LOGO 圖示，如果找不到，點擊右上角的「三顆點」按鈕，就可以找到了。
+![點logo](.github/assets/click_icon1.png)
+![點隱藏的logo](.github/assets/click_icon2.png)
 
 ## 貢獻
 
@@ -47,3 +44,5 @@
 
 稍微技術點的講法，就是開啟 Messenger 頁面後，以 Chrome Extension 的 API「webRequest」
 ，攔截下我們要的 token 等資訊，然後再拿它們去向 FB 發 request，最後再丟到新的頁面，呈現給大家。
+
+***不會收集使用者數據***
