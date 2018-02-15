@@ -17,7 +17,7 @@ module.exports = {
 
   // Alert model
   openingAlertTitle: { message: 'Please be patient' },
-  openingAlertContent: { message: '1. Fetch data from FB maybe take a long time. 2. If you fetch a lot of messages in a short time, may cause some functions of your FB and Messenger can not be used.' },
+  openingAlertContent: { message: '1. Fetch data from FB maybe take a long time. 2. If you fetch a lot of messages in a short time, may cause some functions of your FB and Messenger could\'t be used.' },
   iSee: { message: 'Got it!' },
   cancel: { message: 'Cancel' },
 
@@ -42,7 +42,7 @@ module.exports = {
   // Charts
   drapToLookOtherUsers: { message: 'Drag slider to look other users.' },
   showDetail: { message: 'Show Detail' },
-  dontShowDetail: { message: 'Don\'t show Detail' },
+  showTotal: { message: 'Show Total' },
   total: { message: 'Total' },
   me: { message: 'Me' },
   other: { message: 'Other' },

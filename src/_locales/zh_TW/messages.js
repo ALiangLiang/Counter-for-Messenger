@@ -42,7 +42,7 @@ module.exports = {
   // 圖表
   drapToLookOtherUsers: { message: '滑動以查看其他排名' },
   showDetail: { message: '顯示詳細' },
-  dontShowDetail: { message: '不顯示詳細' },
+  showTotal: { message: '顯示總和' },
   total: { message: '總共' },
   me: { message: '我' },
   other: { message: '其他人' },

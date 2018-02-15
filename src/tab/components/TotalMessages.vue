@@ -10,8 +10,10 @@
       </el-slider>
     </div>
     <el-switch v-model="isShowDetail"
+      active-color="#4bcc1f"
+      inactive-color="#0084ff"
       :active-text="__('showDetail')"
-      :inactive-text="__('dontShowDetail')"></el-switch>
+      :inactive-text="__('showTotal')"></el-switch>
     <bar-chart
      :chart-data="chartData"
      :options="barOption"
