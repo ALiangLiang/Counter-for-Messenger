@@ -57,7 +57,7 @@ export default function getToken () {
           // If status is "complete", ping it.
           if (tab.status === 'complete') {
             pingTimes += 1
-            chrome.runtime.sendMessage('ping', function (response) {
+            chrome.tabs.sendMessage(messengerTabId, 'ping', function (response) {
               if (response === 'pong') { // Means Messenger page is fine.
                 clearInterval(intervalId)
               }
