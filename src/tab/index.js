@@ -55,7 +55,7 @@ new Vue({
       token: null,
       selfId: null,
       db: null,
-      iSee: storage.get('iSee', true)
+      iSee: storage.get('iSee', false)
     }
   },
   watch: {
