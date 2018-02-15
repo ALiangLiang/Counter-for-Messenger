@@ -68,7 +68,7 @@ function createThreadObject (threadNode, createdUsers) {
       if (participants.length > 3) {
         name = participants.slice(0, 3)
           .map((participant) => participant.user.name).join(__('comma'))
-        name += `${__('comma')}${__('others', participants.length - 3)}`
+        name += `${__('comma')}${__('others', String(participants.length - 3))}`
       }
     }
 

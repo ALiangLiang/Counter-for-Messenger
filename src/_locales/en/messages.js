@@ -57,15 +57,7 @@ module.exports = {
   colon: { message: ': ' },
 
   // Thread Object
-  others: {
-    message: '$otherCount$ Others',
-    placeholders: {
-      otherCount: {
-        content: '$1',
-        example: '87 Others'
-      }
-    }
-  },
+  others: { message: '$1 Others' },
 
   // ALert message of content script
   loginAlert: { message: 'Please log in to messenger to count your messages.' }

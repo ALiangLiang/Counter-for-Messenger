@@ -57,15 +57,7 @@ module.exports = {
   colon: { message: '：' },
 
   // Thread 物件
-  others: {
-    message: '其他$otherCount$個人',
-    placeholders: {
-      otherCount: {
-        content: '$1',
-        example: '其他87個人'
-      }
-    }
-  },
+  others: { message: '其他$1個人' },
 
   // Content 腳本的提示訊息
   loginAlert: { message: '請登入 Messenger 網頁版以統計您的訊息。' }

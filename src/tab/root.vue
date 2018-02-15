@@ -66,6 +66,7 @@ body {
 }
 .el-footer a {
   color: white;
+  text-decoration: none;
 }
 .el-footer ul {
   padding-left: 0;
