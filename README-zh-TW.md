@@ -1,6 +1,6 @@
-# Messenger 計數器
+# ![Logo](.github/assets/icon.png) Messenger 計數器
 
-[ ![Chrome Web Store](https://img.shields.io/chrome-web-store/v/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Chrome Web Store) ](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
+[<img src="https://img.shields.io/chrome-web-store/v/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Chrome Web Store"> ](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Users)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/rating/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Rating&colorB=dfb317)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 
@@ -13,27 +13,27 @@
 
 [![從 Chrome Web Store 安裝](.github/assets/tryitnowbutton_small.png)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 
-## 特色
+## 🔥 特色
 
-- 統計
+- 💬 **統計**
   - 多少聊天室
   - 聊天室的訊息量
   - 聊天室的文字量
-- 將所有聊天室排名
-- 下載聊天紀錄
+- 📊 將所有聊天室**排名**
+- 💾 **下載**聊天紀錄
 
-## 使用
-安裝完畢後，點擊 Chrome 右上角的 LOGO 圖示，如果找不到，點擊右上角的「三顆點」按鈕，就可以找到了。
+## 📄 使用
+安裝完畢後，點擊 Chrome 右上角的 LOGO 圖示 <img width="20" alt="Logo" src=".github/assets/icon.png">，如果找不到，點擊右上角的「三顆點」按鈕，就可以找到了。  
 ![點logo](.github/assets/click_icon1.png)
 ![點隱藏的logo](.github/assets/click_icon2.png)
 
-## 貢獻
+## 🔧 貢獻
 
 如果你喜歡這個套件的話，又或是想要新的功能、修復 bug。  
 歡迎 [PR](https://github.com/ALiangLiang/Counter-for-Messenger/compare) 或是[建立 issue](https://github.com/ALiangLiang/Counter-for-Messenger/issues/new)。  
 閱讀[貢獻守則](.github/CONTRIBUTING.md)來瞭解更多資訊。
 
-## 語言
+## 🌎 語言
 
 - [English](README.md)
 - 正體中文 (Traditional Chinese)
@@ -45,4 +45,7 @@
 稍微技術點的講法，就是開啟 Messenger 頁面後，以 Chrome Extension 的 API「webRequest」
 ，攔截下我們要的 token 等資訊，然後再拿它們去向 FB 發 request，最後再丟到新的頁面，呈現給大家。
 
-***不會收集使用者數據***
+## 📣 聲明
+
+- **這是非官方專案**  
+- **不會收集使用者數據**
