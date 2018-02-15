@@ -12,9 +12,6 @@ module.exports = merge(baseWebpack, {
   },
   devtool: '#cheap-module-eval-source-map',
   plugins: [
-    htmlPage('Counter for Messenger', 'app', ['tab']),
-    htmlPage('options', 'options', ['options']),
-    htmlPage('background', 'background', ['background']),
     new webpack.NoEmitOnErrorsPlugin(),
     new webpack.DefinePlugin({
       'process.env.NODE_ENV': '"development"'

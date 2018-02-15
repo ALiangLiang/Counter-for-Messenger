@@ -1,7 +1,7 @@
 const path = require('path')
 const webpack = require('webpack')
 const ChromeReloadPlugin  = require('wcer')
-const { cssLoaders } = require('./tools')
+const { cssLoaders, htmlPage } = require('./tools')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const GenerateLocaleJsonPlugin = require('../plugins/GenerateLocaleJsonPlugin')
 
@@ -87,6 +87,9 @@ module.exports = {
     ]
   },
   plugins: [
+    htmlPage('Counter for Messenger', 'app', ['manifest', 'vendor', 'tab']),
+    htmlPage('options', 'options', ['manifest', 'vendor', 'options']),
+    htmlPage('background', 'background', ['manifest', 'vendor', 'background']),
     new CopyWebpackPlugin([{ from: path.join(__dirname, '..', 'static') }]),
     new ChromeReloadPlugin({
       port: 9090,
@@ -95,6 +98,22 @@ module.exports = {
     new GenerateLocaleJsonPlugin({
       _locales: path.join(__dirname, '..', 'src', '_locales')
     }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'vendor',
+      minChunks: function (module) {
+        return (
+          module.resource &&
+          /\.js$/.test(module.resource) &&
+          module.resource.indexOf(
+            path.join(__dirname, '../node_modules')
+          ) === 0
+        )
+      }
+    }),
+    new webpack.optimize.CommonsChunkPlugin({
+      name: 'manifest',
+      chunks: ['vendor']
+    })
   ],
   performance: { hints: false },
 }
