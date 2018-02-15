@@ -1,7 +1,7 @@
 module.exports = {
   // Extension information
   extName: { message: 'Counter for Messenger' },
-  extDescription: { message: 'Statistics your Messenger , the number of messages with friends and rank ! ! Take a look at what you and your best friend best friends chant !' },
+  extDescription: { message: 'Count and rank your friends or lover by analysis you Messenger!! Take a look what you and your best friend chat!!' },
 
   // Router
   indexPage: { message: 'Index' },
