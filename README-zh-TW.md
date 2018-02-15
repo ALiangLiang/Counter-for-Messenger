@@ -1,8 +1,8 @@
 # Messenger 計數器
 
-[![Releases](https://img.shields.io/github/release/ALiangLiang/Counter-for-Messenger.svg)](https://github.com/ALiangLiang/Counter-for-Messenger/releases/latest)
-
-[![從 Chrome Web Store 安裝](.github/assets/tryitnowbutton_small.png)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Chrome Web Store)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
+[![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Users)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/rating/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Rating&colorB=dfb317)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 
 ![示意圖](.github/assets/screenshot1.png)
 
@@ -10,6 +10,8 @@
 快來看看你與哪個朋友最麻吉唄！
 想不想知道與好朋友聊了幾句？想回味與她聊天的點點滴滴嗎？
 這時候這碗糕就派上用場了！！還不快安裝！？
+
+[![從 Chrome Web Store 安裝](.github/assets/tryitnowbutton_small.png)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 
 功能簡介：
 1. 訊息、字數排行
@@ -30,8 +32,8 @@
 
 ## 貢獻
 
-如果你喜歡這個套件的話，又或是想要新的功能、修復 bug。
-歡迎 [PR](https://github.com/ALiangLiang/Counter-for-Messenger/compare) 或是[建立 issue](https://github.com/ALiangLiang/Counter-for-Messenger/issues/new)。
+如果你喜歡這個套件的話，又或是想要新的功能、修復 bug。  
+歡迎 [PR](https://github.com/ALiangLiang/Counter-for-Messenger/compare) 或是[建立 issue](https://github.com/ALiangLiang/Counter-for-Messenger/issues/new)。  
 閱讀[貢獻守則](.github/CONTRIBUTING.md)來瞭解更多資訊。
 
 ## 語言
