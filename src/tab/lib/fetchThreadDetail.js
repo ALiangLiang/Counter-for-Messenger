@@ -48,9 +48,11 @@ async function fetchThreadDetail ({ token, threadId, messageCount, messageLimit 
     .catch((err) => {
       console.error(err)
       messageLimit = messageLimit / 2
-      return handleFetch({
-        token, threadId, messageCount, messageLimit, before
-      })
+      if (messageLimit > 1000) {
+        return handleFetch({
+          token, threadId, messageCount, messageLimit, before
+        })
+      } else { throw new Error('Too many error on fetch.') }
     })
   // Response and data handle.
   const resText = await response.text()

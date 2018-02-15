@@ -2,7 +2,7 @@ import Queue from 'promise-queue'
 const queue = new Queue(40, Infinity)
 
 // Used to debug. How much fetch mission queue. How much fetch mission pending.
-setInterval(() => console.log(queue.getQueueLength(), queue.getPendingLength()), 3000)
+// setInterval(() => console.log(queue.getQueueLength(), queue.getPendingLength()), 3000)
 
 export default async function fetchService (...args) {
   return new Promise((resolve, reject) => {

@@ -12,6 +12,7 @@ import router from './router'
 import fetchThreads from './lib/fetchThreads.js'
 import getToken from './lib/getToken.js'
 import Indexeddb from '../ext/Indexeddb.js'
+import storage from '../ext/storage.js'
 
 const __ = chrome.i18n.getMessage
 Vue.prototype.__ = __
@@ -36,27 +37,18 @@ new Vue({
   components: { Root },
   template: '<Root :threads-info="threadsInfo" :token="token" :self-id="selfId" :db="db"></Root>',
   data () {
-    let iSee = false
-    try {
-      iSee = JSON.parse(window.localStorage.getItem('iSee'))
-      if (typeof (iSee) !== 'boolean') throw new Error('Variable "iSee" is not type Boolean.')
-    } catch (err) {
-      console.error(err)
-      iSee = false
-      window.localStorage.setItem('iSee', iSee)
-    }
     return {
       loading: null,
       threadsInfo: [],
       token: null,
       selfId: null,
       db: null,
-      iSee
+      iSee: storage.get('iSee', true)
     }
   },
   watch: {
     iSee (value) {
-      window.localStorage.setItem('iSee', value)
+      storage.set('iSee', value)
     }
   },
   async created () {

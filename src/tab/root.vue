@@ -8,7 +8,7 @@
         text-color="#fff"
         default-active="/"
         active-text-color="#ffd04b">
-        <el-menu-item index="/">
+        <el-menu-item index="">
           <img src="../../static/icons/38.png"></img>
           <span> {{ __('extName') }}</span>
         </el-menu-item>

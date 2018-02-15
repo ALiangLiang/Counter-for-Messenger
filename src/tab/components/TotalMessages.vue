@@ -21,6 +21,7 @@
   </div>
 </template>
 <script>
+import { Message } from 'element-ui'
 import BarChart from './BarChart.js'
 import fetchThreadDetail from '../lib/fetchThreadDetail.js'
 const __ = chrome.i18n.getMessage
@@ -82,24 +83,39 @@ export default {
           background: 'rgba(0, 0, 0, 0.7)'
         })
 
+        const errorQueue = []
         await Promise.all(splicedThreads.map(async (thread) => {
           if (thread.textCount) return
           if (!thread.messages) {
             const cachedThread = await this.db.get(thread.id)
             if (cachedThread && cachedThread.messages) return
             thread.isLoading = true
-            const result = await fetchThreadDetail({
-              token: this.token, thread, $set: this.$set
-            })
+            try {
+              const result = await fetchThreadDetail({
+                token: this.token, thread, $set: this.$set
+              })
+              thread.needUpdate = false
+              thread.analyzeMessages(result)
+              await this.db.put({ id: thread.id, messages: result })
+            } catch (err) {
+              console.error(err)
+              if (errorQueue.indexOf(err.message) === -1) {
+                errorQueue.push(err.message)
+              }
+            }
             thread.isLoading = false
-            thread.needUpdate = false
-            thread.analyzeMessages(result)
-            await this.db.put({ id: thread.id, messages: result })
           } else {
             thread.analyzeMessages()
           }
           this.loading.text = `${__('fetchingMessages')}[${++this.loadingCount}/${amountOfMaxDisplay}]`
         }))
+        if (errorQueue.length) {
+          Message({
+            type: 'error',
+            message: errorQueue.join('. ')
+          })
+        }
+
         this.loading.text = __('rendering')
         const participantsStatus = splicedThreads
           .map((thread, i) => {
