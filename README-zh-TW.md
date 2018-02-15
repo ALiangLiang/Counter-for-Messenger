@@ -1,8 +1,10 @@
-## Messenger 計數器
+# Messenger 計數器
 
-[![從 Chrome Web Store 安裝](https://raw.githubusercontent.com/ALiangLiang/Counter-for-Messenger/master/tryitnowbutton_small.png)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
+[![Releases](https://img.shields.io/github/release/ALiangLiang/Counter-for-Messenger.svg)](https://github.com/ALiangLiang/Counter-for-Messenger/releases/latest)
 
-![示意圖](https://raw.githubusercontent.com/ALiangLiang/Counter-for-Messenger/master/screenshots/main.png)
+[![從 Chrome Web Store 安裝](.github/assets/tryitnowbutton_small.png)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
+
+![示意圖](.github/assets/screenshot1.png)
 
 統計你在 Messenger 中，與朋友們的訊息數量，並且排名！！
 快來看看你與哪個朋友最麻吉唄！
@@ -26,12 +28,18 @@
 
 ***不會收集使用者數據***
 
-### 語言
+## 貢獻
+
+如果你喜歡這個套件的話，又或是想要新的功能、修復 bug。
+歡迎 [PR](https://github.com/ALiangLiang/Counter-for-Messenger/compare) 或是[建立 issue](https://github.com/ALiangLiang/Counter-for-Messenger/issues/new)。
+閱讀[貢獻守則](.github/CONTRIBUTING.md)來瞭解更多資訊。
+
+## 語言
 
 - [English](README.md)
 - 正體中文 (Traditional Chinese)
 
-### 如何運作
+## 如何運作
 
 簡單來說，就是開啟 Messenger 網頁版頁面，攔截它發出資訊，然後以這些資訊向 FB 請求我們所要的資訊 (訊息數)。
 
