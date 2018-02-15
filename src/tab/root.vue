@@ -8,7 +8,7 @@
         text-color="#fff"
         default-active="/"
         active-text-color="#ffd04b">
-        <el-menu-item index="">
+        <el-menu-item index="/about">
           <img src="../../static/icons/38.png"></img>
           <span> {{ __('extName') }}</span>
         </el-menu-item>
@@ -20,19 +20,13 @@
     <el-main>
       <router-view :threadsInfo="threadsInfo" :token="token" :self-id="selfId" :db="db"/>
     </el-main>
-    <el-footer>
-      <ul>
-        <li>
-          <a href="https://github.com/ALiangLiang/Counter-for-Messenger">
-            <icon name="github"></icon> Github
-          </a>
-        </li>
-        <li>
-          <a href="https://github.com/ALiangLiang">
-            <icon name="user"></icon> Author: ALiangLiang
-          </a>
-        </li>
-      </ul>
+    <el-footer height="30px">
+      <a href="https://github.com/ALiangLiang/Counter-for-Messenger">
+        <icon name="github"></icon> Github
+      </a>
+      <a href="https://github.com/ALiangLiang">
+        <icon name="user"></icon> Author: ALiangLiang
+      </a>
     </el-footer>
   </el-container>
 </template>
@@ -63,13 +57,10 @@ body {
   text-align: center;
   background-color: #272727;
   color: white;
+  padding-top: 5px;
 }
 .el-footer a {
   color: white;
   text-decoration: none;
-}
-.el-footer ul {
-  padding-left: 0;
-  list-style-type: none;
 }
 </style>
