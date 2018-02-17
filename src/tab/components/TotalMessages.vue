@@ -24,9 +24,11 @@
 </template>
 <script>
 import { Message } from 'element-ui'
+import ColorHash from 'color-hash'
 import BarChart from './BarChart.js'
 import fetchThreadDetail from '../lib/fetchThreadDetail.js'
 const __ = chrome.i18n.getMessage
+const colorHash = new ColorHash({lightness: [0.35, 0.5, 0.65]})
 
 export default {
   name: 'TotalMessages',
@@ -42,8 +44,15 @@ export default {
     rank: 1,
     sliderMax: 1,
     isShowDetail: false,
-    barOption: { responsive: false,
+    barOption: {
+      responsive: false,
       maintainAspectRatio: false,
+      legend: { display: false },
+      tooltips: {
+        filter: (tooltip) => {
+          return tooltip.xLabel !== 0
+        }
+      },
       scales: {
         xAxes: [{
           stacked: true
@@ -119,30 +128,33 @@ export default {
         }
 
         this.loading.text = __('rendering')
-        const participantsStatus = splicedThreads
-          .map((thread, i) => {
-            let me = 0
-            let other = 0
-            thread.participants.forEach((participant) => {
-              if (participant.user.id === this.selfId) me = participant.messageCount
-              else other += participant.messageCount
-            })
-            return [me, other]
+        const labels = splicedThreads.map((thread) => thread.name)
+        const datasetsMap = new Map()
+        splicedThreads.forEach((thread, i) => {
+          thread.participants.forEach((participant) => {
+            const userId = participant.user.id
+            const userName = participant.user.name
+            if (datasetsMap.has(userId)) {
+              datasetsMap.get(userId).data[i] = participant.messageCount
+            } else {
+              datasetsMap.set(userId, {
+                label: userName,
+                backgroundColor: (userId === this.selfId)
+                  ? '#4BCC1F' : colorHash.hex(participant.user.name),
+                data: Array(splicedThreads.length).fill(0)
+              })
+            }
           })
-          .reduce((cur, row) => {
-            cur[0].push(row[0])
-            cur[1].push(row[1])
-            return cur
-          }, [[], []])
-        const datasets = participantsStatus.map((status, i) => {
-          return {
-            label: (i === 0) ? 'Me' : 'Other',
-            backgroundColor: (i === 0) ? '#4BCC1F' : '#F03C24',
-            data: status
-          }
         })
+        const datasets = Array.from(datasetsMap)
+          .sort((a, b) => {
+            if (a[0] === this.selfId) return -1
+            if (b[0] === this.selfId) return 1
+            return 0
+          })
+          .map((data) => data[1])
         this.chartData = {
-          labels: splicedThreads.map((info) => info.name),
+          labels,
           datasets
         }
 
