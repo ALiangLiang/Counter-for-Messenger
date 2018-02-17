@@ -50,7 +50,7 @@ export default {
       legend: { display: false },
       tooltips: {
         filter: (tooltip) => {
-          return tooltip.xLabel !== 0
+          return tooltip.xLabel !== 0 && !isNaN(tooltip.xLabel)
         }
       },
       scales: {
