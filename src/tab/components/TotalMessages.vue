@@ -32,9 +32,7 @@ const colorHash = new ColorHash({lightness: [0.35, 0.5, 0.65]})
 
 export default {
   name: 'TotalMessages',
-  components: {
-    BarChart
-  },
+  components: { BarChart },
   props: [ 'threadsInfo', 'selfId', 'token', 'db' ],
   data: () => ({
     HEIGHT: 800,
@@ -49,17 +47,11 @@ export default {
       maintainAspectRatio: false,
       legend: { display: false },
       tooltips: {
-        filter: (tooltip) => {
-          return tooltip.xLabel !== 0 && !isNaN(tooltip.xLabel)
-        }
+        filter: (tooltip) => tooltip.xLabel !== 0 && !isNaN(tooltip.xLabel)
       },
       scales: {
-        xAxes: [{
-          stacked: true
-        }],
-        yAxes: [{
-          stacked: true
-        }]
+        xAxes: [{ stacked: true }],
+        yAxes: [{ stacked: true }]
       }
     }
   }),
