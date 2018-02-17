@@ -2,11 +2,11 @@
   <div id="about">
     <h1>Support</h1>
     <h3>Found a bug? Got a question or new idea?</h3>
-    <p>Why don't you send us a <a :href="webstorePageUrl + '/support'">report</a>?</p>
+    <p>Why don't you send us a <a :href="webstorePageUrl + '/support'" target="_blank">report</a>?</p>
     <h3>Like this extension?</h3>
-    <p>Let us know on <a :href="webstorePageUrl + '/reviews'">Chrome web store</a>!</p>
+    <p>Let us know on <a :href="webstorePageUrl + '/reviews'" target="_blank">Chrome web store</a>!</p>
     <h3>Want new feature?</h3>
-    <p>Welcome your PR on <a href="https://github.com/ALiangLiang/Counter-for-Messenger">Github</a>. 😄</p>
+    <p>Welcome your PR on <a href="https://github.com/ALiangLiang/Counter-for-Messenger" target="_blank">Github</a>. 😄</p>
 
     <h1>Frequently Asked Questions</h1>
     <h3>Is my information safe?</h3>
@@ -20,7 +20,9 @@
     <p>
       You can donate to support our work. You can tell others to try
       Counter of Messenger. And, if you're technically-savvy, you can
-      <a href="#">use our beta version</a>
+      <a href="https://chrome.google.com/webstore/detail/flkejcheidpcclcdokndihmnlejfabil" target="_blank">
+        use our beta version
+      </a>
       and help us find bugs before they're released to the public.
     </p>
 
@@ -28,23 +30,23 @@
 
     <h1>Note</h1>
     <p>
-      It'a web extension you know. Inspired by I want to know how many messages with my best friend (or you can called lover).
-      Original it's just a little project. Very simple and ugly. But in recently time, more and more user install this extension.
-      And give me many encourage. I don't want to disappoint them. So I update this project. Make it more powerful, more beautiful.
-      If you really like this extension, tell me. I would very happy. 😄😄😄 Thanks every guys.
+      It'a web extension you know. Inspired by I want to know how many messages
+      with my best friend. In the beginning it's just a little project. Very
+      simple and ugly. But until recently, more and more user install this extension.
+      And give me many encourage. I don't want to disappoint them. So I update
+      this project. Make it more powerful, more beautiful. If you really like
+      this extension, tell me. I would very happy. 😄😄😄 Thanks every guys.
     </p>
   </div>
 </template>
 <script>
-// const __ = chrome.i18n.getMessage
+const __ = chrome.i18n.getMessage
 
 export default {
   name: 'About',
-  data () {
-    return {
-      webstorePageUrl: 'https://chrome.google.com/webstore/detail/counter-for-messenger/ldlagicdigidgnhniajpmoddkoakdoca'
-    }
-  }
+  data: () => ({
+    webstorePageUrl: 'https://chrome.google.com/webstore/detail/' + __('@@extension_id')
+  })
 }
 </script>
 

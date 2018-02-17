@@ -3,6 +3,10 @@
 [<img src="https://img.shields.io/chrome-web-store/v/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Chrome%20Web%20Store"> ](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Users)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/rating/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Rating&colorB=dfb317)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
+[![Chrome Web Store BETA](https://img.shields.io/chrome-web-store/v/flkejcheidpcclcdokndihmnlejfabil.svg?label=Beta)](https://chrome.google.com/webstore/detail/flkejcheidpcclcdokndihmnlejfabil)
+
+🌎 | English | [正體中文 (Traditional Chinese)](README-zh-TW.md)
+------------- | ------------- | -------------
 
 ![DEMO](.github/assets/screenshot1.png)
 
@@ -21,7 +25,7 @@ Take a look what you and your best friend chat!!
 - 💾 **Backup**(Download) your messages.
 
 ## 📄 Instructions
-After installed, click on the logo <img width="20" alt="Logo" src=".github/assets/icon.png"> on the top right of Chrome browser.  
+After installed, click the logo <img width="20" alt="Logo" src=".github/assets/icon.png"> on the top right of Chrome browser.  
 If no any icon there, click "three dot" button and you can found the logo.  
 ![click logo](.github/assets/click_icon1.png)
 ![click hidden logo](.github/assets/click_icon2.png)
@@ -32,12 +36,9 @@ Like Counter of Messenger? Want new feature or bug fixes?
 Please contribute to the project either by [_creating a PR_](https://github.com/ALiangLiang/Counter-for-Messenger/compare) or [_submitting an issue_](https://github.com/ALiangLiang/Counter-for-Messenger/issues/new) on GitHub.  
 Read the [contribution guide](.github/CONTRIBUTING.md) for more detailed information.
 
-## 🌎 Languages
+If you're technically-savvy, you can use our [beta version](https://chrome.google.com/webstore/detail/flkejcheidpcclcdokndihmnlejfabil) and help us find bugs before they're released to the public.
 
-- English
-- [正體中文 (Traditional Chinese)](README-zh-TW.md)
-
-## 📣 Declaim
+## 📣 Declaration
 
 - **It's a unofficial project.**
 - **We would not collect any user data.**

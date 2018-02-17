@@ -1,7 +1,7 @@
 module.exports = {
   // 擴充套件資訊
   extName: { message: 'Messenger 計數器' },
-  extDescription: { message: '統計你在 Messenger 中，與朋友們的訊息數量，並且排名！！' },
+  extDescription: { message: '統計並排名你在 Messenger 中與朋友的訊息量！也可以順便打包下載訊息記錄。' },
 
   // 路由
   indexPage: { message: '首頁' },

@@ -3,6 +3,10 @@
 [<img src="https://img.shields.io/chrome-web-store/v/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Chrome%20Web%20Store"> ](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Users)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/rating/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Rating&colorB=dfb317)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
+[![Chrome Web Store BETA](https://img.shields.io/chrome-web-store/v/flkejcheidpcclcdokndihmnlejfabil.svg?label=Beta)](https://chrome.google.com/webstore/detail/flkejcheidpcclcdokndihmnlejfabil)
+
+🌎 | [English](README.md) | 正體中文 (Traditional Chinese)
+------------- | ------------- | -------------
 
 ![示意圖](.github/assets/screenshot1.png)
 
@@ -29,14 +33,10 @@
 
 ## 🔧 貢獻
 
-如果你喜歡這個套件的話，又或是想要新的功能、修復 bug。  
-歡迎 [PR](https://github.com/ALiangLiang/Counter-for-Messenger/compare) 或是[建立 issue](https://github.com/ALiangLiang/Counter-for-Messenger/issues/new)。  
-閱讀[貢獻守則](.github/CONTRIBUTING.md)來瞭解更多資訊。
+如果你喜歡這個套件的話，又或是想要新的功能、修復 bug，歡迎 [PR](https://github.com/ALiangLiang/Counter-for-Messenger/compare) 或是[建立 issue](https://github.com/ALiangLiang/Counter-for-Messenger/issues/new)，閱讀[貢獻守則](.github/CONTRIBUTING.md)來瞭解更多資訊。
 
-## 🌎 語言
-
-- [English](README.md)
-- 正體中文 (Traditional Chinese)
+如果你有一定的技術，可以使用[公開測試版本](https://chrome.google.com/webstore/detail/flkejcheidpcclcdokndihmnlejfabil)
+，並且幫助我們在釋出正式版前找出錯誤。
 
 ## 如何運作
 
