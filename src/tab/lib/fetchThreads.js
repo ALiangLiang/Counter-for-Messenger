@@ -80,16 +80,8 @@ function createThreadObject (threadNode, createdUsers) {
     })
   } else {
     console.warn('Unknown thread type: ', threadNode)
-    // 預設使用 thread 名稱作為顯示名稱標籤。
-    // By default, use thread name as display tooltip.
-    let name = threadNode.name || 'Unknown'
-
-    Object.assign(thread, {
-      id: threadNode.thread_key.other_user_id || threadNode.thread_key.thread_fbid,
-      name,
-      tooltip: name,
-      type: threadNode.thread_type
-    })
+    // TODO: handle with thread type 'ROOM' and 'MARKETPLACE'
+    return null
   }
 
   return thread
@@ -137,6 +129,7 @@ export default async function fetchThreads (token, limit = 5000) {
   const createdUsers = [] // Use to record user we created.
   const threadsData = json.o0.data.viewer.message_threads.nodes
     .map((threadsData) => createThreadObject(threadsData, createdUsers))
+    .filter((thread) => !!thread)
     // Sort by message count. From more to less.
     .sort((threadA, threadB) => threadB.messageCount - threadA.messageCount)
 
