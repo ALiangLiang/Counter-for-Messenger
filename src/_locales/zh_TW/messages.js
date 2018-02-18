@@ -5,8 +5,7 @@ module.exports = {
 
   // 路由
   indexPage: { message: '首頁' },
-  messageChart: { message: '訊息數量圖表' },
-  textChart: { message: '文字數量圖表' },
+  chartPage: { message: '圖表' },
 
   // Loading 訊息
   interceptingToken: { message: '攔截權杖中...' },
@@ -43,6 +42,8 @@ module.exports = {
   drapToLookOtherUsers: { message: '滑動以查看其他排名' },
   showDetail: { message: '顯示詳細' },
   showTotal: { message: '顯示總和' },
+  showMessage: { message: '顯示訊息數量' },
+  showText: { message: '顯示文字數量' },
   total: { message: '總共' },
   me: { message: '我' },
   other: { message: '其他人' },

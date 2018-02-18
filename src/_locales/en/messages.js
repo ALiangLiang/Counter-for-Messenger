@@ -5,8 +5,7 @@ module.exports = {
 
   // Router
   indexPage: { message: 'Index' },
-  messageChart: { message: 'Chart of Messages' },
-  textChart: { message: 'Chart of Text' },
+  chartPage: { message: 'Chart' },
 
   // Message of loading
   interceptingToken: { message: 'Intercept token...' },
@@ -43,6 +42,8 @@ module.exports = {
   drapToLookOtherUsers: { message: 'Drag slider to look other users.' },
   showDetail: { message: 'Show Detail' },
   showTotal: { message: 'Show Total' },
+  showMessage: { message: 'Show Messages' },
+  showText: { message: 'Show Texts' },
   total: { message: 'Total' },
   me: { message: 'Me' },
   other: { message: 'Other' },

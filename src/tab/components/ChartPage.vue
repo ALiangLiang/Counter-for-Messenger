@@ -9,6 +9,11 @@
         @change="renderChart()">
       </el-slider>
     </div>
+    <el-switch v-model="isShowText"
+    active-color="#4bcc1f"
+    inactive-color="#0084ff"
+    :active-text="__('showText')"
+    :inactive-text="__('showMessage')"></el-switch>
     <el-switch v-model="isShowDetail"
       active-color="#4bcc1f"
       inactive-color="#0084ff"
@@ -41,6 +46,7 @@ export default {
     chartData: null,
     rank: 1,
     sliderMax: 1,
+    isShowText: false,
     isShowDetail: false,
     barOption: { responsive: false,
       maintainAspectRatio: false,
@@ -60,6 +66,9 @@ export default {
   watch: {
     isShowDetail (val) {
       this.renderChart(val)
+    },
+    isShowText () {
+      this.renderChart()
     }
   },
   methods: {
@@ -69,11 +78,11 @@ export default {
       const splicedThreads = this.threadsInfo.slice(startSliceIndex, startSliceIndex + amountOfMaxDisplay)
       if (!isShowDetail) {
         this.chartData = {
-          labels: splicedThreads.map((info) => info.name),
+          labels: splicedThreads.map((thread) => thread.name),
           datasets: [{
             label: __('total'),
             backgroundColor: '#0083FF',
-            data: splicedThreads.map((info) => info.messageCount)
+            data: splicedThreads.map((thread) => this.selectCountType(thread))
           }]
         }
       } else {
@@ -124,8 +133,8 @@ export default {
             let me = 0
             let other = 0
             thread.participants.forEach((participant) => {
-              if (participant.user.id === this.selfId) me = participant.messageCount
-              else other += participant.messageCount
+              if (participant.user.id === this.selfId) me = this.selectCountType(participant)
+              else other += this.selectCountType(participant)
             })
             return [me, other]
           })
@@ -148,6 +157,10 @@ export default {
 
         this.loading.close()
       }
+    },
+    selectCountType (object) {
+      const type = (this.isShowText) ? 'textCount' : 'messageCount'
+      return object[type]
     }
   }
 }

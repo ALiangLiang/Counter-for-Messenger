@@ -13,8 +13,7 @@
           <span> {{ __('extName') }}</span>
         </el-menu-item>
         <el-menu-item index="/">{{ __('indexPage') }}</el-menu-item>
-        <el-menu-item index="/message">{{ __('messageChart') }}</el-menu-item>
-        <el-menu-item index="/text">{{ __('textChart') }}</el-menu-item>
+        <el-menu-item index="/chart">{{ __('chartPage') }}</el-menu-item>
         <el-menu-item index="">
           <a class="share-link" target="_blank"
             href="https://www.facebook.com/sharer/sharer.php?u=https%3A//chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca">
