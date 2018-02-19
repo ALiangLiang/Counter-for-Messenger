@@ -1,31 +1,39 @@
 <template>
-  <div>
-    <div class="block">
-      <span class="demonstration">{{ __('drapToLookOtherUsers') }}</span>
+  <el-container>
+    <el-aside width="300px">
+      <el-form ref="form" label-width="0px">
+        <el-form-item>
+          <el-switch v-model="isShowText"
+          active-color="#4bcc1f"
+          inactive-color="#0084ff"
+          :active-text="__('showText')"
+          :inactive-text="__('showMessage')"></el-switch>
+        </el-form-item>
+        <el-form-item>
+          <el-switch v-model="isShowDetail"
+            active-color="#4bcc1f"
+            inactive-color="#0084ff"
+            :active-text="__('showDetail')"
+            :inactive-text="__('showTotal')"></el-switch>
+        </el-form-item>
+      </el-form>
+    </el-aside>
+    <bar-chart
+     :chart-data="chartData"
+     :height="chartHeight"
+     :options="barOption">
+    </bar-chart>
+    <el-aside width="100px">
       <el-slider
         v-model="rank"
+        vertical
+        :height="chartHeight - 18 + 'px'"
         :min="1"
         :max="this.threadsInfo.length + 1"
         @change="renderChart()">
       </el-slider>
-    </div>
-    <el-switch v-model="isShowText"
-    active-color="#4bcc1f"
-    inactive-color="#0084ff"
-    :active-text="__('showText')"
-    :inactive-text="__('showMessage')"></el-switch>
-    <el-switch v-model="isShowDetail"
-      active-color="#4bcc1f"
-      inactive-color="#0084ff"
-      :active-text="__('showDetail')"
-      :inactive-text="__('showTotal')"></el-switch>
-    <bar-chart
-     :chart-data="chartData"
-     :options="barOption"
-     :width="800"
-     :height="HEIGHT" >
-    </bar-chart>
-  </div>
+    </el-aside>
+  </el-container>
 </template>
 <script>
 import { Message } from 'element-ui'
@@ -40,7 +48,7 @@ export default {
   },
   props: [ 'threadsInfo', 'selfId', 'token', 'db' ],
   data: () => ({
-    HEIGHT: 800,
+    chartHeight: document.documentElement.clientHeight - 130,
     loading: null,
     loadingCount: 0,
     chartData: null,
@@ -48,33 +56,29 @@ export default {
     sliderMax: 1,
     isShowText: false,
     isShowDetail: false,
-    barOption: { responsive: false,
+    barOption: {
+      responsive: false,
       maintainAspectRatio: false,
       scales: {
-        xAxes: [{
-          stacked: true
-        }],
-        yAxes: [{
-          stacked: true
-        }]
+        xAxes: [{ stacked: true }],
+        yAxes: [{ stacked: true, barPercentage: 0.7 }]
       }
     }
   }),
   async created () {
+    this.$nextTick(() => window.addEventListener('resize', () =>
+      (this.chartHeight = document.documentElement.clientHeight - 130)))
     this.renderChart()
   },
   watch: {
-    isShowDetail (val) {
-      this.renderChart(val)
-    },
-    isShowText () {
-      this.renderChart()
-    }
+    chartHeight: () => this.renderChart(),
+    isShowDetail: () => this.renderChart(),
+    isShowText: () => this.renderChart()
   },
   methods: {
     async renderChart (isShowDetail = this.isShowDetail) {
       const startSliceIndex = Number(this.rank) - 1
-      const amountOfMaxDisplay = this.HEIGHT / 20
+      const amountOfMaxDisplay = this.chartHeight / 20
       const splicedThreads = this.threadsInfo.slice(startSliceIndex, startSliceIndex + amountOfMaxDisplay)
       if (!isShowDetail) {
         this.chartData = {
@@ -166,5 +170,5 @@ export default {
 }
 </script>
 
-<style scoped>
+<style>
 </style>

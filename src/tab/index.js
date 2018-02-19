@@ -1,7 +1,7 @@
 import Vue from 'vue'
 // Import element-ui components.
 import { Slider, Loading, Message, Button, Table, TableColumn, Tag, Tooltip,
-  Pagination, Switch, Container, Menu, MenuItem, Header, Main, Footer,
+  Pagination, Switch, Container, Menu, MenuItem, Header, Aside, Main, Footer,
   MessageBox, Input, Form, FormItem } from 'element-ui'
 // Customize element-ui theme. Let this style more like FB.
 import '../../element-variables.scss'
@@ -36,10 +36,9 @@ locale.use((mainLangName === 'zh') ? zhLocale : enLocale)
 
 // Import element-ui components.
 const elements = [ Slider, Loading, Button, Table, TableColumn, Tag, Tooltip,
-  Pagination, Switch, Container, Menu, MenuItem, Header, Main, Footer, Input,
-  Form, FormItem ]
+  Pagination, Switch, Container, Menu, MenuItem, Header, Aside, Main, Footer,
+  Input, Form, FormItem ]
 elements.forEach((el) => Vue.use(el, { locale }))
-
 Vue.prototype.$confirm = MessageBox.confirm
 
 /* eslint-disable no-new */

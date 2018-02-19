@@ -25,6 +25,7 @@
     <el-main>
       <router-view :threadsInfo="threadsInfo" :token="token" :self-id="selfId" :db="db"/>
     </el-main>
+    <el-footer height="30px" class="offset-footer"></el-footer>
     <el-footer height="30px">
       <a href="https://github.com/ALiangLiang/Counter-for-Messenger">
         <icon name="github"></icon> Github
@@ -69,10 +70,17 @@ body {
   margin-left: 50px;
 }
 .el-footer {
+  position: fixed;
+  width: 100%;
+  bottom: 0;
   text-align: center;
   background-color: #272727;
   color: white;
   padding-top: 5px;
+}
+.el-footer.offset-footer {
+  background-color: white;
+  position: relative;
 }
 .el-footer a {
   color: white;
