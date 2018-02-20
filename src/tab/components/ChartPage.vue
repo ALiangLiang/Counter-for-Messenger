@@ -20,6 +20,7 @@
     </el-aside>
     <bar-chart
      :chart-data="chartData"
+     :styles="chartContainerStyles"
      :height="chartHeight"
      :options="barOption">
     </bar-chart>
@@ -49,6 +50,11 @@ export default {
   props: [ 'threadsInfo', 'selfId', 'token', 'db' ],
   data: () => ({
     chartHeight: document.documentElement.clientHeight - 130,
+    chartContainerStyles: {
+      position: 'relative',
+      width: '100%',
+      height: document.documentElement.clientHeight - 130 + 'px'
+    },
     loading: null,
     loadingCount: 0,
     chartData: null,
@@ -57,8 +63,9 @@ export default {
     isShowText: false,
     isShowDetail: false,
     barOption: {
-      responsive: false,
+      responsive: true,
       maintainAspectRatio: false,
+      onResize (...argus) { console.log(argus) },
       scales: {
         xAxes: [{ stacked: true }],
         yAxes: [{ stacked: true, barPercentage: 0.7 }]
@@ -71,7 +78,11 @@ export default {
     this.renderChart()
   },
   watch: {
-    chartHeight () { this.renderChart() },
+    chartHeight (height) {
+      console.log(height)
+      this.chartContainerStyles.height = height + 'px'
+      this.renderChart()
+    },
     isShowDetail () { this.renderChart() },
     isShowText () { this.renderChart() }
   },
@@ -150,9 +161,8 @@ export default {
             }
           }
           thread.isLoading = false
-        } else {
-          thread.analyzeMessages()
-        }
+        } else thread.analyzeMessages()
+
         this.loading.text = `${__('fetchingMessages')}[${++this.loadingCount}/${threads.length}]`
       }))
       if (errorQueue.length) {
