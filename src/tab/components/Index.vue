@@ -120,6 +120,8 @@ export default {
   },
   methods: {
     async fetchSelectedThreads () {
+      this.$ga.event('ThreadDetails', 'fetch', 'length', this.selectedThreads.length)
+
       const allCacheThreads = await this.db.getAll()
       const results = await Promise.all(this.selectedThreads.map(async (thread) => {
         thread.isLoading = true
@@ -158,6 +160,8 @@ export default {
       })
     },
     async fetchMessages (thread) {
+      this.$ga.event('ThreadDetails', 'fetch', 'length', 1)
+
       thread.isLoading = true
       const cachedThread = await this.db.get(thread.id)
       let messageLimit
@@ -185,6 +189,8 @@ export default {
       return thread
     },
     async downloadHistory (thread) {
+      this.$ga.event('Thread', 'download')
+
       if (thread.messages) {
         return downloadMessages(thread, this.selfId)
       } else {

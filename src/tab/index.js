@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import VueAnalytics from 'vue-analytics'
 // Import element-ui components.
 import { Slider, Loading, Message, Button, Table, TableColumn, Tag, Tooltip,
   Pagination, Switch, Container, Menu, MenuItem, Header, Aside, Main, Footer,
@@ -7,7 +8,7 @@ import { Slider, Loading, Message, Button, Table, TableColumn, Tag, Tooltip,
 import '../../element-variables.scss'
 /**
  * Languages of Element-UI
- * Base no locales of this extension.
+ * Base on locales of this extension.
  */
 import enLocale from 'element-ui/lib/locale/lang/en'
 import zhLocale from 'element-ui/lib/locale/lang/zh-TW'
@@ -39,6 +40,19 @@ const elements = [ Slider, Loading, Button, Table, TableColumn, Tag, Tooltip,
   Pagination, Switch, Container, Menu, MenuItem, Header, Aside, Main, Footer,
   Input, Form, FormItem ]
 elements.forEach((el) => Vue.use(el, { locale }))
+
+// In Chrome extension, must close checking protocol.
+const gaSet = [{ field: 'checkProtocolTask', value: null }]
+if (process.env.NODE_ENV !== 'production') {
+  // If not in production mode, don't send any data to ga service.
+  gaSet.push({ field: 'sendHitTask', value: null })
+}
+Vue.use(VueAnalytics, {
+  id: 'UA-114347247-1',
+  set: gaSet,
+  router
+})
+
 Vue.prototype.$confirm = MessageBox.confirm
 
 /* eslint-disable no-new */

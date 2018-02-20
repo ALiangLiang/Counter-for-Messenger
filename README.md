@@ -41,4 +41,4 @@ If you're technically-savvy, you can use our [beta version](https://chrome.googl
 ## 📣 Declaration
 
 - **It's a unofficial project.**
-- **We would not collect any user data.**
+- **We would not collect any user data from Messenger.**
