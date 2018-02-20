@@ -71,16 +71,19 @@ export default {
     this.renderChart()
   },
   watch: {
-    chartHeight: () => this.renderChart(),
-    isShowDetail: () => this.renderChart(),
-    isShowText: () => this.renderChart()
+    chartHeight () { this.renderChart() },
+    isShowDetail () { this.renderChart() },
+    isShowText () { this.renderChart() }
   },
   methods: {
-    async renderChart (isShowDetail = this.isShowDetail) {
+    async renderChart () {
       const startSliceIndex = Number(this.rank) - 1
       const amountOfMaxDisplay = this.chartHeight / 20
       const splicedThreads = this.threadsInfo.slice(startSliceIndex, startSliceIndex + amountOfMaxDisplay)
-      if (!isShowDetail) {
+      if (!(!this.isShowText && !this.isShowDetail)) {
+        await this.syncThreadDetail(splicedThreads)
+      }
+      if (!this.isShowDetail) {
         this.chartData = {
           labels: splicedThreads.map((thread) => thread.name),
           datasets: [{
@@ -90,48 +93,6 @@ export default {
           }]
         }
       } else {
-        this.loadingCount = 0
-        this.loading = this.$loading({
-          lock: true,
-          text: __('fetchingMessages'),
-          spinner: 'el-icon-loading',
-          background: 'rgba(0, 0, 0, 0.7)'
-        })
-
-        const errorQueue = []
-        await Promise.all(splicedThreads.map(async (thread) => {
-          if (thread.textCount) return
-          if (!thread.messages) {
-            const cachedThread = await this.db.get(thread.id)
-            if (cachedThread && cachedThread.messages) return
-            thread.isLoading = true
-            try {
-              const result = await fetchThreadDetail({
-                token: this.token, thread, $set: this.$set
-              })
-              thread.needUpdate = false
-              thread.analyzeMessages(result)
-              await this.db.put({ id: thread.id, messages: result })
-            } catch (err) {
-              console.error(err)
-              if (errorQueue.indexOf(err.message) === -1) {
-                errorQueue.push(err.message)
-              }
-            }
-            thread.isLoading = false
-          } else {
-            thread.analyzeMessages()
-          }
-          this.loading.text = `${__('fetchingMessages')}[${++this.loadingCount}/${amountOfMaxDisplay}]`
-        }))
-        if (errorQueue.length) {
-          Message({
-            type: 'error',
-            message: errorQueue.join('. ')
-          })
-        }
-
-        this.loading.text = __('rendering')
         const participantsStatus = splicedThreads
           .map((thread, i) => {
             let me = 0
@@ -158,9 +119,50 @@ export default {
           labels: splicedThreads.map((info) => info.name),
           datasets
         }
-
-        this.loading.close()
       }
+    },
+    async syncThreadDetail (threads) {
+      this.loadingCount = 0
+      this.loading = this.$loading({
+        lock: true,
+        text: __('fetchingMessages'),
+        spinner: 'el-icon-loading',
+        background: 'rgba(0, 0, 0, 0.7)'
+      })
+      const errorQueue = []
+      await Promise.all(threads.map(async (thread) => {
+        if (thread.textCount) return
+        if (!thread.messages) {
+          const cachedThread = await this.db.get(thread.id)
+          if (cachedThread && cachedThread.messages) return
+          thread.isLoading = true
+          try {
+            const result = await fetchThreadDetail({
+              token: this.token, thread, $set: this.$set
+            })
+            thread.needUpdate = false
+            thread.analyzeMessages(result)
+            await this.db.put({ id: thread.id, messages: result })
+          } catch (err) {
+            console.error(err)
+            if (errorQueue.indexOf(err.message) === -1) {
+              errorQueue.push(err.message)
+            }
+          }
+          thread.isLoading = false
+        } else {
+          thread.analyzeMessages()
+        }
+        this.loading.text = `${__('fetchingMessages')}[${++this.loadingCount}/${threads.length}]`
+      }))
+      if (errorQueue.length) {
+        Message({
+          type: 'error',
+          message: errorQueue.join('. ')
+        })
+      }
+      this.loading.close()
+      return threads
     },
     selectCountType (object) {
       const type = (this.isShowText) ? 'textCount' : 'messageCount'
