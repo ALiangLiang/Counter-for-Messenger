@@ -4,7 +4,7 @@ module.exports = {
   extDescription: { message: 'Count and rank your friends or lover by analysis you Messenger!! Take a look what you and your best friend chat!!' },
 
   // Router
-  indexPage: { message: 'Index' },
+  listPage: { message: 'List' },
   chartPage: { message: 'Chart' },
 
   // Message of loading
@@ -20,7 +20,7 @@ module.exports = {
   iSee: { message: 'Got it!' },
   cancel: { message: 'Cancel' },
 
-  // Index
+  // List Page
   threadName: { message: 'Name' },
   threadType: { message: 'Type' },
   threadMessageCount: { message: 'Messages' },
@@ -38,7 +38,7 @@ module.exports = {
   searchInputLabel: { message: 'Search' },
   searchInputPlaceholder: { message: 'Keyword' },
 
-  // Charts
+  // Chart page
   drapToLookOtherUsers: { message: 'Drag slider to look other users.' },
   showDetail: { message: 'Show Detail' },
   showTotal: { message: 'Show Total' },

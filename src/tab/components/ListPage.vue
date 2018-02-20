@@ -94,7 +94,7 @@ import downloadMessages from '../lib/downloadMessages.js'
 const __ = chrome.i18n.getMessage
 
 export default {
-  name: 'Index',
+  name: 'ListPage',
   props: [ 'threadsInfo', 'token', 'selfId', 'db' ],
   components: {
     Icon

@@ -6,13 +6,13 @@
         mode="horizontal"
         background-color="#0083FF"
         text-color="#fff"
-        default-active="/"
+        default-active="/list"
         active-text-color="#ffd04b">
         <el-menu-item index="/about">
           <img src="../../static/icons/38.png"></img>
           <span> {{ __('extName') }}</span>
         </el-menu-item>
-        <el-menu-item index="/">{{ __('indexPage') }}</el-menu-item>
+        <el-menu-item index="/list">{{ __('listPage') }}</el-menu-item>
         <el-menu-item index="/chart">{{ __('chartPage') }}</el-menu-item>
         <el-menu-item index="">
           <a class="share-link" target="_blank"
@@ -77,6 +77,7 @@ body {
   background-color: #272727;
   color: white;
   padding-top: 5px;
+  z-index: 1;
 }
 .el-footer.offset-footer {
   background-color: white;

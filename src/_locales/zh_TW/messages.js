@@ -4,7 +4,7 @@ module.exports = {
   extDescription: { message: '統計並排名你在 Messenger 中與朋友的訊息量！也可以順便打包下載訊息記錄。' },
 
   // 路由
-  indexPage: { message: '首頁' },
+  listPage: { message: '清單' },
   chartPage: { message: '圖表' },
 
   // Loading 訊息
@@ -20,7 +20,7 @@ module.exports = {
   iSee: { message: '我瞭解' },
   cancel: { message: '取消' },
 
-  // 首頁
+  // 清單
   threadName: { message: '名稱' },
   threadType: { message: '種類' },
   threadMessageCount: { message: '訊息數量' },
