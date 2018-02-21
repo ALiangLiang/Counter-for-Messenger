@@ -39,6 +39,7 @@ module.exports = {
   searchInputPlaceholder: { message: 'Keyword' },
 
   // Chart page
+  operationBar: { message: 'Operation Bar' },
   drapToLookOtherUsers: { message: 'Drag slider to look other users.' },
   showDetail: { message: 'Show Detail' },
   showTotal: { message: 'Show Total' },

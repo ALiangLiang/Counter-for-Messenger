@@ -39,6 +39,7 @@ module.exports = {
   searchInputPlaceholder: { message: '請輸入關鍵字' },
 
   // 圖表
+  operationBar: { message: '工具欄' },
   drapToLookOtherUsers: { message: '滑動以查看其他排名' },
   showDetail: { message: '顯示詳細' },
   showTotal: { message: '顯示總和' },

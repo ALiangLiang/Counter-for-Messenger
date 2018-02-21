@@ -63,6 +63,10 @@ export default {
 body {
   margin: 0;
 }
+.el-main {
+  padding-left: 0;
+  padding-right: 0;
+}
 .el-header {
   padding: 0;
 }

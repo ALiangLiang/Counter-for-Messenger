@@ -1,30 +1,47 @@
 <template>
   <el-container>
-    <el-aside width="300px">
-      <el-form ref="form" label-width="0px">
-        <el-form-item>
-          <el-switch v-model="isShowText"
-          active-color="#4bcc1f"
-          inactive-color="#0084ff"
-          :active-text="__('showText')"
-          :inactive-text="__('showMessage')"></el-switch>
-        </el-form-item>
-        <el-form-item>
-          <el-switch v-model="isShowDetail"
+    <el-menu
+      default-active=""
+      class="el-menu-vertical"
+      text-color="#4bcc1f"
+      :collapse="isCollapse"
+      mode="vertical">
+      <el-menu-item index="0" @click="isCollapse = !isCollapse">
+        <i :class="(isCollapse) ? 'el-icon-arrow-right' : 'el-icon-arrow-left'"></i>
+        <span slot="title">{{ __('operationBar') }}</span>
+      </el-menu-item>
+      <el-menu-item index="1" @click="clickMenuItemHandle('isShowTextSwitch')">
+        <i class="el-icon-message"></i>
+        <span slot="title">
+          <el-switch
+            ref="isShowTextSwitch"
+            v-model="isShowText"
+            active-color="#4bcc1f"
+            inactive-color="#0084ff"
+            :active-text="__('showText')"
+            :inactive-text="__('showMessage')"></el-switch>
+        </span>
+      </el-menu-item>
+      <el-menu-item index="2" @click="clickMenuItemHandle('isShowDetailSwitch')">
+        <i class="el-icon-document"></i>
+        <span slot="title">
+          <el-switch
+            ref="isShowDetailSwitch"
+            v-model="isShowDetail"
             active-color="#4bcc1f"
             inactive-color="#0084ff"
             :active-text="__('showDetail')"
             :inactive-text="__('showTotal')"></el-switch>
-        </el-form-item>
-      </el-form>
-    </el-aside>
+        </span>
+      </el-menu-item>
+    </el-menu>
     <bar-chart
      :chart-data="chartData"
      :styles="chartContainerStyles"
      :height="chartHeight"
      :options="barOption">
     </bar-chart>
-    <el-aside width="100px">
+    <el-aside width="50px">
       <el-slider
         v-model="rank"
         vertical
@@ -43,7 +60,7 @@ import fetchThreadDetail from '../lib/fetchThreadDetail.js'
 const __ = chrome.i18n.getMessage
 
 export default {
-  name: 'TotalMessages',
+  name: 'ChartPage',
   components: {
     BarChart
   },
@@ -53,8 +70,10 @@ export default {
     chartContainerStyles: {
       position: 'relative',
       width: '100%',
+      'min-width': '400px',
       height: document.documentElement.clientHeight - 130 + 'px'
     },
+    isCollapse: false,
     loading: null,
     loadingCount: 0,
     chartData: null,
@@ -65,7 +84,6 @@ export default {
     barOption: {
       responsive: true,
       maintainAspectRatio: false,
-      onResize (...argus) { console.log(argus) },
       scales: {
         xAxes: [{ stacked: true }],
         yAxes: [{ stacked: true, barPercentage: 0.7 }]
@@ -87,6 +105,10 @@ export default {
     isShowText () { this.renderChart() }
   },
   methods: {
+    clickMenuItemHandle (refName) {
+      const itemVm = this.$refs[refName]
+      itemVm.$emit('input', !itemVm.value)
+    },
     async renderChart () {
       const startSliceIndex = Number(this.rank) - 1
       const amountOfMaxDisplay = this.chartHeight / 20
@@ -182,5 +204,17 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
+aside {
+  min-width: 50px;
+}
+.el-menu-vertical {
+  left: 0px;
+}
+.el-menu-vertical:not(.el-menu--collapse) {
+  min-height: 400px;
+}
+.el-menu>li:last-child {
+  float: none;
+}
 </style>
