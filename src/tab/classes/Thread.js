@@ -1,6 +1,7 @@
 import User from './User.js'
 import _set from 'lodash/set'
 import _get from 'lodash/get'
+import _isUndefined from 'lodash/isUndefined'
 
 export default class Thread {
   constructor (data) {
@@ -9,7 +10,7 @@ export default class Thread {
     this.isLoading = false
     // Initial properties.
     publicPropNames.forEach((propName) => {
-      this[propName] = data[propName] || null
+      this[propName] = _isUndefined(data[propName]) ? null : data[propName]
     })
   }
 
