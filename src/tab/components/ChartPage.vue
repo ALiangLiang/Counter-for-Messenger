@@ -61,35 +61,35 @@ const __ = chrome.i18n.getMessage
 
 export default {
   name: 'ChartPage',
-  components: {
-    BarChart
-  },
+  components: { BarChart },
   props: [ 'threadsInfo', 'selfId', 'token', 'db' ],
-  data: () => ({
-    chartHeight: document.documentElement.clientHeight - 130,
-    chartContainerStyles: {
-      position: 'relative',
-      width: '100%',
-      'min-width': '400px',
-      height: document.documentElement.clientHeight - 130 + 'px'
-    },
-    isCollapse: false,
-    loading: null,
-    loadingCount: 0,
-    chartData: null,
-    rank: 1,
-    sliderMax: 1,
-    isShowText: false,
-    isShowDetail: false,
-    barOption: {
-      responsive: true,
-      maintainAspectRatio: false,
-      scales: {
-        xAxes: [{ stacked: true }],
-        yAxes: [{ stacked: true, barPercentage: 0.7 }]
+  data () {
+    return {
+      chartHeight: document.documentElement.clientHeight - 130,
+      chartContainerStyles: {
+        position: 'relative',
+        width: '100%',
+        'min-width': '400px',
+        height: document.documentElement.clientHeight - 130 + 'px'
+      },
+      isCollapse: false,
+      loading: null,
+      loadingCount: 0,
+      chartData: null,
+      rank: this.threadsInfo.length,
+      sliderMax: 1,
+      isShowText: false,
+      isShowDetail: false,
+      barOption: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          xAxes: [{ stacked: true }],
+          yAxes: [{ stacked: true, barPercentage: 0.7 }]
+        }
       }
     }
-  }),
+  },
   async created () {
     this.$nextTick(() => window.addEventListener('resize', () =>
       (this.chartHeight = document.documentElement.clientHeight - 130)))
@@ -104,15 +104,17 @@ export default {
     isShowDetail () { this.renderChart() },
     isShowText () { this.renderChart() }
   },
+  computed: {
+    amountOfMaxDisplay () { return this.chartHeight / 20 }
+  },
   methods: {
     clickMenuItemHandle (refName) {
       const itemVm = this.$refs[refName]
       itemVm.$emit('input', !itemVm.value)
     },
     async renderChart () {
-      const startSliceIndex = Number(this.rank) - 1
-      const amountOfMaxDisplay = this.chartHeight / 20
-      const splicedThreads = this.threadsInfo.slice(startSliceIndex, startSliceIndex + amountOfMaxDisplay)
+      const startSliceIndex = this.threadsInfo.length - Number(this.rank)
+      const splicedThreads = this.threadsInfo.slice(startSliceIndex, startSliceIndex + this.amountOfMaxDisplay)
       if (!(!this.isShowText && !this.isShowDetail)) {
         await this.syncThreadDetail(splicedThreads)
       }

@@ -27,10 +27,10 @@
     </el-main>
     <el-footer height="30px" class="offset-footer"></el-footer>
     <el-footer height="30px">
-      <a href="https://github.com/ALiangLiang/Counter-for-Messenger">
+      <a href="https://github.com/ALiangLiang/Counter-for-Messenger" target="_blank">
         <icon name="github"></icon> Github
       </a>
-      <a href="https://github.com/ALiangLiang">
+      <a href="https://github.com/ALiangLiang" target="_blank">
         <icon name="user"></icon> Author: ALiangLiang
       </a>
     </el-footer>
