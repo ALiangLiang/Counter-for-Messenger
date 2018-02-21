@@ -45,7 +45,10 @@ module.exports = {
   showTotal: { message: '顯示總和' },
   showMessage: { message: '顯示訊息數量' },
   showText: { message: '顯示文字數量' },
+  detail: { message: '詳細' },
   total: { message: '總共' },
+  message: { message: '訊息數量' },
+  text: { message: '文字數量' },
   me: { message: '我' },
   other: { message: '其他人' },
 

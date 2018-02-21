@@ -85,6 +85,12 @@ export default {
       barOption: {
         responsive: true,
         maintainAspectRatio: false,
+        title: {
+          display: true,
+          fontSize: 16,
+          padding: 5,
+          text: 'test'
+        },
         scales: {
           xAxes: [{ stacked: true }],
           yAxes: [{ stacked: true, barPercentage: 0.7 }]
@@ -96,6 +102,7 @@ export default {
     this.$nextTick(() => window.addEventListener('resize', () =>
       (this.chartHeight = document.documentElement.clientHeight - 130)))
     this.renderChart()
+    this.changeChartTitle()
   },
   watch: {
     chartHeight (height) {
@@ -103,13 +110,26 @@ export default {
       this.chartContainerStyles.height = height + 'px'
       this.renderChart()
     },
-    isShowDetail () { this.renderChart() },
-    isShowText () { this.renderChart() }
+    isShowDetail () {
+      this.renderChart()
+      this.changeChartTitle()
+    },
+    isShowText () {
+      this.renderChart()
+      this.changeChartTitle()
+    }
   },
   computed: {
     amountOfMaxDisplay () { return this.chartHeight / 20 }
   },
   methods: {
+    changeChartTitle () {
+      const specs = [
+        (this.isShowDetail) ? __('total') : __('detail'),
+        (this.isShowText) ? __('text') : __('message')
+      ]
+      this.barOption.title.text = specs.join(' / ')
+    },
     clickMenuItemHandle (refName) {
       const itemVm = this.$refs[refName]
       itemVm.$emit('input', !itemVm.value)

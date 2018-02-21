@@ -45,7 +45,10 @@ module.exports = {
   showTotal: { message: 'Show Total' },
   showMessage: { message: 'Show Messages' },
   showText: { message: 'Show Texts' },
+  detail: { message: 'Detail' },
   total: { message: 'Total' },
+  sessage: { message: 'Messages' },
+  text: { message: 'Texts' },
   me: { message: 'Me' },
   other: { message: 'Other' },
 
