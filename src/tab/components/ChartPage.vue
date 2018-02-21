@@ -42,14 +42,16 @@
      :options="barOption">
     </bar-chart>
     <el-aside width="50px">
-      <el-slider
-        v-model="rank"
-        vertical
-        :height="chartHeight - 18 + 'px'"
-        :min="1"
-        :max="this.threadsInfo.length + 1"
-        @change="renderChart()">
-      </el-slider>
+      <el-tooltip class="item" effect="dark" :content="__('drapToLookOtherUsers')" placement="left">
+        <el-slider
+          v-model="rank"
+          vertical
+          :height="chartHeight - 18 + 'px'"
+          :min="1"
+          :max="this.threadsInfo.length + 1"
+          @change="renderChart()">
+        </el-slider>
+      </el-tooltip>
     </el-aside>
   </el-container>
 </template>
