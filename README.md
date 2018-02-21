@@ -6,7 +6,7 @@
 [![Chrome Web Store BETA](https://img.shields.io/chrome-web-store/v/flkejcheidpcclcdokndihmnlejfabil.svg?label=Beta)](https://chrome.google.com/webstore/detail/flkejcheidpcclcdokndihmnlejfabil)
 
 🌎 | English | [正體中文 (Traditional Chinese)](README-zh-TW.md)
-------------- | ------------- | -------------
+--- | ------ | -------------
 
 ![DEMO](.github/assets/screenshot1.png)
 
@@ -37,6 +37,10 @@ Please contribute to the project either by [_creating a PR_](https://github.com/
 Read the [contribution guide](.github/CONTRIBUTING.md) for more detailed information.
 
 If you're technically-savvy, you can use our [beta version](https://chrome.google.com/webstore/detail/flkejcheidpcclcdokndihmnlejfabil) and help us find bugs before they're released to the public.
+
+### 🌎 Translation
+
+Welcome every language support. Help your countryman to use this application. Ref [CONTRIBUTING - Working with translations](.github/CONTRIBUTING.md#working-with-translations)
 
 ## 📣 Declaration
 

@@ -12,9 +12,7 @@ module.exports = {
     '128': 'icons/128.png'
   },
   browser_action: {
-    default_icon: {
-      '16': 'icons/16.png'
-    },
+    default_icon: { '16': 'icons/16.png' },
     default_title: '__MSG_extName__'
   },
   permissions: [
