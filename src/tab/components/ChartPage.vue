@@ -48,7 +48,7 @@
           vertical
           :height="chartHeight - 18 + 'px'"
           :min="1"
-          :max="this.threadsInfo.length + 1"
+          :max="this.threadsInfo.length"
           @change="renderChart()">
         </el-slider>
       </el-tooltip>
