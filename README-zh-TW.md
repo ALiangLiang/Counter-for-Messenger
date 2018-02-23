@@ -8,14 +8,18 @@
 🌎 | [English](README.md) | 正體中文 (Traditional Chinese)
 ------------- | ------------- | -------------
 
-![示意圖](.github/assets/screenshot1.png)
-
 統計你在 Messenger 中，與朋友們的訊息數量，並且排名！！
 快來看看你與哪個朋友最麻吉唄！
 想不想知道與好朋友聊了幾句？想回味與她聊天的點點滴滴嗎？
 這時候這碗糕就派上用場了！！還不快安裝！？
 
-[![從 Chrome Web Store 安裝](.github/assets/tryitnowbutton_small.png)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
+<div style="text-align:center;margin-bottom:10px">
+  <a href="https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca">
+    <img src=".github/assets/tryitnowbutton_small.png" alt="從 Chrome Web Store 安裝" />
+  </a>
+</div>
+
+<div style="text-align:center"><img src=".github/assets/screenshot3.png" alt="示意圖" /></div>
 
 ## 🔥 特色
 

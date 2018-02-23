@@ -8,12 +8,16 @@
 🌎 | English | [正體中文 (Traditional Chinese)](README-zh-TW.md)
 --- | ------ | -------------
 
-![DEMO](.github/assets/screenshot1.png)
-
 Count and rank your friends or lover by analysis you Messenger!!  
 Take a look what you and your best friend chat!!
 
-[![Install from Chrome Web Store](.github/assets/tryitnowbutton_small.png)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
+<div style="text-align:center;margin-bottom:10px">
+  <a href="https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca">
+    <img src=".github/assets/tryitnowbutton_small.png" alt="Install from Chrome Web Store" />
+  </a>
+</div>
+
+<div style="text-align:center"><img src=".github/assets/screenshot2.png" alt="DEMO" /></div>
 
 ## 🔥 Features
 
