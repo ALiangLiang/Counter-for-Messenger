@@ -11,13 +11,15 @@
 Count and rank your friends or lover by analysis you Messenger!!  
 Take a look what you and your best friend chat!!
 
-<div style="text-align:center;margin-bottom:10px">
+<p align="center">
   <a href="https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca">
     <img src=".github/assets/tryitnowbutton_small.png" alt="Install from Chrome Web Store" />
   </a>
-</div>
+</p>
 
-<div style="text-align:center"><img src=".github/assets/screenshot2.png" alt="DEMO" /></div>
+<p align="center">
+  <img src=".github/assets/screenshot2.png" alt="DEMO" />
+</p>
 
 ## 🔥 Features
 

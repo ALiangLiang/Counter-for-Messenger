@@ -13,13 +13,15 @@
 想不想知道與好朋友聊了幾句？想回味與她聊天的點點滴滴嗎？
 這時候這碗糕就派上用場了！！還不快安裝！？
 
-<div style="text-align:center;margin-bottom:10px">
+<p align="center">
   <a href="https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca">
     <img src=".github/assets/tryitnowbutton_small.png" alt="從 Chrome Web Store 安裝" />
   </a>
-</div>
+</p>
 
-<div style="text-align:center"><img src=".github/assets/screenshot3.png" alt="示意圖" /></div>
+<p align="center">
+  <img src=".github/assets/screenshot3.png" alt="示意圖" />
+</p>
 
 ## 🔥 特色
 
