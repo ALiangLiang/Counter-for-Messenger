@@ -27,7 +27,7 @@ function createThreadObject (threadNode, createdUsers) {
       return {
         user,
         messageCount: null,
-        textCount: null,
+        characterCount: null,
         inGroup: true
       }
     })

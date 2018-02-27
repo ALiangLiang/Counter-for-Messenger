@@ -58,7 +58,7 @@
       </el-table-column>
       <el-table-column prop="messageCount" sortable :label="__('threadMessageCount')"
         width="120"> </el-table-column>
-      <el-table-column prop="textCount" sortable :label="__('threadTextCount')"
+      <el-table-column prop="characterCount" sortable :label="__('threadCharacterCount')"
         width="120"> </el-table-column>
       <el-table-column :label="__('threadOperation')" width="360">
         <template slot-scope="{ row }">
@@ -68,7 +68,7 @@
             @click="fetchMessages(row)"
             type="text" size="small">
             <icon name="cloud-download"></icon>
-            {{ (row.textCount === null) ? __('importMessageHistory') : __('importedMessageHistory')}}
+            {{ (row.characterCount === null) ? __('importMessageHistory') : __('importedMessageHistory')}}
           </el-button>
           <el-button
             @click="downloadHistory(row)"
@@ -153,7 +153,7 @@ export default {
 
       results.forEach(([thread, updatedMessages]) => {
         if (updatedMessages) {
-          thread.textCount = Thread.culTextCount(updatedMessages)
+          thread.characterCount = Thread.culCharacterCount(updatedMessages)
           thread.needUpdate = false
           thread.isLoading = false
         }
@@ -181,7 +181,7 @@ export default {
           token: this.token, thread, $set: this.$set, messageLimit
         })
         thread.messages = (_get(cachedThread, 'messages') || []).concat(result)
-        thread.textCount = Thread.culTextCount(thread.messages)
+        thread.characterCount = Thread.culCharacterCount(thread.messages)
         this.db.put({ id: thread.id, messages: thread.messages })
         thread.needUpdate = false
         thread.isLoading = false
@@ -205,7 +205,7 @@ export default {
     },
     getSummaries ({ columns, data }) {
       const totalMessageCount = data.reduce((sum, row) => row.messageCount + sum, 0)
-      const totalTextCount = data.reduce((sum, row) => row.textCount + sum, 0)
+      const totalTextCount = data.reduce((sum, row) => row.characterCount + sum, 0)
       return ['', '', '', '', totalMessageCount, totalTextCount]
     },
     onSelect (items) {

@@ -6,7 +6,7 @@ import _isUndefined from 'lodash/isUndefined'
 export default class Thread {
   constructor (data) {
     // Public properties name.
-    const publicPropNames = ['id', 'name', 'tooltop', 'type', 'messages', 'participants', 'messageCount', 'textCount', 'needUpdate']
+    const publicPropNames = ['id', 'name', 'tooltop', 'type', 'messages', 'participants', 'messageCount', 'characterCount', 'needUpdate']
     this.isLoading = false
     // Initial properties.
     publicPropNames.forEach((propName) => {
@@ -28,19 +28,19 @@ export default class Thread {
   analyzeMessages (messages = this.messages, threads) {
     if (!messages) throw new Error('Need messages.')
 
-    let textSum = 0
-    // Statistic messages with every participants. And count text.
+    let characterSum = 0
+    // Statistic messages with every participants. And count character.
     const participantsStats = {}
     messages.forEach((message) => {
       const textLength = (message.text) ? message.text.length : 0
-      textSum += textLength
+      characterSum += textLength
       const participantStats = participantsStats[message.senderId]
       _set(participantsStats, `${message.senderId}.messageCount`,
         _get(participantStats, 'messageCount', 0) + 1)
-      _set(participantsStats, `${message.senderId}.textCount`,
-        _get(participantStats, 'textCount', 0) + textLength)
+      _set(participantsStats, `${message.senderId}.characterCount`,
+        _get(participantStats, 'characterCount', 0) + textLength)
     })
-    this.textCount = textSum
+    this.characterCount = characterSum
 
     // Set statistic results on Thread Object.
     // Don't let vue instance trigger "messages". Will cause memory leak.
@@ -51,7 +51,7 @@ export default class Thread {
         (threads) ? threads.getUserById(participantId) : null
         if (messageSender) {
           messageSender.messageCount = participantStats.messageCount
-          messageSender.textCount = participantStats.textCount
+          messageSender.characterCount = participantStats.characterCount
         } else { // This sender is not inside the thread.
           messageSender = {
             user: new User({
@@ -61,7 +61,7 @@ export default class Thread {
               url: null
             }),
             messageCount: participantStats.messageCount,
-            textCount: participantStats.textCount,
+            characterCount: participantStats.characterCount,
             inGroup: false
           }
           this.participants.push(messageSender)
@@ -69,7 +69,7 @@ export default class Thread {
       })
   }
 
-  static culTextCount (messages) {
+  static culCharacterCount (messages) {
     return messages.reduce((cur, message) =>
       ((message.text) ? message.text.length : 0) + cur, 0)
   }

@@ -10,15 +10,15 @@
         <i :class="(isCollapse) ? 'el-icon-arrow-right' : 'el-icon-arrow-left'"></i>
         <span slot="title">{{ __('operationBar') }}</span>
       </el-menu-item>
-      <el-menu-item index="1" @click="clickMenuItemHandle('isShowTextSwitch')">
+      <el-menu-item index="1" @click="clickMenuItemHandle('isShowCharacterSwitch')">
         <i class="el-icon-message"></i>
         <span slot="title">
           <el-switch
-            ref="isShowTextSwitch"
-            v-model="isShowText"
+            ref="isShowCharacterSwitch"
+            v-model="isShowCharacter"
             active-color="#4bcc1f"
             inactive-color="#0084ff"
-            :active-text="__('showText')"
+            :active-text="__('showCharacter')"
             :inactive-text="__('showMessage')"></el-switch>
         </span>
       </el-menu-item>
@@ -80,7 +80,7 @@ export default {
       chartData: null,
       rank: this.threadsInfo.length,
       sliderMax: 1,
-      isShowText: false,
+      isShowCharacter: false,
       isShowDetail: false,
       barOption: {
         responsive: true,
@@ -89,7 +89,7 @@ export default {
           display: true,
           fontSize: 16,
           padding: 5,
-          text: 'test'
+          text: ''
         },
         scales: {
           xAxes: [{ stacked: true }],
@@ -106,17 +106,16 @@ export default {
   },
   watch: {
     chartHeight (height) {
-      console.log(height)
       this.chartContainerStyles.height = height + 'px'
       this.renderChart()
     },
     isShowDetail () {
-      this.renderChart()
       this.changeChartTitle()
+      this.renderChart()
     },
-    isShowText () {
-      this.renderChart()
+    isShowCharacter () {
       this.changeChartTitle()
+      this.renderChart()
     }
   },
   computed: {
@@ -125,8 +124,8 @@ export default {
   methods: {
     changeChartTitle () {
       const specs = [
-        (this.isShowDetail) ? __('total') : __('detail'),
-        (this.isShowText) ? __('text') : __('message')
+        (this.isShowDetail) ? __('detail') : __('total'),
+        (this.isShowCharacter) ? __('character') : __('message')
       ]
       this.barOption.title.text = specs.join(' / ')
     },
@@ -135,9 +134,10 @@ export default {
       itemVm.$emit('input', !itemVm.value)
     },
     async renderChart () {
+      console.log(this.barOption.title.text)
       const startSliceIndex = this.threadsInfo.length - Number(this.rank)
       const splicedThreads = this.threadsInfo.slice(startSliceIndex, startSliceIndex + this.amountOfMaxDisplay)
-      if (!(!this.isShowText && !this.isShowDetail)) {
+      if (!(!this.isShowCharacter && !this.isShowDetail)) {
         await this.syncThreadDetail(splicedThreads)
       }
       if (!this.isShowDetail) {
@@ -188,7 +188,7 @@ export default {
       })
       const errorQueue = []
       await Promise.all(threads.map(async (thread) => {
-        if (thread.textCount) return
+        if (thread.characterCount) return
         if (!thread.messages) {
           const cachedThread = await this.db.get(thread.id)
           if (cachedThread && cachedThread.messages) return
@@ -221,7 +221,7 @@ export default {
       return threads
     },
     selectCountType (object) {
-      const type = (this.isShowText) ? 'textCount' : 'messageCount'
+      const type = (this.isShowCharacter) ? 'characterCount' : 'messageCount'
       return object[type]
     }
   }
