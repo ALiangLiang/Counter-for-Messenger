@@ -19,6 +19,7 @@ module.exports = {
     'tabs',
     'webRequest',
     'webRequestBlocking',
+    'downloads',
     '*://*.messenger.com/*'
   ],
   background: {
