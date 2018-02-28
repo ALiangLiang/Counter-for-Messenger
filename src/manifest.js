@@ -1,6 +1,6 @@
 module.exports = {
   name: '__MSG_extName__',
-  version: '0.2.0',
+  version: '0.2.1',
   description: '__MSG_extDescription__',
   author: 'ALiangLiang',
   manifest_version: 2,
