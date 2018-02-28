@@ -26,7 +26,7 @@ Take a look what you and your best friend chat!!
 - 💬 **Count**
   - Threads (Chat rooms)
   - Messages in thread
-  - Text in thread
+  - Characters in thread
 - 📊 **Rank** all your threads on chart.
 - 💾 **Backup**(Download) your messages.
 
