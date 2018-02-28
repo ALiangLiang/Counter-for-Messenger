@@ -134,7 +134,6 @@ export default {
       itemVm.$emit('input', !itemVm.value)
     },
     async renderChart () {
-      console.log(this.barOption.title.text)
       const startSliceIndex = this.threadsInfo.length - Number(this.rank)
       const splicedThreads = this.threadsInfo.slice(startSliceIndex, startSliceIndex + this.amountOfMaxDisplay)
       if (!(!this.isShowCharacter && !this.isShowDetail)) {
@@ -165,13 +164,11 @@ export default {
             cur[1].push(row[1])
             return cur
           }, [[], []])
-        const datasets = participantsStatus.map((status, i) => {
-          return {
-            label: (i === 0) ? 'Me' : 'Other',
-            backgroundColor: (i === 0) ? '#4BCC1F' : '#F03C24',
-            data: status
-          }
-        })
+        const datasets = participantsStatus.map((status, i) => ({
+          label: (i === 0) ? 'Me' : 'Other',
+          backgroundColor: (i === 0) ? '#4BCC1F' : '#F03C24',
+          data: status
+        }))
         this.chartData = {
           labels: splicedThreads.map((info) => info.name),
           datasets

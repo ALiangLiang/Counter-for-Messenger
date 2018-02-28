@@ -6,7 +6,7 @@ import _isUndefined from 'lodash/isUndefined'
 export default class Thread {
   constructor (data) {
     // Public properties name.
-    const publicPropNames = ['id', 'name', 'tooltop', 'type', 'messages', 'participants', 'messageCount', 'characterCount', 'needUpdate']
+    const publicPropNames = ['id', 'name', 'tooltop', 'tag', 'type', 'messages', 'participants', 'messageCount', 'characterCount', 'needUpdate']
     this.isLoading = false
     // Initial properties.
     publicPropNames.forEach((propName) => {

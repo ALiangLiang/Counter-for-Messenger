@@ -8,7 +8,7 @@ import Thread from '../classes/Thread'
 import User from '../classes/User'
 const __ = chrome.i18n.getMessage
 
-function createThreadObject (threadNode, createdUsers) {
+function createThreadObject (threadNode, createdUsers, tag) {
   const participantsData = threadNode.all_participants.nodes
     .map((participant) => {
       // Find user we ever created.
@@ -35,7 +35,8 @@ function createThreadObject (threadNode, createdUsers) {
   // Initial thread object.
   const thread = new Thread({
     participants: participantsData,
-    messageCount: threadNode.messages_count
+    messageCount: threadNode.messages_count,
+    tag
   })
   const { participants } = thread
 
@@ -87,49 +88,52 @@ function createThreadObject (threadNode, createdUsers) {
   return thread
 }
 
-export default async function fetchThreads (token, limit = 5000) {
-  // Prepare request form body.
-  const dataJson = {
-    fb_dtsg: token,
-    __a: 1,
-    counter: 'true',
-    queries: {
-      o0: {
-        doc_id: '1475048592613093',
-        query_params: {
-          limit,
-          before: null,
-          tags: ['INBOX'],
-          includeDeliveryReceipts: true,
-          includeSeqID: false
+export default async function fetchThreads (token, limit = 5000, tags = [ 'INBOX', 'ARCHIVED', 'PENDING' ]) {
+  const threadsData = (await Promise.all(tags.map(async (tag) => {
+    // Prepare request form body.
+    const dataJson = {
+      fb_dtsg: token,
+      __a: 1,
+      counter: 'true',
+      queries: {
+        o0: {
+          doc_id: '1475048592613093',
+          query_params: {
+            limit,
+            before: null,
+            tags: [tag],
+            includeDeliveryReceipts: true,
+            includeSeqID: false
+          }
         }
       }
     }
-  }
-  const form = Object.keys(dataJson).map(function (key) {
-    const val = (typeof dataJson[key] === 'object')
-      ? JSON.stringify(dataJson[key]) : dataJson[key]
-    return encodeURIComponent(key) + ((dataJson[key] !== undefined) ? ('=' + encodeURIComponent(val)) : '')
-  }).join('&')
+    const form = Object.keys(dataJson).map(function (key) {
+      const val = (typeof dataJson[key] === 'object')
+        ? JSON.stringify(dataJson[key]) : dataJson[key]
+      return encodeURIComponent(key) + ((dataJson[key] !== undefined) ? ('=' + encodeURIComponent(val)) : '')
+    }).join('&')
 
-  // Fetch
-  const response = await fetch('https://www.messenger.com/api/graphqlbatch/', {
-    method: 'POST',
-    credentials: 'same-origin',
-    headers: {
-      'content-type': 'application/x-www-form-urlencoded; charset=utf-8',
-      origin: 'https://www.messenger.com'
-    },
-    body: form
-  })
+    // Fetch
+    const response = await fetch('https://www.messenger.com/api/graphqlbatch/', {
+      method: 'POST',
+      credentials: 'same-origin',
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded; charset=utf-8',
+        origin: 'https://www.messenger.com'
+      },
+      body: form
+    })
 
-  // Response and data handle.
-  const body = await response.text()
-  const json = JSON.parse(body.split('\n')[0])
-  const createdUsers = [] // Use to record user we created.
-  const threadsData = json.o0.data.viewer.message_threads.nodes
-    .map((threadsData) => createThreadObject(threadsData, createdUsers))
-    .filter((thread) => !!thread)
+    // Response and data handle.
+    const body = await response.text()
+    const json = JSON.parse(body.split('\n')[0])
+    const createdUsers = [] // Use to record user we created.
+    return json.o0.data.viewer.message_threads.nodes
+      .map((threadsData) => createThreadObject(threadsData, createdUsers, tag))
+      .filter((thread) => !!thread)
+  })))
+    .reduce((cur, threadsData) => cur.concat(threadsData), [])
     // Sort by message count. From more to less.
     .sort((threadA, threadB) => threadB.messageCount - threadA.messageCount)
 

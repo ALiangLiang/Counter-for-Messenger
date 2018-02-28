@@ -23,6 +23,7 @@ module.exports = {
   // 清單
   threadName: { message: '名稱' },
   threadType: { message: '種類' },
+  threadTag: { message: '標籤' },
   threadMessageCount: { message: '訊息數量' },
   threadCharacterCount: { message: '文字數量' },
   threadOperation: { message: '操作' },
@@ -33,6 +34,9 @@ module.exports = {
   user: { message: '用戶' },
   fanpage: { message: '粉絲專頁' },
   group: { message: '群組' },
+  inbox: { message: '收件夾' },
+  archived: { message: '封存' },
+  pending: { message: '陌生' },
   unknown: { message: '未知' },
   fetchDetailOfselected: { message: '載入所選訊息的記錄' },
   searchInputLabel: { message: '搜尋' },

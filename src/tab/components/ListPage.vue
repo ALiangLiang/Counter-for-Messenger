@@ -44,7 +44,7 @@
       <el-table-column
         prop="type"
         :label="__('threadType')"
-        width="180"
+        width="90"
         :filters="typeFilters"
         :filter-method="typeFilterMethod"
         filter-placement="bottom-end">
@@ -53,6 +53,18 @@
             :type="determineThreadType(row.type).tagType"
             close-transition>
             {{ determineThreadType(row.type).name }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="tag"
+        :label="__('threadTag')"
+        width="90">
+        <template slot-scope="{ row }">
+          <el-tag
+            :type="determineThreadTag(row.tag).tagType"
+            close-transition>
+            {{ determineThreadTag(row.tag).name }}
           </el-tag>
         </template>
       </el-table-column>
@@ -217,6 +229,14 @@ export default {
         case 'PAGE': return { name: __('fanpage'), tagType: 'success' }
         case 'GROUP': return { name: __('group'), tagType: 'warning' }
         case 'REDUCEDMESSAGINGACTOR': return { name: __('unknown'), tagType: 'danger' }
+      }
+      return { name: __('unknown'), tagType: 'danger' }
+    },
+    determineThreadTag (tag) {
+      switch (tag) {
+        case 'INBOX': return { name: __('inbox'), tagType: 'primary' }
+        case 'ARCHIVED': return { name: __('archived'), tagType: 'success' }
+        case 'PENDING': return { name: __('pending'), tagType: 'warning' }
       }
       return { name: __('unknown'), tagType: 'danger' }
     },

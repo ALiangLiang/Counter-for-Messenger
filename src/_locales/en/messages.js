@@ -23,6 +23,7 @@ module.exports = {
   // List Page
   threadName: { message: 'Name' },
   threadType: { message: 'Type' },
+  threadTag: { message: 'Tag' },
   threadMessageCount: { message: 'Messages' },
   threadCharacterCount: { message: 'Characters' },
   threadOperation: { message: 'Operations' },
@@ -33,6 +34,9 @@ module.exports = {
   user: { message: 'User' },
   fanpage: { message: 'Fanpage' },
   group: { message: 'Group' },
+  inbox: { message: 'Inbox' },
+  archived: { message: 'Archived' },
+  pending: { message: 'Request' },
   unknown: { message: 'Unknown' },
   fetchDetailOfselected: { message: 'Import Messages of Selected Threads' },
   searchInputLabel: { message: 'Search' },
