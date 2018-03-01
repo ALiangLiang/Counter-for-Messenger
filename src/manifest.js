@@ -37,6 +37,5 @@ module.exports = {
     run_at: 'document_end'
   }],
   default_locale: 'en',
-  content_security_policy: "script-src 'self' 'unsafe-eval' https://www.google-analytics.com https://www.messenger.com https://www.google.com https://checkout.google.com; object-src 'self'",
-  key: 'MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApgt7WcuhA9s1XINhU8hU5b3ZCL7u6KAZSGJLXHjczbxI4RD8bMFUKeGuRoogHjdb1hcMWXqYdYcdgfoecFdUX3mbdgueybBXSdVnU/b2/6qu6iMK3VplMf/6gYmtEudJtq2QnqRivmS2NWH6RdvpwR8mKSPlgLZmV80t+dnR91Bozih55f0J/3PhbWk8OFpYXWFrUbTJmfiy9LpQARiILJ88GXjCBa53aokWvd14+YBWHNx8HyzQDamJBEM3XaY7vY5xa1OJGg1DxKYAupRHXyn9qnjPMv94a934JGc0witZ3aVRJFiS8l7MAJwCIjCCtxhezT4CHKDmOslaJi2hVQIDAQAB'
+  content_security_policy: "script-src 'self' 'unsafe-eval' https://www.google-analytics.com https://www.messenger.com https://www.google.com https://checkout.google.com; object-src 'self'"
 }

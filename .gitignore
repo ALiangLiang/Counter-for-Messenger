@@ -1,3 +1,7 @@
+# env
+core/.env.*
+!core/.env.example.*
+
 # IDE
 .vscode
 
@@ -11,4 +15,4 @@ npm-debug.log
 build
 
 # package zip
-build.zip
+extension.zip

@@ -24,7 +24,9 @@
   "scripts": {
     "lint": "eslint --ext .js,.vue src",
     "dev": "webpack --config ./core/webpack.dev.js --hide-modules",
-    "build": "webpack --config ./core/webpack.prod.js -p --progress  --hide-modules --colors"
+    "build": "webpack --config ./core/webpack.prod.js -p --progress  --hide-modules --colors",
+    "beta-deploy": "webpack --config ./core/webpack.prod.js -p --progress  --hide-modules --colors && node core/deploy.js --beta",
+    "deploy": "webpack --config ./core/webpack.prod.js -p --progress  --hide-modules --colors && node core/deploy.js"
   },
   "devDependencies": {
     "archiver": "^2.1.0",
@@ -40,6 +42,7 @@
     "babel-register": "^6.26.0",
     "buble": "^0.16.0",
     "buble-loader": "^0.4.1",
+    "chrome-webstore-upload": "^0.2.1",
     "clean-webpack-plugin": "^0.1.17",
     "copy-webpack-plugin": "^4.2.0",
     "cross-env": "^5.1.0",
@@ -74,6 +77,7 @@
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.3",
     "webpack-merge": "^4.1.0",
-    "ws": "^3.2.0"
+    "ws": "^3.2.0",
+    "zip-webpack-plugin": "^2.1.0"
   }
 }
