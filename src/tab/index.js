@@ -48,7 +48,7 @@ if (process.env.NODE_ENV !== 'production') {
   gaSet.push({ field: 'sendHitTask', value: null })
 }
 Vue.use(VueAnalytics, {
-  id: 'UA-114347247-1',
+  id: (!process.env.BETA) ? 'UA-114347247-1' : 'UA-114347247-3',
   set: gaSet,
   router
 })

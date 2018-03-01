@@ -3,9 +3,11 @@ const WebStore = require('chrome-webstore-upload')
 const env = require('./.env')
 let config = env['release'] // Use release env by default.
 
+let mode = 'release'
 if (env.beta) { // if "beta" env exist and use beta mode.
   const isBeta = !!process.argv.find((arg) => arg === '--beta')
-  config = env[(isBeta) ? 'beta' : 'release']
+  mode = (isBeta) ? 'beta' : 'release'
+  config = env[mode]
 }
 
 const webStoreClient = WebStore({
@@ -15,6 +17,7 @@ const webStoreClient = WebStore({
   refreshToken: config.refreshToken
 })
 
+console.log('Start fetch token.')
 webStoreClient.fetchToken()
   .then((token) => {
     if (!config.extensionId) { // no extension id, publish first
@@ -28,11 +31,13 @@ webStoreClient.fetchToken()
         .catch((err) => console.error(err))
     }
 
-    const file = fs.createReadStream('./extension.zip')
+    const file = fs.createReadStream(`./${mode}.zip`)
+    console.log('Start upload.')
     webStoreClient.uploadExisting(file, token)
       .then((res) => {
         console.log(res)
         if (res.uploadState === 'FAILURE') return
+        console.log('Start publish.')
         return webStoreClient.publish('default', token)
       })
       .then((res) => {

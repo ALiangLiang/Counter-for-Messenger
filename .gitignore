@@ -15,4 +15,5 @@ npm-debug.log
 build
 
 # package zip
-extension.zip
+beta.zip
+release.zip

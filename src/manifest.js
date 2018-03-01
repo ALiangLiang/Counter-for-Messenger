@@ -1,3 +1,4 @@
+const config = require('../core/.env')
 module.exports = {
   name: '__MSG_extName__',
   version: '0.2.1',
@@ -37,5 +38,6 @@ module.exports = {
     run_at: 'document_end'
   }],
   default_locale: 'en',
-  content_security_policy: "script-src 'self' 'unsafe-eval' https://www.google-analytics.com https://www.messenger.com https://www.google.com https://checkout.google.com; object-src 'self'"
+  content_security_policy: "script-src 'self' 'unsafe-eval' https://www.google-analytics.com https://www.messenger.com https://www.google.com https://checkout.google.com; object-src 'self'",
+  key: config[(!process.env.BETA) ? 'release' : 'beta'].key
 }

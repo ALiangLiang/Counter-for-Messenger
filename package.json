@@ -25,7 +25,7 @@
     "lint": "eslint --ext .js,.vue src",
     "dev": "webpack --config ./core/webpack.dev.js --hide-modules",
     "build": "webpack --config ./core/webpack.prod.js -p --progress  --hide-modules --colors",
-    "beta-deploy": "webpack --config ./core/webpack.prod.js -p --progress  --hide-modules --colors && node core/deploy.js --beta",
+    "beta-deploy": "webpack --config ./core/webpack.beta.js -p --progress  --hide-modules --colors && node core/deploy.js --beta",
     "deploy": "webpack --config ./core/webpack.prod.js -p --progress  --hide-modules --colors && node core/deploy.js"
   },
   "devDependencies": {
