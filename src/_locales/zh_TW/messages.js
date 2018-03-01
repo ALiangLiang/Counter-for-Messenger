@@ -34,7 +34,7 @@ module.exports = {
   user: { message: '用戶' },
   fanpage: { message: '粉絲專頁' },
   group: { message: '群組' },
-  inbox: { message: '收件夾' },
+  inbox: { message: '收件匣' },
   archived: { message: '封存' },
   pending: { message: '陌生' },
   unknown: { message: '未知' },
