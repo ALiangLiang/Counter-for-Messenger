@@ -1,0 +1,9 @@
+/* theme color */
+$--color-primary: #0084ff !default;
+$--color-success: #4bcc1f !default;
+$--color-danger: #f03c24 !default;
+
+/* icon font path, required */
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+
+@import "~element-ui/packages/theme-chalk/src/index";
