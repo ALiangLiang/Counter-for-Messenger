@@ -5,16 +5,16 @@
     <p>Why don't you send us a <a :href="webstorePageUrl + '/support'" target="_blank">report</a>?</p>
     <h3>Like this extension?</h3>
     <p>Let us know on <a :href="webstorePageUrl + '/reviews'" target="_blank">Chrome web store</a>!</p>
-    <h3>Want new feature?</h3>
-    <p>Welcome your PR on <a href="https://github.com/ALiangLiang/Counter-for-Messenger" target="_blank">Github</a>. 😄</p>
+    <h3>Want to add feature or help translating?</h3>
+    <p>Why not fork in <a href="https://github.com/ALiangLiang/Counter-for-Messenger" target="_blank">Github</a>? 😄</p>
 
     <h1>Frequently Asked Questions</h1>
     <h3>Is my information safe?</h3>
     <p>
-      This extension only fetch your data from Messenger to your local device.
+      This extension only fetches your data from Messenger to your local device.
       If your device is not public, your information is safe. On the other hand,
-      if you're using public device, ensure remove this extension after you finish
-      using this extension.
+      if you're using a public device, be sure to remove this extension
+      after you finish using this extension.
     </p>
     <h3>How can I help Counter of Messenger?</h3>
     <p>
@@ -30,12 +30,14 @@
 
     <h1>Note</h1>
     <p>
-      It'a web extension you know. Inspired by I want to know how many messages
-      with my best friend. In the beginning it's just a little project. Very
-      simple and ugly. But until recently, more and more user install this extension.
-      And give me many encourage. I don't want to disappoint them. So I update
-      this project. Make it more powerful, more beautiful. If you really like
-      this extension, tell me. I would very happy. 😄😄😄 Thanks every guys.
+      It'a web extension you know. Inspired by the fact that I want to know
+      how many messages I have with my best friends.
+      In the beginning it was just a little project. Very simple and ugly.
+      But recently, more and more users installed this extension,
+      and encouraged me to develop it further. I don't want to disappoint them.
+      So I've updated this project, Making it more powerful and beautiful.
+      If you really like this extension, tell me. I would very happy.
+      😄😄😄 Thanks everyone.
     </p>
   </div>
 </template>

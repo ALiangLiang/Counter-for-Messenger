@@ -1,7 +1,7 @@
 module.exports = {
   // Extension information
   extName: { message: 'Counter for Messenger' },
-  extDescription: { message: 'Count and rank your friends or lover by analysis you Messenger!! Take a look what you and your best friend chat!!' },
+  extDescription: { message: 'Count and rank your friends or partner by analysing your Messenger! Check out and download the messaging history of you and your best friends!' },
 
   // Router
   listPage: { message: 'List' },
@@ -16,7 +16,7 @@ module.exports = {
 
   // Alert model
   openingAlertTitle: { message: 'Please be patient' },
-  openingAlertContent: { message: '1. Fetch data from FB maybe take a long time. 2. If you fetch a lot of messages in a short time, may cause some functions of your FB and Messenger could\'t be used.' },
+  openingAlertContent: { message: '1. Fetching data from FB may take a long time. 2. When you fetch a lot of messages in a short time, it may cause that some functions of your FB and Messenger could\'t be used.' },
   iSee: { message: 'Got it!' },
   cancel: { message: 'Cancel' },
 
