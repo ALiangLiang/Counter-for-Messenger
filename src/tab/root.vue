@@ -5,9 +5,9 @@
         router
         mode="horizontal"
         background-color="#0083FF"
-        text-color="#fff"
+        text-color="#f1f1f1"
         default-active="/list"
-        active-text-color="#ffd04b">
+        active-text-color="#ffffff">
         <el-menu-item index="/about">
           <img src="../../static/icons/38.png"></img>
           <span> {{ __('extName') }}</span>
@@ -90,6 +90,15 @@ body {
 .el-footer a {
   color: white;
   text-decoration: none;
+}
+.el-footer a>svg {
+  /*keeping some space on the bottom bar*/
+  padding-right:5px;
+  padding-left:10px;
+}
+.el-footer {
+  /*making the footer visually more even*/
+  height:32px !important;
 }
 .share-link {
   text-decoration: none;
