@@ -1,8 +1,23 @@
 <template>
   <div :class="['outer', align]">
     <div :id="messageData.timestamp" :class="[boxAlign]" :title="localTimeString">
-      {{ (messageData.text) ? messageData.text : '' }}
-      <img v-if="messageData.sticker" :src="messageData.sticker" width="120" height="120">
+      {{ (messageData.body) ? messageData.body : '' }}
+      <div v-for="(attachment, i) in messageData.attachments" :key="i">
+        <img v-if="attachment.type === 'sticker'" :src="attachment.url" class="sticker-img">
+        <img v-if="attachment.type === 'image'" :src="attachment.previewUrl" class="image-img">
+        <audio
+          v-if="attachment.type === 'audio'"
+          :src="attachment.url"
+          controls>
+          Your browser does not support the <code>audio</code> element.
+        </audio>
+        <video
+          v-if="attachment.type === 'video'"
+          :src="attachment.url"
+          controls>
+          Your browser does not support the <code>video</code> element.
+        </video>
+      </div>
     </div>
   </div>
 </template>
@@ -18,8 +33,8 @@ export default {
   created () {
     const date = new Date(Number(this.messageData.timestamp))
     this.localTimeString = date.toLocaleDateString() + ' ' + date.toLocaleTimeString()
-    this.align = (Number(this.messageData.senderId) === Number(this.selfId)) ? 'right' : 'left'
-    this.boxAlign = (Number(this.messageData.senderId) === Number(this.selfId)) ? 'box_r' : 'box_l'
+    this.align = (Number(this.messageData.senderID) === Number(this.selfId)) ? 'right' : 'left'
+    this.boxAlign = (Number(this.messageData.senderID) === Number(this.selfId)) ? 'box_r' : 'box_l'
   }
 }
 </script>

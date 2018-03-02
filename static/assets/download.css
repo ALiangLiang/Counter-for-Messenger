@@ -69,6 +69,21 @@ body {
   transform: translateY(0);
   visibility: visible;
 }
+.sticker-img {
+  max-width: 120px;
+  max-height: 120px;
+}
+.image-img {
+  max-width: 100%;
+}
+.event-outer {
+  clear: both;
+  text-align: center;
+}
+.event-snippet {
+  font-size: 12px;
+  color: rgba(0, 0, 0, .40);
+}
 @media screen and (max-width: 569px) {
   .container{
     min-width: initial;

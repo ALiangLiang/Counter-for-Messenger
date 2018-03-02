@@ -32,12 +32,12 @@ export default class Thread {
     // Statistic messages with every participants. And count character.
     const participantsStats = {}
     messages.forEach((message) => {
-      const textLength = (message.text) ? message.text.length : 0
+      const textLength = (message.body) ? message.body.length : 0
       characterSum += textLength
-      const participantStats = participantsStats[message.senderId]
-      _set(participantsStats, `${message.senderId}.messageCount`,
+      const participantStats = participantsStats[message.senderID]
+      _set(participantsStats, `${message.senderID}.messageCount`,
         _get(participantStats, 'messageCount', 0) + 1)
-      _set(participantsStats, `${message.senderId}.characterCount`,
+      _set(participantsStats, `${message.senderID}.characterCount`,
         _get(participantStats, 'characterCount', 0) + textLength)
     })
     this.characterCount = characterSum
@@ -71,6 +71,6 @@ export default class Thread {
 
   static culCharacterCount (messages) {
     return messages.reduce((cur, message) =>
-      ((message.text) ? message.text.length : 0) + cur, 0)
+      ((message.body) ? message.body.length : 0) + cur, 0)
   }
 }

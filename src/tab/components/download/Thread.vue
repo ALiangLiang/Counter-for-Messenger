@@ -9,22 +9,29 @@
     <body>
       <div id="container" class='container'>
         <div class="title"></div>
-        <message
-          v-for="(message, i) in messagesData"
-          :key="i"
-          :message-data="message"
-          :self-id="selfId">
-        </message>
+        <div v-for="(message, i) in messagesData" :key="i">
+          <message
+            v-if="message.type === 'message'"
+            :message-data="message"
+            :self-id="selfId">
+          </message>
+          <event
+            v-if="message.type === 'event'"
+            :message-data="message"
+            :self-id="selfId">
+          </event>
+        </div>
       </div>
     </body>
   </html>
 </template>
 <script>
 import MessageElement from './Message.vue'
+import EventElement from './Event.vue'
 
 export default {
   name: 'Thread',
-  components: { Message: MessageElement },
+  components: { Message: MessageElement, Event: EventElement },
   props: [ 'messagesData', 'selfId' ]
 }
 </script>

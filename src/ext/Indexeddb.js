@@ -37,10 +37,10 @@ export default class Indexeddb {
     return this._onload
   }
 
-  get (threadId) {
+  get (senderID) {
     const request = this._db.transaction('Threads')
       .objectStore('Threads')
-      .get(threadId)
+      .get(senderID)
     return promisifyRequestResult(request)
   }
 
@@ -64,10 +64,10 @@ export default class Indexeddb {
     return Promise.all(values.map((val) => promisifyRequestResult(objectStore.put(val))))
   }
 
-  remove (threadId) {
+  remove (senderID) {
     const request = this._db.transaction('Threads')
       .objectStore('Threads')
-      .delete(threadId)
+      .delete(senderID)
     return promisifyRequestResult(request)
   }
 
