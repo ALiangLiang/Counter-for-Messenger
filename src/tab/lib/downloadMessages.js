@@ -10,14 +10,18 @@ import _chunk from 'lodash/chunk'
 import ThreadComponenet from '../components/download/Thread.vue'
 const __ = chrome.i18n.getMessage
 
+const _errorHandler = () => {
+  return Message({
+    type: 'error',
+    dangerouslyUseHTMLString: true,
+    message: `<p><span>Oops, cannot download messages. </span>
+    <a href="https://github.com/ALiangLiang/Counter-for-Messenger/issues" target="_blank">Please contact developer.</a></p>`
+  })
+}
+
 export default async function downloadMessages (info, selfId) {
   if (!selfId) {
-    return Message({
-      type: 'error',
-      dangerouslyUseHTMLString: true,
-      message: `<p><span>Oops, cannot download messages. </span>
-      <a href="https://github.com/ALiangLiang/Counter-for-Messenger/issues" target="_blank">Please contact developer.</a></p>`
-    })
+    return _errorHandler()
   }
   const zip = new JSZip()
   const folderName = __('extName')
@@ -38,14 +42,19 @@ export default async function downloadMessages (info, selfId) {
     zip.file(`${folderName} - ${info.name} - ${time} - ${i + 1}.html`, pageBlob)
   })
 
-  const assetBlob = await (await fetch('chrome-extension://ldlagicdigidgnhniajpmoddkoakdoca/assets/download.css')).blob()
-  zip.file('download.css', assetBlob)
-  const zipBlob = await zip.generateAsync({
-    type: 'blob',
-    compression: 'DEFLATE'
-  })
-  chrome.downloads.download({
-    filename: `${folderName} - ${info.name} - ${time}.zip`,
-    url: URL.createObjectURL(zipBlob)
-  })
+  try {
+    const assetBlob = await (await fetch('/assets/download.css')).blob()
+    zip.file('download.css', assetBlob)
+    const zipBlob = await zip.generateAsync({
+      type: 'blob',
+      compression: 'DEFLATE'
+    })
+    chrome.downloads.download({
+      filename: `${folderName} - ${info.name} - ${time}.zip`,
+      url: URL.createObjectURL(zipBlob)
+    })
+  } catch (err) {
+    console.error(err)
+    return _errorHandler()
+  }
 }

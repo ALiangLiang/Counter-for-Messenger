@@ -16,7 +16,7 @@ module.exports = {
 
   // 提醒視窗
   openingAlertTitle: { message: '請保持耐心' },
-  openingAlertContent: { message: '1. 從 FB 撈取資料可能會花費許多時間。2. 短時間內嘗試載入大量訊息，可能造成 Messenger 與部分 FB 功能暫時無法使用，請注意。' },
+  openingAlertContent: { message: '從 FB 撈取資料可能會花費許多時間。' },
   iSee: { message: '我瞭解' },
   cancel: { message: '取消' },
 

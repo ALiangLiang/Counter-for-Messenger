@@ -1,7 +1,7 @@
 {
   "name": "counter-for-messenger",
   "version": "0.2.1",
-  "description": "Statistics your Messenger , the number of messages with friends and rank ! ! Take a look at what you and your best friend best friends chant !",
+  "description": "Count and rank your friends by analysing your Messenger! Check out and download the messaging history of you and your best friends!",
   "author": "ALiangLiang <me@aliangliang.top>",
   "license": "MIT",
   "private": false,

@@ -35,9 +35,9 @@ webStoreClient.fetchToken()
     console.log('Start upload.')
     try {
       const res = await webStoreClient.uploadExisting(file, token)
-      if (res.uploadState === 'FAILURE') return
+      if (res.uploadState === 'FAILURE') return console.error('Upload failed.', res)
       console.log('Start publish.')
-      return webStoreClient.publish('default', token)
+      await webStoreClient.publish('default', token)
     } catch (err) {
       console.error(err)
     }
