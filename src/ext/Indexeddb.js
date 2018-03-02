@@ -1,3 +1,5 @@
+const __VERSION__ = 2
+
 function promisifyRequestResult (request) {
   return new Promise(function (resolve, reject) {
     request.onerror = (event) => reject(event)
@@ -12,7 +14,7 @@ export default class Indexeddb {
       window.alert('Your browser doesn\'t support a stable version of IndexedDB. Such and such feature will not be available.')
     }
     this._loaded = false
-    const request = this._indexedDB.open(selfId)
+    const request = this._indexedDB.open(selfId, __VERSION__)
     request.onerror = function (err) { console.error(err) }
     request.onsuccess = (event) => {
       this._db = event.currentTarget.result
@@ -22,9 +24,19 @@ export default class Indexeddb {
       }
     }
     request.onupgradeneeded = function (event) {
-      event.currentTarget.result.createObjectStore('Threads', {
-        keyPath: 'id'
-      })
+      if (event.oldVersion < 1) {
+        // do initial schema creation
+        event.currentTarget.result.createObjectStore('Threads', {
+          keyPath: 'id'
+        })
+      }
+      if (event.oldVersion < 2) {
+        // rebuild db
+        event.currentTarget.result.deleteObjectStore('Threads')
+        event.currentTarget.result.createObjectStore('Threads', {
+          keyPath: 'id'
+        })
+      }
     }
   }
 
@@ -53,7 +65,6 @@ export default class Indexeddb {
 
   add (values) {
     values = (values instanceof Array) ? values : [values]
-    console.log(this._db)
     const objectStore = this._db.transaction('Threads', 'readwrite').objectStore('Threads')
     return Promise.all(values.map((val) => promisifyRequestResult(objectStore.add(val))))
   }
