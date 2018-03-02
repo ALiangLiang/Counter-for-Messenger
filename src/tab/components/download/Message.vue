@@ -2,6 +2,7 @@
   <div :class="['outer', align]">
     <div :id="messageData.timestamp" :class="[boxAlign]" :title="localTimeString">
       {{ (messageData.text) ? messageData.text : '' }}
+      <img v-if="messageData.sticker" :src="messageData.sticker" width="120" height="120">
     </div>
   </div>
 </template>
