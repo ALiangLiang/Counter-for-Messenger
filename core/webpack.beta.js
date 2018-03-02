@@ -9,19 +9,22 @@ const OptimizeCSSPlugin = require('optimize-css-assets-webpack-plugin')
 const ZipPlugin = require('zip-webpack-plugin')
 const { styleLoaders } = require('./tools')
 
-module.exports = merge(baseWebpack, {
-  devtool: '#cheap-module-eval-source-map',
-  module: { rules: styleLoaders({ extract: true, sourceMap: true }) },
-  plugins: [
-    new CleanWebpackPlugin(['build/*.*']),
-    new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': '"production"',
-      'process.env.BETA': 'true'
-    }),
-    new OptimizeCSSPlugin({ cssProcessorOptions: { safe: true } }),
-    new ExtractTextPlugin({ filename: 'css/[name].[contenthash].css' }),
-    new webpack.HashedModuleIdsPlugin(),
-    new ZipPlugin({ path: '..', filename: 'beta.zip' })
-  ]
-})
+module.exports = (env) => {
+  Object.assign(process.env, env)
+  return merge(baseWebpack, {
+    devtool: '#cheap-module-eval-source-map',
+    module: { rules: styleLoaders({ extract: true, sourceMap: true }) },
+    plugins: [
+      new CleanWebpackPlugin(['build/*.*']),
+      new webpack.NoEmitOnErrorsPlugin(),
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': '"production"',
+        'process.env.BETA': 'true'
+      }),
+      new OptimizeCSSPlugin({ cssProcessorOptions: { safe: true } }),
+      new ExtractTextPlugin({ filename: 'css/[name].[contenthash].css' }),
+      new webpack.HashedModuleIdsPlugin(),
+      new ZipPlugin({ path: '..', filename: 'beta.zip' })
+    ]
+  })
+}

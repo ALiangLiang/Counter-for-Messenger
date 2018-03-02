@@ -19,7 +19,7 @@ const webStoreClient = WebStore({
 
 console.log('Start fetch token.')
 webStoreClient.fetchToken()
-  .then((token) => {
+  .then(async (token) => {
     if (!config.extensionId) { // no extension id, publish first
       console.log('Start publish.')
       webStoreClient.publish('default', token)
@@ -33,16 +33,13 @@ webStoreClient.fetchToken()
 
     const file = fs.createReadStream(`./${mode}.zip`)
     console.log('Start upload.')
-    webStoreClient.uploadExisting(file, token)
-      .then((res) => {
-        console.log(res)
-        if (res.uploadState === 'FAILURE') return
-        console.log('Start publish.')
-        return webStoreClient.publish('default', token)
-      })
-      .then((res) => {
-        console.log(res)
-      })
-      .catch((err) => console.error(err))
+    try {
+      const res = await webStoreClient.uploadExisting(file, token)
+      if (res.uploadState === 'FAILURE') return
+      console.log('Start publish.')
+      return webStoreClient.publish('default', token)
+    } catch (err) {
+      console.error(err)
+    }
   })
   .catch((err) => console.error(err))
