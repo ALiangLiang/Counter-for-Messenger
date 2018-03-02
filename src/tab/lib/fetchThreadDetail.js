@@ -80,13 +80,13 @@ async function fetchThreadDetail ({ token, threadId, messageCount, messageLimit 
     }))
   messageCount = messageCount - messages.length
   if (messageThread.messages.page_info.has_previous_page && messages[0] && messageCount) {
-    return messages.concat(await fetchThreadDetail({
+    return (await fetchThreadDetail({
       token,
       threadId,
       messageCount,
       messageLimit,
       before: messages[0].timestamp
-    }))
+    })).concat(messages)
   } else {
     return messages
   }
