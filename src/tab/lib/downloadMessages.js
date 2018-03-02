@@ -5,6 +5,8 @@
 // TODO: This function maybe broken when too much messages. Coz device resource leak.
 import { Message } from 'element-ui'
 import Vue from 'vue'
+import JSZip from 'jszip'
+import _chunk from 'lodash/chunk'
 import ThreadComponenet from '../components/download/Thread.vue'
 const __ = chrome.i18n.getMessage
 
@@ -17,31 +19,33 @@ export default async function downloadMessages (info, selfId) {
       <a href="https://github.com/ALiangLiang/Counter-for-Messenger/issues" target="_blank">Please contact developer.</a></p>`
     })
   }
-  const { messages } = info
-
-  const html = new Vue({
-    components: { Thread: ThreadComponenet },
-    data: { messages, selfId },
-    render (h) {
-      return (
-        <thread messages-data={ messages } self-id={ selfId }></thread>
-      )
-    }
-  }).$mount().$el
-
+  const zip = new JSZip()
+  const folderName = __('extName')
   const padLeft = (str, len) => String(str).padStart(len, '0')
   const date = new Date()
   const time = `${date.getFullYear()}${padLeft(date.getMonth() + 1, 2)}${padLeft(date.getDate(), 2)}`
-  const folderName = __('extName')
-  const blob = new Blob(['<!DOCTYPE html>', html.outerHTML], {type: 'text/html'})
-  chrome.downloads.download({
-    filename: `${folderName}/${info.name}/${time}.html`,
-    url: URL.createObjectURL(blob)
+  const { messages } = info
+  _chunk(messages, 10000).forEach((messageChunk, i) => {
+    const html = new Vue({
+      components: { Thread: ThreadComponenet },
+      render (h) {
+        return (
+          <thread messages-data={ messageChunk } self-id={ selfId }></thread>
+        )
+      }
+    }).$mount().$el
+    const pageBlob = new Blob(['<!DOCTYPE html>', html.outerHTML], {type: 'text/html'})
+    zip.file(`${folderName} - ${info.name} - ${time} - ${i + 1}.html`, pageBlob)
   })
-  // download assets
+
+  const assetBlob = await (await fetch('chrome-extension://ldlagicdigidgnhniajpmoddkoakdoca/assets/download.css')).blob()
+  zip.file('download.css', assetBlob)
+  const zipBlob = await zip.generateAsync({
+    type: 'blob',
+    compression: 'DEFLATE'
+  })
   chrome.downloads.download({
-    filename: folderName + '/download.css',
-    url: 'chrome-extension://ldlagicdigidgnhniajpmoddkoakdoca/assets/download.css',
-    conflictAction: 'overwrite'
+    filename: `${folderName} - ${info.name} - ${time}.zip`,
+    url: URL.createObjectURL(zipBlob)
   })
 }
