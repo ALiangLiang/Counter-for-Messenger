@@ -28,13 +28,13 @@ export default async function downloadMessages (info, selfId) {
   const padLeft = (str, len) => String(str).padStart(len, '0')
   const date = new Date()
   const time = `${date.getFullYear()}${padLeft(date.getMonth() + 1, 2)}${padLeft(date.getDate(), 2)}`
-  const { messages } = info
+  const { messages, participants } = info
   _chunk(messages, 10000).forEach((messageChunk, i) => {
     const html = new Vue({
       components: { Thread: ThreadComponenet },
       render (h) {
         return (
-          <thread messages-data={ messageChunk } self-id={ selfId }></thread>
+          <thread messages-data={ messageChunk } participants={ participants } self-id={ selfId }></thread>
         )
       }
     }).$mount().$el

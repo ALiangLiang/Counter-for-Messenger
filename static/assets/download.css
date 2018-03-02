@@ -19,6 +19,7 @@ body {
   font-size:15px;
   padding-bottom: 13px;
   border-bottom: 1px solid rgba(0, 0, 0, .10);
+  margin-bottom: 30px;
 }
 .outer {
   background: #FFFCDD;
@@ -27,7 +28,7 @@ body {
   background: #FFFBD4;
   padding: 0.6em 1.2em;
   border-radius: 12px;
-  margin: 11px;
+  margin: 11px 11px 25px 11px;
   clear: both;
   float: left;
   color: #58636B;
@@ -45,8 +46,18 @@ body {
 .outer.right:hover {
   background: #D6D5CB;
 }
-.outer > div:after {
+.outer > div:before {
   content: attr(title);
+  position: absolute;
+  top: -1.2em;
+  left: 0.7em;
+  font-size: 0.8em;
+  color: #5C6D86;
+  display: block;
+  width: 15em;
+}
+.outer > div:after {
+  content: attr(time);
   position: absolute;
   bottom: -1.5em;
   left: 1em;

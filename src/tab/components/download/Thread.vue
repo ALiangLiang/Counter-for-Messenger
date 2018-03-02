@@ -13,12 +13,12 @@
           <message
             v-if="message.type === 'message'"
             :message-data="message"
+            :participants="participants"
             :self-id="selfId">
           </message>
           <event
             v-if="message.type === 'event'"
-            :message-data="message"
-            :self-id="selfId">
+            :message-data="message">
           </event>
         </div>
       </div>
@@ -32,6 +32,6 @@ import EventElement from './Event.vue'
 export default {
   name: 'Thread',
   components: { Message: MessageElement, Event: EventElement },
-  props: [ 'messagesData', 'selfId' ]
+  props: [ 'messagesData', 'participants', 'selfId' ]
 }
 </script>
