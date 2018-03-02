@@ -9,8 +9,8 @@
     "axios": "^0.17.0",
     "chart.js": "^2.7.1",
     "color-hash": "^1.0.3",
-    "downloadjs": "^1.4.4",
     "element-ui": "^2.2.0",
+    "jszip": "^3.1.5",
     "lodash": "^4.17.4",
     "promise-queue": "^2.2.5",
     "vue": "^2.5.13",
@@ -25,19 +25,25 @@
   "scripts": {
     "lint": "eslint --ext .js,.vue src",
     "dev": "webpack --config ./core/webpack.dev.js --hide-modules",
-    "build": "webpack --config ./core/webpack.prod.js -p --progress  --hide-modules --colors"
+    "build": "webpack --config ./core/webpack.prod.js -p --progress  --hide-modules --colors",
+    "beta-deploy": "webpack --config ./core/webpack.beta.js -p --progress  --hide-modules --colors && node core/deploy.js --beta",
+    "deploy": "webpack --config ./core/webpack.prod.js -p --progress  --hide-modules --colors && node core/deploy.js"
   },
   "devDependencies": {
     "archiver": "^2.1.0",
     "babel-core": "^6.26.0",
     "babel-eslint": "^8.0.1",
+    "babel-helper-vue-jsx-merge-props": "^2.0.3",
     "babel-loader": "^7.1.2",
+    "babel-plugin-syntax-jsx": "^6.18.0",
     "babel-plugin-transform-runtime": "^6.23.0",
+    "babel-plugin-transform-vue-jsx": "^3.5.1",
     "babel-preset-env": "^1.6.1",
     "babel-preset-stage-2": "^6.24.1",
     "babel-register": "^6.26.0",
     "buble": "^0.16.0",
     "buble-loader": "^0.4.1",
+    "chrome-webstore-upload": "^0.2.1",
     "clean-webpack-plugin": "^0.1.17",
     "copy-webpack-plugin": "^4.2.0",
     "cross-env": "^5.1.0",
@@ -72,6 +78,7 @@
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.3",
     "webpack-merge": "^4.1.0",
-    "ws": "^3.2.0"
+    "ws": "^3.2.0",
+    "zip-webpack-plugin": "^2.1.0"
   }
 }
