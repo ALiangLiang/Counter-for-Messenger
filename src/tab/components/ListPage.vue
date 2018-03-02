@@ -80,7 +80,7 @@
             @click="fetchMessages(row)"
             type="text" size="small">
             <icon name="cloud-download"></icon>
-            {{ (row.characterCount === null) ? __('importMessageHistory') : __('importedMessageHistory')}}
+            {{ (row.needUpdate) ? __('importMessageHistory') : __('importedMessageHistory')}}
           </el-button>
           <el-button
             @click="downloadHistory(row)"
