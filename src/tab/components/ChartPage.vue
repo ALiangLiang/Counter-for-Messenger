@@ -64,7 +64,7 @@ const __ = chrome.i18n.getMessage
 export default {
   name: 'ChartPage',
   components: { BarChart },
-  props: [ 'threadsInfo', 'selfId', 'token', 'db' ],
+  props: [ 'threadsInfo', 'jar', 'db' ],
   data () {
     return {
       chartHeight: document.documentElement.clientHeight - 130,
@@ -154,7 +154,7 @@ export default {
             let me = 0
             let other = 0
             thread.participants.forEach((participant) => {
-              if (participant.user.id === this.selfId) me = this.selectCountType(participant)
+              if (participant.user.id === this.jar.selfId) me = this.selectCountType(participant)
               else other += this.selectCountType(participant)
             })
             return [me, other]
@@ -192,7 +192,7 @@ export default {
           thread.isLoading = true
           try {
             const result = await fetchThreadDetail({
-              token: this.token, thread, $set: this.$set
+              jar: this.jar, thread, $set: this.$set
             })
             thread.needUpdate = false
             thread.analyzeMessages(result)

@@ -6,6 +6,7 @@ import _get from 'lodash/get'
 import Threads from '../classes/Threads'
 import Thread from '../classes/Thread'
 import User from '../classes/User'
+import { graphql, getQraphqlForm } from './util'
 const __ = chrome.i18n.getMessage
 
 function createThreadObject (threadNode, createdUsers, tag) {
@@ -88,46 +89,24 @@ function createThreadObject (threadNode, createdUsers, tag) {
   return thread
 }
 
-export default async function fetchThreads (token, limit = 5000, tags = [ 'INBOX', 'ARCHIVED', 'PENDING' ]) {
+export default async function fetchThreads (jar, limit = 5000, tags = [ 'INBOX', 'ARCHIVED', 'PENDING' ]) {
   const threadsData = (await Promise.all(tags.map(async (tag) => {
     // Prepare request form body.
-    const dataJson = {
-      fb_dtsg: token,
-      __a: 1,
-      counter: 'true',
-      queries: {
-        o0: {
-          doc_id: '1475048592613093',
-          query_params: {
-            limit,
-            before: null,
-            tags: [tag],
-            includeDeliveryReceipts: true,
-            includeSeqID: false
-          }
+    const queries = {
+      o0: {
+        doc_id: '1475048592613093',
+        query_params: {
+          limit,
+          before: null,
+          tags: [tag],
+          includeDeliveryReceipts: true,
+          includeSeqID: false
         }
       }
     }
-    const form = Object.keys(dataJson).map(function (key) {
-      const val = (typeof dataJson[key] === 'object')
-        ? JSON.stringify(dataJson[key]) : dataJson[key]
-      return encodeURIComponent(key) + ((dataJson[key] !== undefined) ? ('=' + encodeURIComponent(val)) : '')
-    }).join('&')
+    const form = getQraphqlForm(queries, jar)
+    const json = await graphql('https://www.facebook.com/api/graphqlbatch/', form)
 
-    // Fetch
-    const response = await fetch('https://www.messenger.com/api/graphqlbatch/', {
-      method: 'POST',
-      credentials: 'same-origin',
-      headers: {
-        'content-type': 'application/x-www-form-urlencoded; charset=utf-8',
-        origin: 'https://www.messenger.com'
-      },
-      body: form
-    })
-
-    // Response and data handle.
-    const body = await response.text()
-    const json = JSON.parse(body.split('\n')[0])
     const createdUsers = [] // Use to record user we created.
     return json.o0.data.viewer.message_threads.nodes
       .map((threadsData) => createThreadObject(threadsData, createdUsers, tag))

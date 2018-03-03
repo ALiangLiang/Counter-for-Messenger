@@ -23,7 +23,7 @@
       </el-menu>
     </el-header>
     <el-main>
-      <router-view :threadsInfo="threadsInfo" :token="token" :self-id="selfId" :db="db"/>
+      <router-view :threadsInfo="threadsInfo" :jar="jar" :db="db"/>
     </el-main>
     <el-footer height="30px" class="offset-footer"></el-footer>
     <el-footer height="30px">
@@ -53,7 +53,7 @@ Icon.register({
 
 export default {
   name: 'Root',
-  props: [ 'threadsInfo', 'token', 'selfId', 'db' ],
+  props: [ 'threadsInfo', 'jar', 'db' ],
   components: {
     Icon
   }

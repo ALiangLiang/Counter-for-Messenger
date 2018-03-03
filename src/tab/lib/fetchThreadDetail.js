@@ -2,49 +2,26 @@
 // Fetch thread detail information (include messages). And parse every message. //
 /// //////////////////////////////////////////////////////////////////////////////
 import _compact from 'lodash/compact'
-import fetchService from './fetchService.js'
+import { graphql, getQraphqlForm } from './util'
 
-function handleFetch ({ token, senderID, messageCount, messageLimit = 7500, before = null }) {
+function handleFetch ({ jar, senderID, messageCount, messageLimit = 7500, before = null }) {
   messageLimit = Math.floor(Math.min(messageLimit, messageCount))
 
   // Prepare request form body.
-  const form = {
-    batch_name: 'MessengerGraphQLThreadFetcher',
-    fb_dtsg: token, // It's required!!
-    jazoest: '2' + Array.from(token).map((char) => char.charCodeAt(0)).join(''),
-    client: 'mercury',
-    __a: 1,
-    counter: 'true',
-    queries: {
-      o0: {
-        doc_id: '1583545408361109', // I'm not sure what is it.
-        query_params: {
-          id: senderID, // thread id
-          message_limit: messageLimit, // limit of  fetching messages
-          load_messages: 1,
-          load_read_receipts: false,
-          before // offset timestamp
-        }
+  const queries = {
+    o0: {
+      doc_id: '1583545408361109', // I'm not sure what is it.
+      query_params: {
+        id: senderID, // thread id
+        message_limit: messageLimit, // limit of  fetching messages
+        load_messages: 1,
+        load_read_receipts: false,
+        before // offset timestamp
       }
     }
   }
-  const body = Object.keys(form).map(function (key) {
-    const val = (typeof form[key] === 'object')
-      ? JSON.stringify(form[key]) : form[key]
-    return encodeURIComponent(key) +
-      ((form[key] !== undefined) ? ('=' + encodeURIComponent(val)) : '')
-  }).join('&')
-
-  // Fetch
-  return fetchService('https://www.messenger.com/api/graphqlbatch/', {
-    method: 'POST',
-    credentials: 'same-origin',
-    headers: {
-      'content-type': 'application/x-www-form-urlencoded; charset=utf-8',
-      origin: 'https://www.messenger.com'
-    },
-    body
-  })
+  const form = getQraphqlForm(queries, jar)
+  return graphql('https://www.facebook.com/api/graphqlbatch/', form)
 }
 
 // Shamely copy from https://github.com/KevinSalmon/facebook-chat-api/blob/6cb19d038a35c92dc8ac6d6250c0ed34981e86ea/src/getThreadHistoryGraphQL.js
@@ -453,14 +430,10 @@ function formatMessagesGraphQLResponse (messageThread) {
 }
 // End shamely copy.
 
-async function fetchThreadDetail ({ token, senderID, messageCount, messageLimit = 7500, before = null }) {
-  const messageThread = await handleFetch({ token, senderID, messageCount, messageLimit, before })
-    .then(async (response) => {
-      // Response and data handle.
-      const resText = await response.text()
-      const resTextLines = resText.split('\n')
-      const resJson = JSON.parse(resTextLines[0])
-      const messageThread = resJson.o0.data.message_thread
+async function fetchThreadDetail ({ jar, senderID, messageCount, messageLimit = 7500, before = null }) {
+  const messageThread = await handleFetch({ jar, senderID, messageCount, messageLimit, before })
+    .then(async (json) => {
+      const messageThread = json.o0.data.message_thread
       if (!messageThread.messages.page_info) {
         throw new Error('No page_info.')
       }
@@ -471,7 +444,7 @@ async function fetchThreadDetail ({ token, senderID, messageCount, messageLimit 
       messageLimit = messageLimit / 2
       if (messageLimit > 1000) {
         return handleFetch({
-          token, senderID, messageCount, messageLimit, before
+          jar, senderID, messageCount, messageLimit, before
         })
       } else { throw new Error('Too many error on fetch.') }
     })
@@ -480,7 +453,7 @@ async function fetchThreadDetail ({ token, senderID, messageCount, messageLimit 
   messageCount = messageCount - messages.length
   if (messageThread.messages.page_info.has_previous_page && messages[0] && messageCount) {
     return (await fetchThreadDetail({
-      token,
+      jar,
       senderID,
       messageCount,
       messageLimit,
@@ -492,13 +465,13 @@ async function fetchThreadDetail ({ token, senderID, messageCount, messageLimit 
 }
 
 export default async function (args) {
-  const { thread, messageLimit, before, token } = args
+  const { thread, messageLimit, before, jar } = args
 
   // Copy thread and use it in fetch handler.
   const senderID = thread.id
   const messageCount = (messageLimit) ? Math.min(thread.messageCount, messageLimit) : thread.messageCount
   // Fetch thread detail information.
   return fetchThreadDetail({
-    token, senderID, messageCount, messageLimit, before
+    jar, senderID, messageCount, messageLimit, before
   })
 }

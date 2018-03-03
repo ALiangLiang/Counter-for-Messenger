@@ -112,7 +112,7 @@ const __ = chrome.i18n.getMessage
 
 export default {
   name: 'ListPage',
-  props: [ 'threadsInfo', 'token', 'selfId', 'db' ],
+  props: [ 'threadsInfo', 'jar', 'db' ],
   components: {
     Icon
   },
@@ -159,7 +159,7 @@ export default {
 
         if (!thread.messages) {
           const result = await fetchThreadDetail({
-            token: this.token, thread, $set: this.$set, messageLimit
+            jar: this.jar, thread, $set: this.$set, messageLimit
           })
           const updatedMessages = (_get(cachedThread, 'messages') || []).concat(result)
           this.db.put({ id: thread.id, messages: updatedMessages })
@@ -195,7 +195,7 @@ export default {
 
       if (!thread.messages) {
         const result = await fetchThreadDetail({
-          token: this.token, thread, $set: this.$set, messageLimit
+          jar: this.jar, thread, $set: this.$set, messageLimit
         })
         thread.messages = (_get(cachedThread, 'messages') || []).concat(result)
         thread.characterCount = Thread.culCharacterCount(thread.messages)
@@ -209,14 +209,14 @@ export default {
       this.$ga.event('Thread', 'download')
 
       if (thread.messages) {
-        return downloadMessages(thread, this.selfId)
+        return downloadMessages(thread, this.jar.selfId)
       } else {
         const cachedThread = await this.db.get(thread.id)
         if (cachedThread) {
           thread.messages = cachedThread.messages
-          return downloadMessages(thread, this.selfId)
+          return downloadMessages(thread, this.jar.selfId)
         } else {
-          return downloadMessages(await this.fetchMessages(thread), this.selfId)
+          return downloadMessages(await this.fetchMessages(thread), this.jar.selfId)
         }
       }
     },

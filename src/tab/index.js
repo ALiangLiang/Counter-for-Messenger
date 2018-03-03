@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueAnalytics from 'vue-analytics'
 // Import element-ui components.
-import { Slider, Loading, Message, Button, Table, TableColumn, Tag, Tooltip,
+import { Slider, Loading, Button, Table, TableColumn, Tag, Tooltip,
   Pagination, Switch, Container, Menu, MenuItem, Header, Aside, Main, Footer,
   MessageBox, Input, Form, FormItem } from 'element-ui'
 // Customize element-ui theme. Let this style more like FB.
@@ -19,7 +19,7 @@ import _get from 'lodash/get'
 import Root from './Root.vue'
 import router from './router'
 import fetchThreads from './lib/fetchThreads.js'
-import getToken from './lib/getToken.js'
+import { getJar } from './lib/util.js'
 import Indexeddb from '../ext/Indexeddb.js'
 import storage from '../ext/storage.js'
 
@@ -60,13 +60,12 @@ new Vue({
   el: '#root',
   router,
   components: { Root },
-  template: '<Root :threads-info="threadsInfo" :token="token" :self-id="selfId" :db="db"></Root>',
+  template: '<Root :threads-info="threadsInfo" :jar="jar" :db="db"></Root>',
   data () {
     return {
       loading: null,
       threadsInfo: [],
-      token: null,
-      selfId: null,
+      jar: null,
       db: null,
       iSee: storage.get('iSee', false)
     }
@@ -93,26 +92,12 @@ new Vue({
       }).then(() => (this.iSee = true), () => (this.iSee = false))
     }
 
-    /**
-     * Create a listener. Use to listen from content script injecting
-     * in Messenger login page. If need login, remind client.
-     */
-    const onNeedLogin = () => (this.loading.text = __('waitingForLogin'))
-    chrome.runtime.onMessage.addListener(onNeedLogin)
-
     try {
-      const { token, selfId } = await getToken()
-      chrome.runtime.onMessage.removeListener(onNeedLogin) // Remove listener after get token.
-      this.token = token
-      this.selfId = selfId
-      this.db = new Indexeddb(selfId)
+      const jar = await getJar()
+      this.jar = jar
+      this.db = new Indexeddb(jar.selfId)
     } catch (err) {
       console.error(err)
-      this.loading.text = __('messengerIsDead')
-      Message({
-        type: 'error',
-        message: __('messengerIsDead')
-      })
       throw err
     }
 
@@ -120,7 +105,7 @@ new Vue({
       this.loading.text = __('fetchingThreads')
       this.db.onload = async () => {
         const [ threads, cachedThreads ] = await Promise.all([
-          fetchThreads(this.token),
+          fetchThreads(this.jar),
           this.db.getAll()
         ])
         this.threadsInfo = threads.map((thread) => {

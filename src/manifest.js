@@ -22,7 +22,8 @@ module.exports = {
     'webRequest',
     'webRequestBlocking',
     'downloads',
-    '*://*.messenger.com/*'
+    '*://*.messenger.com/*',
+    '*://*.facebook.com/*'
   ],
   background: {
     persistent: true,
