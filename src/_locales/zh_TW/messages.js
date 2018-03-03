@@ -8,7 +8,7 @@ module.exports = {
   chartPage: { message: '圖表' },
 
   // Loading 訊息
-  interceptingToken: { message: '攔截權杖中...' },
+  interceptingToken: { message: '取得權杖中...' },
   fetchingThreads: { message: '抓取訊息總數中...' },
   fetchingMessages: { message: '抓取訊息中...' },
   rendering: { message: '渲染中...' },

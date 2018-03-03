@@ -1,4 +1,6 @@
-import fetchService from './fetchService.js'
+import Queue from 'promise-queue'
+
+const _queue = new Queue(40, Infinity)
 
 // http get
 export function get (url) {
@@ -87,3 +89,29 @@ export async function getJar () {
     throw new Error('Cannot extract from facebook page.')
   }
 }
+
+// A service to send request to API. Controll request flow to avoid become DDOS.
+export async function fetchService (...args) {
+  return new Promise((resolve, reject) => {
+    let wrapper = null
+    try {
+      wrapper = async () => {
+        try {
+          const response = await fetch(...args)
+          if (!response.ok) throw new Error('No ok.')
+          return resolve(response)
+        } catch (err) {
+          console.error(err)
+          return reject(err)
+        }
+      }
+    } catch (err) {
+      console.error(err)
+      return reject(err)
+    }
+    _queue.add(wrapper)
+  })
+}
+
+// Used to debug. How much fetch mission queue. How much fetch mission pending.
+// setInterval(() => console.log(_queue.getQueueLength(), _queue.getPendingLength()), 3000)

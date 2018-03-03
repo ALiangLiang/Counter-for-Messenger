@@ -8,7 +8,7 @@ module.exports = {
   chartPage: { message: 'Chart' },
 
   // Message of loading
-  interceptingToken: { message: 'Intercept token...' },
+  interceptingToken: { message: 'Extracting token...' },
   fetchingThreads: { message: 'Fetching threads...' },
   fetchingMessages: { message: 'Fetching messages...' },
   rendering: { message: 'Rendering...' },

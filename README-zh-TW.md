@@ -48,13 +48,6 @@
 
 我們歡迎大家增加各種語言的支援，協助各位的同胞使用這個擴充套件。可以參考 [CONTRIBUTING - Working with translations](.github/CONTRIBUTING.md#working-with-translations)。
 
-## 如何運作
-
-簡單來說，就是開啟 Messenger 網頁版頁面，攔截它發出資訊，然後以這些資訊向 FB 請求我們所要的資訊 (訊息數)。
-
-稍微技術點的講法，就是開啟 Messenger 頁面後，以 Chrome Extension 的 API「webRequest」
-，攔截下我們要的 token 等資訊，然後再拿它們去向 FB 發 request，最後再丟到新的頁面，呈現給大家。
-
 ## 📣 聲明
 
 - **這是非官方專案**  
