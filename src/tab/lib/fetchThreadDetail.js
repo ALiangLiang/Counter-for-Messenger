@@ -212,6 +212,7 @@ function formatEventData (event) {
     case 'LightweightEventCreateExtensibleMessageAdminText':
     case 'LightweightEventNotifyExtensibleMessageAdminText':
     case 'LightweightEventNotifyBeforeEventExtensibleMessageAdminText':
+    case 'LightweightEventUpdateExtensibleMessageAdminText':
     case 'LightweightEventUpdateTitleExtensibleMessageAdminText':
     case 'LightweightEventUpdateTimeExtensibleMessageAdminText':
     case 'LightweightEventUpdateLocationExtensibleMessageAdminText':

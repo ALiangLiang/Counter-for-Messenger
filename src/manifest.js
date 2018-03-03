@@ -2,7 +2,7 @@ const config = require('../core/.env')
 
 module.exports = {
   name: '__MSG_extName__',
-  version: '0.2.1.7',
+  version: '0.2.2',
   description: '__MSG_extDescription__',
   author: 'ALiangLiang',
   manifest_version: 2,
