@@ -255,7 +255,7 @@ export default {
         showCancelButton: true,
         cancelButtonText: __('cancel'),
         center: true
-      }).then(() => this.db.clear(), () => null)
+      }).then(() => this.db.destroy(), () => null)
     }
   }
 }

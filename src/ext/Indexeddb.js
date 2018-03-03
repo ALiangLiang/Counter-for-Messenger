@@ -2,7 +2,7 @@ const __VERSION__ = 2
 
 function promisifyRequestResult (request) {
   return new Promise(function (resolve, reject) {
-    request.onerror = (event) => reject(event)
+    request.onerror = reject
     request.onsuccess = (event) => resolve(request.result)
   })
 }
@@ -14,7 +14,8 @@ export default class Indexeddb {
       window.alert('Your browser doesn\'t support a stable version of IndexedDB. Such and such feature will not be available.')
     }
     this._loaded = false
-    const request = this._indexedDB.open(selfId, __VERSION__)
+    this._dbName = selfId
+    const request = this._indexedDB.open(this._dbName, __VERSION__)
     request.onerror = function (err) { console.error(err) }
     request.onsuccess = (event) => {
       this._db = event.currentTarget.result
@@ -90,7 +91,7 @@ export default class Indexeddb {
   }
 
   destroy () {
-    const request = this._indexedDB.deleteDatabase(this._selfId)
+    const request = this._indexedDB.deleteDatabase(this._dbName)
     return promisifyRequestResult(request)
   }
 }
