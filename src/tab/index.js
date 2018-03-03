@@ -53,6 +53,7 @@ Vue.use(VueAnalytics, {
   router
 })
 
+Vue.prototype.$alert = MessageBox.alert
 Vue.prototype.$confirm = MessageBox.confirm
 
 /* eslint-disable no-new */
@@ -83,6 +84,7 @@ new Vue({
       background: 'rgba(0, 0, 0, 0.7)'
     })
 
+    // Let user know fetching data maybe take a long time.
     if (!this.iSee) {
       this.$confirm(__('openingAlertContent'), __('openingAlertTitle'), {
         confirmButtonText: __('iSee'),
@@ -92,15 +94,66 @@ new Vue({
       }).then(() => (this.iSee = true), () => (this.iSee = false))
     }
 
-    try {
+    // extract token and user id from facebook page.
+    const createJar = async () => {
       const jar = await getJar()
       this.jar = jar
       this.db = new Indexeddb(jar.selfId)
+    }
+    try {
+      await createJar()
     } catch (err) {
-      console.error(err)
-      throw err
+      this.$ga.event('Login', 'need')
+      await new Promise(async (resolve, reject) => {
+        // not login yet
+        this.loading.text = __('loginRequired')
+        try {
+          await this.$alert(__('loginRequired'), __('loginRequired'), {
+            type: 'warning'
+          })
+        } catch (err) {}
+
+        // assist user to login
+        let retryCount = 0
+        const appTabId = (await new Promise(function (resolve, reject) {
+          chrome.tabs.getCurrent(resolve)
+        })).id
+        const onMessage = (request, sender, sendResponse) => {
+          chrome.tabs.update(appTabId, { highlighted: true })
+          const retry = async () => {
+            try {
+              await createJar()
+              chrome.runtime.onMessage.removeListener(onMessage)
+              this.$ga.event('Login', 'success')
+              return resolve()
+            } catch (err) {
+              if (retryCount > 50) {
+                this.$ga.event('Login', 'detect-failed')
+                this.$alert(__('cannotDetectLoginContent'), __('error'), {
+                  confirmButtonText: __('refresh'),
+                  type: 'warning'
+                }).then(() => document.location.reload(), () => {})
+                throw new Error('Cannot detect facebook login.')
+              }
+              retryCount += 1
+              // take a while to wait "log in" facebook successful.
+              return setTimeout(() => retry(), 133)
+            }
+          }
+          return retry()
+        }
+
+        // setup listener to listen submit event on login facebook
+        chrome.runtime.onMessage.addListener(onMessage)
+
+        // create a new facebook page
+        chrome.tabs.create({ url: 'https://www.facebook.com/', active: true })
+
+        console.warn(err)
+      })
     }
 
+    // fetch threads information
     try {
       this.loading.text = __('fetchingThreads')
       this.db.onload = async () => {

@@ -71,22 +71,22 @@ export async function getJar () {
   // fetch facebook page and extract data from their.
   const res = await get('https://www.facebook.com/')
   const html = await res.text()
-  try {
-    // required
-    const token = getFrom(html, 'name="fb_dtsg" value="', '"')
-    const selfId = getFrom(html, 'name="xhpc_targetid" value="', '"')
-    // optional
-    let revision
-    try { revision = getFrom(html, 'revision":', ',') } catch (err) {}
 
-    return {
-      token,
-      selfId,
-      revision
-    }
-  } catch (err) {
-    console.error(err)
+  // required
+  const token = getFrom(html, 'name="fb_dtsg" value="', '"')
+  const selfId = getFrom(html, 'name="xhpc_targetid" value="', '"')
+  if (!token || !selfId) {
     throw new Error('Cannot extract from facebook page.')
+  }
+
+  // optional
+  let revision
+  try { revision = getFrom(html, 'revision":', ',') } catch (err) {}
+
+  return {
+    token,
+    selfId,
+    revision
   }
 }
 

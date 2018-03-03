@@ -250,7 +250,7 @@ export default {
       return row[property] === value
     },
     reset () {
-      return this.$confirm(__('resetConfirmTitle'), __('resetConfirm'), {
+      return this.$confirm(__('resetConfirmContent'), __('resetConfirmTitle'), {
         confirmButtonText: __('sure'),
         showCancelButton: true,
         cancelButtonText: __('cancel'),

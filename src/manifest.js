@@ -2,7 +2,7 @@ const config = require('../core/.env')
 
 module.exports = {
   name: '__MSG_extName__',
-  version: '0.2.1.6',
+  version: '0.2.1.7',
   description: '__MSG_extDescription__',
   author: 'ALiangLiang',
   manifest_version: 2,
@@ -22,7 +22,6 @@ module.exports = {
     'webRequest',
     'webRequestBlocking',
     'downloads',
-    '*://*.messenger.com/*',
     '*://*.facebook.com/*'
   ],
   background: {
@@ -36,10 +35,10 @@ module.exports = {
       'js/vendor.js',
       'js/content.js'
     ],
-    matches: ['*://*.messenger.com/*'],
+    matches: ['*://*.facebook.com/*'],
     run_at: 'document_end'
   }],
   default_locale: 'en',
-  content_security_policy: "script-src 'self' 'unsafe-eval' https://www.google-analytics.com https://www.messenger.com https://www.google.com https://checkout.google.com; object-src 'self'",
+  content_security_policy: "script-src 'self' 'unsafe-eval' https://www.google-analytics.com https://www.google.com https://checkout.google.com; object-src 'self'",
   key: config[(!process.env.BETA) ? 'release' : 'beta'].key
 }

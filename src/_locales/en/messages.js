@@ -17,8 +17,13 @@ module.exports = {
   // Alert model
   openingAlertTitle: { message: 'Please be patient' },
   openingAlertContent: { message: 'Fetching data from FB may take a long time.' },
+  resetConfirmTitle: { message: 'Sure?' },
+  resetConfirmContent: { message: 'Are you sure you want to clear all cached data?' },
+  error: { message: 'Error' },
+  cannotDetectLoginContent: { message: 'Cannot detect facebook login.' },
   iSee: { message: 'Got it!' },
   sure: { message: 'Sure!!' },
+  refresh: { message: 'Refresh' },
   cancel: { message: 'Cancel' },
 
   // List Page
@@ -41,8 +46,6 @@ module.exports = {
   unknown: { message: 'Unknown' },
   fetchDetailOfselected: { message: 'Import Messages of Selected Threads' },
   reset: { message: 'Reset' },
-  resetConfirm: { message: 'Sure?' },
-  resetConfirmTitle: { message: 'Are you sure you want to clear all cached data?' },
   searchInputLabel: { message: 'Search' },
   searchInputPlaceholder: { message: 'Keyword' },
 
@@ -63,7 +66,7 @@ module.exports = {
   // Error message
   fetchError: { message: 'Oops, cannot fetch messages.' },
   contactDevelper: { message: 'Please contact developer.' },
-  messengerIsDead: { message: 'Your Messenger is temporarily unavailable. Please take a while to use again.' },
+  loginRequired: { message: 'Please login Facebook first.' },
 
   // Symbol
   comma: { message: ', ' },
