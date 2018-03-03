@@ -76,9 +76,16 @@ export default class Indexeddb {
   }
 
   remove (senderID) {
-    const request = this._db.transaction('Threads')
+    const request = this._db.transaction('Threads', 'readwrite')
       .objectStore('Threads')
       .delete(senderID)
+    return promisifyRequestResult(request)
+  }
+
+  clear () {
+    const request = this._db.transaction('Threads', 'readwrite')
+      .objectStore('Threads')
+      .clear()
     return promisifyRequestResult(request)
   }
 

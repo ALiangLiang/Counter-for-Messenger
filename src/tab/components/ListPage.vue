@@ -13,6 +13,11 @@
             {{ __('fetchDetailOfselected') }}
           </el-button>
         </el-form-item>
+        <el-form-item>
+          <el-button type="danger" @click="reset()">
+            {{ __('reset') }}
+          </el-button>
+        </el-form-item>
       </el-form>
       <el-pagination
         @size-change="(val) => (threadsPerPage = val)"
@@ -243,6 +248,14 @@ export default {
     typeFilterMethod (value, row, column) {
       const property = column['property']
       return row[property] === value
+    },
+    reset () {
+      return this.$confirm(__('resetConfirmTitle'), __('resetConfirm'), {
+        confirmButtonText: __('sure'),
+        showCancelButton: true,
+        cancelButtonText: __('cancel'),
+        center: true
+      }).then(() => this.db.clear(), () => null)
     }
   }
 }

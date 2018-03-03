@@ -18,6 +18,7 @@ module.exports = {
   openingAlertTitle: { message: '請保持耐心' },
   openingAlertContent: { message: '從 FB 撈取資料可能會花費許多時間。' },
   iSee: { message: '我瞭解' },
+  sure: { message: '確定' },
   cancel: { message: '取消' },
 
   // 清單
@@ -39,6 +40,9 @@ module.exports = {
   pending: { message: '陌生' },
   unknown: { message: '未知' },
   fetchDetailOfselected: { message: '載入所選訊息的記錄' },
+  reset: { message: '清除所有資料' },
+  resetConfirm: { message: '確定？' },
+  resetConfirmTitle: { message: '你確定要清除所有快取資料？' },
   searchInputLabel: { message: '搜尋' },
   searchInputPlaceholder: { message: '請輸入關鍵字' },
 

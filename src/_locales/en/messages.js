@@ -18,6 +18,7 @@ module.exports = {
   openingAlertTitle: { message: 'Please be patient' },
   openingAlertContent: { message: 'Fetching data from FB may take a long time.' },
   iSee: { message: 'Got it!' },
+  sure: { message: 'Sure!!' },
   cancel: { message: 'Cancel' },
 
   // List Page
@@ -39,6 +40,9 @@ module.exports = {
   pending: { message: 'Request' },
   unknown: { message: 'Unknown' },
   fetchDetailOfselected: { message: 'Import Messages of Selected Threads' },
+  reset: { message: 'Reset' },
+  resetConfirm: { message: 'Sure?' },
+  resetConfirmTitle: { message: 'Are you sure you want to clear all cached data?' },
   searchInputLabel: { message: 'Search' },
   searchInputPlaceholder: { message: 'Keyword' },
 
