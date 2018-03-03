@@ -9,6 +9,25 @@ import User from '../classes/User'
 import { graphql, getQraphqlForm } from './util'
 const __ = chrome.i18n.getMessage
 
+function formatParticipant (participant) {
+  return {
+    id: participant.id,
+    name: participant.name,
+    type: _get(participant, '__typename', '').toUpperCase(),
+    url: participant.url,
+    gender: participant.gender,
+    shortName: participant.short_name,
+    username: participant.username,
+    avatar: (participant.big_image_src) ? participant.big_image_src.uri : null,
+    isViewerFriend: participant.is_viewer_friend,
+    isMessengerUser: participant.is_messenger_user,
+    isVerified: participant.is_verified,
+    isNessageBlockedByViewer: participant.is_message_blocked_by_viewer,
+    isViewerCoworker: participant.is_viewer_coworker,
+    isEmployee: participant.is_employee
+  }
+}
+
 function createThreadObject (threadNode, createdUsers, tag) {
   const participantsData = threadNode.all_participants.nodes
     .map((participant) => {
@@ -17,12 +36,7 @@ function createThreadObject (threadNode, createdUsers, tag) {
       // If not found, create one and push it to array "createdUsers".
       let user = createdUser
       if (!user) {
-        user = new User({
-          id: participant.messaging_actor.id,
-          name: participant.messaging_actor.name,
-          type: _get(participant, 'messaging_actor.__typename', '').toUpperCase(),
-          url: participant.messaging_actor.url
-        })
+        user = new User(formatParticipant(participant.messaging_actor))
         createdUsers.push(user)
       }
       return {

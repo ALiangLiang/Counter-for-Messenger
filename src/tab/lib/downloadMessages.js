@@ -7,7 +7,7 @@ import { Message } from 'element-ui'
 import Vue from 'vue'
 import JSZip from 'jszip'
 import _chunk from 'lodash/chunk'
-import ThreadComponenet from '../components/download/Thread.vue'
+import HtmlComponenet from '../components/download/Html.vue'
 const __ = chrome.i18n.getMessage
 
 const _errorHandler = () => {
@@ -28,27 +28,60 @@ export default async function downloadMessages (info, selfId) {
   const padLeft = (str, len) => String(str).padStart(len, '0')
   const date = new Date()
   const time = `${date.getFullYear()}${padLeft(date.getMonth() + 1, 2)}${padLeft(date.getDate(), 2)}`
+  const title = `${folderName} - ${info.name} - ${time}`
   const { messages, participants } = info
-  _chunk(messages, 10000).forEach((messageChunk, i) => {
-    const html = new Vue({
-      components: { Thread: ThreadComponenet },
-      render (h) {
-        return (
-          <thread messages-data={ messageChunk } participants={ participants } self-id={ selfId }></thread>
-        )
-      }
-    }).$mount().$el
-    const pageBlob = new Blob(['<!DOCTYPE html>', html.outerHTML], {type: 'text/html'})
-    zip.file(`${folderName} - ${info.name} - ${time} - ${i + 1}.html`, pageBlob)
-  })
+  _chunk(messages, 10000) // split every 10000 messages into chunks
+    .forEach((messageChunk, i) => {
+      const html = new Vue({
+        components: { HtmlElement: HtmlComponenet },
+        render (h) {
+          return (
+            <html-element
+              title={ title }
+              messages-data={ messageChunk }
+              participants={ participants }
+              self-id={ selfId }></html-element>
+          )
+        }
+      }).$mount().$el
+
+      // Create a empty document which is independant. Used to avoid load resource
+      // like image, audio, video...
+      const doc = document.implementation.createDocument(null, '', null)
+
+      // initial a html element in document
+      doc.appendChild(document.createElement('html'))
+
+      // extract html element from document.
+      const docHtml = doc.lastElementChild
+
+      // append rendered head and body to independant document.
+      Array.from(html.children).forEach((child) => docHtml.appendChild(child))
+
+      // html -> string -> blob<text/html>
+      const pageBlob = new Blob([
+        '<!DOCTYPE html>',
+        docHtml.outerHTML
+      ], { type: 'text/html' })
+
+      // put file blob into zip
+      zip.file(`${folderName} - ${info.name} - ${time} - ${i + 1}.html`, pageBlob)
+    })
 
   try {
+    // fetch assets into blob
     const assetBlob = await (await fetch('/assets/download.css')).blob()
+
+    // also put into zip
     zip.file('download.css', assetBlob)
+
+    // generate zip blob
     const zipBlob = await zip.generateAsync({
       type: 'blob',
       compression: 'DEFLATE'
     })
+
+    // start download
     chrome.downloads.download({
       filename: `${folderName} - ${info.name} - ${time}.zip`,
       url: URL.createObjectURL(zipBlob)
