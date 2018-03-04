@@ -1,8 +1,8 @@
 const config = require('../core/.env')
 
-module.exports = {
+const manifest = {
   name: '__MSG_extName__',
-  version: '0.2.2',
+  version: '0.2.2.1',
   description: '__MSG_extDescription__',
   author: 'ALiangLiang',
   manifest_version: 2,
@@ -28,7 +28,6 @@ module.exports = {
     persistent: true,
     page: 'pages/background.html'
   },
-  options_page: 'pages/options.html',
   content_scripts: [{
     js: [
       'js/manifest.js',
@@ -39,6 +38,30 @@ module.exports = {
     run_at: 'document_end'
   }],
   default_locale: 'en',
-  content_security_policy: "script-src 'self' 'unsafe-eval' https://www.google-analytics.com https://www.google.com https://checkout.google.com; object-src 'self'",
-  key: config[(!process.env.BETA) ? 'release' : 'beta'].key
+  content_security_policy: "script-src 'self' 'unsafe-eval' https://www.google-analytics.com https://www.google.com https://checkout.google.com; object-src 'self'"
 }
+
+const optionPage = 'pages/options.html'
+if (!process.env.FIREFOX) {
+  console.info('chrome')
+  Object.assign(manifest, {
+    options_page: optionPage,
+    key: config[(!process.env.BETA) ? 'release' : 'beta'].key
+  })
+} else {
+  console.info('firefox')
+  delete manifest.background.persistent // Firefox not support background.persistent
+  Object.assign(manifest, {
+    applications: {
+      gecko: {
+        id: 'counterformessenger@aliangliang.top',
+        strict_min_version: '56.0'
+      }
+    },
+    options_ui: {
+      page: optionPage
+    }
+  })
+}
+
+module.exports = manifest
