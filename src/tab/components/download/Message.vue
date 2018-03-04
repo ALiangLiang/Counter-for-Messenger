@@ -37,10 +37,15 @@
           </a>
         </div>
       </div>
+      <div v-if="reactions" class="reaction">
+        <span class="reactionEmoji">{{ reactions }}</span>
+        <span class="reactionNum">{{ this.messageData.messageReactions.length }}</span>
+      </div>
     </div>
   </div>
 </template>
 <script>
+import _union from 'lodash/union'
 const __ = chrome.i18n.getMessage
 
 export default {
@@ -49,7 +54,8 @@ export default {
   data: () => ({
     align: 'right' || 'left',
     boxAlign: 'box_r' || 'box_l',
-    localTimeString: ''
+    localTimeString: '',
+    reactions: null
   }),
   created () {
     const date = new Date(Number(this.messageData.timestamp))
@@ -57,11 +63,25 @@ export default {
     this.isSelf = Number(this.messageData.senderID) === Number(this.selfId)
     this.align = (this.isSelf) ? 'right' : 'left'
     this.boxAlign = (this.isSelf) ? 'box_r' : 'box_l'
+    if (this.messageData.messageReactions && this.messageData.messageReactions.length) {
+      // const reactions = this.messageData.messageReactions.map((messageReaction) => ({
+      //   name: this.getParticipant(messageReaction.id),
+      //   reaction: messageReaction.reaction
+      // }))
+      this.reactions = _union(this.messageData.messageReactions
+        .map((messageReaction) => messageReaction.reaction))
+        .join('')
+    }
   },
   computed: {
-    sender: function () { return this.participants.find((participant) => participant.user.id === this.messageData.senderID) },
-    senderName: function () { return (this.sender) ? this.sender.user.name : __('unknown') },
-    senderAvatar: function () { return (this.sender) ? this.sender.user.avatar : null }
+    sender () { return this.getParticipant(this.messageData.senderID) },
+    senderName () { return (this.sender) ? this.sender.user.name : __('unknown') },
+    senderAvatar () { return (this.sender) ? this.sender.user.avatar : null }
+  },
+  methods: {
+    getParticipant (id) {
+      return this.participants.find((participant) => participant.user.id === id)
+    }
   }
 }
 </script>
