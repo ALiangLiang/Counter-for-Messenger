@@ -35,15 +35,25 @@
       :summary-method="getSummaries"
       @selection-change="onSelect"
       style="width: 100%">
-      <el-table-column type="selection" width="55"> </el-table-column>
-      <el-table-column prop="id" sortable label="#" width="180"> </el-table-column>
+      <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column prop="id" sortable label="#" width="180"></el-table-column>
       <el-table-column prop="name" :label="__('threadName')" width="180">
         <template slot-scope="{ row }">
-          <el-tooltip :content="row.tooltip" placement="top-start"
+          <!-- Group -->
+          <el-tooltip :content="getTooltip(row.participants)" placement="top-start"
             v-if="row.type === 'GROUP'">
-            <div>{{ row.name }}</div>
+            <div class="outer-name">
+              <avatar :images="(row.image) ? [{ text: row.threadName, src: row.image}] : row.participants.map((p) => ({ text: p.user.name, src: p.user.avatar }))" />
+              <span>{{ row.threadName }}</span>
+            </div>
           </el-tooltip>
-          <div v-else>{{ row.name }}</div>
+          <!-- End Group -->
+          <!-- One to one -->
+          <div v-else class="outer-name">
+            <avatar :images="row.participants.filter((p) => p.user.id !== jar.selfId).map((p) => ({ text: p.user.name, src: p.user.avatar }))" />
+            <span>{{ row.threadName }}</span>
+          </div>
+          <!-- End One to one -->
         </template>
       </el-table-column>
       <el-table-column
@@ -106,6 +116,7 @@ import 'vue-awesome/icons/download'
 import Icon from 'vue-awesome/components/Icon'
 import _get from 'lodash/get'
 import Thread from '../classes/Thread.js'
+import Avatar from './Avatar'
 import fetchThreadDetail from '../lib/fetchThreadDetail.js'
 import downloadMessages from '../lib/downloadMessages.js'
 const __ = chrome.i18n.getMessage
@@ -113,9 +124,7 @@ const __ = chrome.i18n.getMessage
 export default {
   name: 'ListPage',
   props: [ 'threadsInfo', 'jar', 'db' ],
-  components: {
-    Icon
-  },
+  components: { Icon, Avatar },
   data () {
     return {
       keyword: '',
@@ -132,7 +141,7 @@ export default {
   computed: {
     tableData () {
       return this.threadsInfo.filter((thread) =>
-        thread.name.match(new RegExp(this.keyword, 'i')))
+        thread.threadName.match(new RegExp(this.keyword, 'i')))
     }
   },
   methods: {
@@ -225,6 +234,10 @@ export default {
       const totalTextCount = data.reduce((sum, row) => row.characterCount + sum, 0)
       return ['', '', '', '', totalMessageCount, totalTextCount]
     },
+    getTooltip (participants) {
+      return participants.map((participant) => participant.user.name)
+        .join(__('comma'))
+    },
     onSelect (items) {
       this.selectedThreads = items
     },
@@ -262,6 +275,13 @@ export default {
 </script>
 
 <style>
+  .outer-name {
+    display: inline-block;
+  }
+  .outer-name div, span {
+    display: inline-block;
+    vertical-align: middle;
+  }
   .el-tooltip__popper {
     max-width: 240px;
   }

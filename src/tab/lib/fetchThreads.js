@@ -9,10 +9,18 @@ import User from '../classes/User'
 import { graphql, getQraphqlForm } from './util'
 const __ = chrome.i18n.getMessage
 
-function formatParticipant (participant) {
+function formatParticipant (participant, threadNode) {
+  // Mapping participant nickname from threadNode.customization_info
+  const participantCustomizations = (threadNode && threadNode.customization_info)
+    ? threadNode.customization_info
+      .participant_customizations
+      .find((participantId) => participantId === participant.id)
+    : null
+
   return {
     id: participant.id,
     name: participant.name,
+    nickname: (participantCustomizations) ? participantCustomizations.nickname : null,
     type: _get(participant, '__typename', '').toUpperCase(),
     url: participant.url,
     gender: participant.gender,
@@ -28,17 +36,10 @@ function formatParticipant (participant) {
   }
 }
 
-function createThreadObject (threadNode, createdUsers, tag) {
-  const participantsData = threadNode.all_participants.nodes
+function formatThread (threadNode) {
+  const participants = threadNode.all_participants.nodes
     .map((participant) => {
-      // Find user we ever created.
-      const createdUser = createdUsers.find((user) => user.id === participant.messaging_actor.id)
-      // If not found, create one and push it to array "createdUsers".
-      let user = createdUser
-      if (!user) {
-        user = new User(formatParticipant(participant.messaging_actor))
-        createdUsers.push(user)
-      }
+      const user = new User(formatParticipant(participant.messaging_actor, threadNode))
       return {
         user,
         messageCount: null,
@@ -46,61 +47,54 @@ function createThreadObject (threadNode, createdUsers, tag) {
         inGroup: true
       }
     })
-
-  // Initial thread object.
-  const thread = new Thread({
-    participants: participantsData,
-    messageCount: threadNode.messages_count,
-    tag
-  })
-  const { participants } = thread
-
+  let type, threadName
   if (threadNode.thread_type === 'ONE_TO_ONE') {
     const otherUserId = threadNode.other_user_id
     const otherUser = participants.find((participant) =>
       participant.user.id !== otherUserId)
     const otherUserName = otherUser.user.name
+    type = (otherUser.user.type) ? otherUser.user.type.toUpperCase() : 'USER'
+    threadName = otherUserName
 
     if (otherUserName === null) console.warn(threadNode)
     if (!otherUser.user.type) console.warn(otherUser)
 
-    Object.assign(thread, {
-      id: threadNode.thread_key.thread_fbid || threadNode.thread_key.other_user_id,
-      name: otherUserName,
-      tooltip: otherUserName,
-      type: (otherUser.user.type) ? otherUser.user.type.toUpperCase() : 'USER'
-    })
+    threadName = otherUserName
   } else if (threadNode.thread_type === 'GROUP') {
-    // 預設使用 thread 名稱作為顯示名稱標籤。
-    // By default, use thread name as display tooltip.
-    let name = threadNode.name
-    const tooltip = participants
-      .map((participant) => participant.user.name)
-      .join(__('comma'))
+    type = threadNode.thread_type
+
     // 如果沒有 thread 名稱，代表是沒有設定名稱的團體。
     // If no thread name, means it's no setting name group.
+    let groupParticipants = ''
     if (threadNode.name === null) {
-      name = tooltip
       if (participants.length > 3) {
-        name = participants.slice(0, 3)
+        groupParticipants = participants.slice(0, 3)
           .map((participant) => participant.user.name).join(__('comma'))
-        name += `${__('comma')}${__('others', String(participants.length - 3))}`
+        groupParticipants += `${__('comma')}${__('others', String(participants.length - 3))}`
       }
     }
 
-    Object.assign(thread, {
-      id: threadNode.thread_key.other_user_id || threadNode.thread_key.thread_fbid,
-      name,
-      tooltip,
-      type: threadNode.thread_type
-    })
+    threadName = threadNode.name || groupParticipants
   } else {
     console.warn('Unknown thread type: ', threadNode)
     // TODO: handle with thread type 'ROOM' and 'MARKETPLACE'
     return null
   }
 
-  return thread
+  return {
+    id: threadNode.thread_key.other_user_id || threadNode.thread_key.thread_fbid,
+    threadName,
+    name: threadNode.name,
+    image: (threadNode.image) ? threadNode.image.uri : null,
+    type,
+    participants,
+    messageCount: threadNode.messages_count
+  }
+}
+
+function createThreadObject (threadNode, createdUsers, tag) {
+  const thread = formatThread(threadNode)
+  return new Thread(Object.assign({ tag }, thread))
 }
 
 export default async function fetchThreads (jar, limit = 5000, tags = [ 'INBOX', 'ARCHIVED', 'PENDING' ]) {

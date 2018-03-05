@@ -1,9 +1,8 @@
-
 const webpack = require('webpack')
 const merge = require('webpack-merge')
 const baseWebpack = require('./webpack.base')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-const { styleLoaders, htmlPage } = require('./tools')
+const { styleLoaders } = require('./tools')
 
 module.exports = (env) => merge(baseWebpack(env), {
   // cheap-module-eval-source-map быстрее для разработки

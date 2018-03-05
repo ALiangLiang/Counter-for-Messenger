@@ -1,6 +1,6 @@
 const path = require('path')
 const webpack = require('webpack')
-const ChromeReloadPlugin  = require('wcer')
+const ChromeReloadPlugin = require('wcer')
 const { cssLoaders, htmlPage } = require('./tools')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const GenerateLocaleJsonPlugin = require('../plugins/GenerateLocaleJsonPlugin')
@@ -13,7 +13,7 @@ module.exports = (env) => {
       tab: resolve('./tab'),
       options: resolve('./options'),
       content: resolve('./content'),
-      background: resolve('./backend'),
+      background: resolve('./backend')
     },
     output: {
       path: path.join(__dirname, '..', 'build', (!env.FIREFOX) ? 'chrome' : 'firefox'),
@@ -57,7 +57,7 @@ module.exports = (env) => {
       }, {
         test: /\.js$/,
         loader: 'babel-loader',
-        include:  [path.join(__dirname, '..', 'src'), path.join(__dirname, '..', 'test'), path.join(__dirname, '..', 'node_modules/vue-awesome')],
+        include: [path.join(__dirname, '..', 'src'), path.join(__dirname, '..', 'test'), path.join(__dirname, '..', 'node_modules/vue-awesome')]
       }, {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
@@ -86,7 +86,7 @@ module.exports = (env) => {
       htmlPage('options', 'options', ['manifest', 'vendor', 'options']),
       htmlPage('background', 'background', ['manifest', 'vendor', 'background']),
       new webpack.DefinePlugin({
-        'chrome': (!env.FIREFOX) ? 'chrome' : 'browser'
+        chrome: (!env.FIREFOX) ? 'chrome' : 'browser'
       }),
       new CopyWebpackPlugin([{ from: path.join(__dirname, '..', 'static') }]),
       new ChromeReloadPlugin({
@@ -110,6 +110,6 @@ module.exports = (env) => {
       }),
       new webpack.optimize.CommonsChunkPlugin({ name: 'manifest', chunks: ['vendor'] })
     ],
-    performance: { hints: false },
+    performance: { hints: false }
   }
 }

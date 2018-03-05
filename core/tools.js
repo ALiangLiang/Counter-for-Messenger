@@ -13,19 +13,18 @@ exports.htmlPage = (title, filename, chunks, template) => new HtmlWebpackPlugin(
   chunks
 })
 
-
 exports.cssLoaders = (options = {}) => {
   let loaders = {}
   let prePprocessors = {
     css: {},
     postcss: {},
-    less: { loader: 'less'},
-    sass: { loader:'sass', options: { indentedSyntax: true } },
-    scss: { loader:'sass' },
+    less: { loader: 'less' },
+    sass: { loader: 'sass', options: { indentedSyntax: true } },
+    scss: { loader: 'sass' },
     stylus: { loader: 'stylus' },
     styl: { loader: 'stylus' }
   }
-  for(let key in prePprocessors) {
+  for (let key in prePprocessors) {
     let loader = [{
       loader: 'css-loader',
       options: {
@@ -44,7 +43,7 @@ exports.cssLoaders = (options = {}) => {
       loaders[key] = ['vue-style-loader'].concat(loader)
     }
   }
-  return loaders;
+  return loaders
 }
 exports.styleLoaders = function (options) {
   const output = []
