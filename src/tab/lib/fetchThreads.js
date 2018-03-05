@@ -88,7 +88,8 @@ function formatThread (threadNode) {
     image: (threadNode.image) ? threadNode.image.uri : null,
     type,
     participants,
-    messageCount: threadNode.messages_count
+    messageCount: threadNode.messages_count,
+    characterCount: null
   }
 }
 

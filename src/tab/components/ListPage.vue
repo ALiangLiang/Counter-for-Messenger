@@ -232,7 +232,7 @@ export default {
     getSummaries ({ columns, data }) {
       const totalMessageCount = data.reduce((sum, row) => row.messageCount + sum, 0)
       const totalTextCount = data.reduce((sum, row) => row.characterCount + sum, 0)
-      return ['', '', '', '', totalMessageCount, totalTextCount]
+      return ['', '', '', '', '', totalMessageCount, totalTextCount]
     },
     getTooltip (participants) {
       return participants.map((participant) => participant.user.name)
