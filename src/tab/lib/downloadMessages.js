@@ -28,7 +28,7 @@ export default async function downloadMessages (info, selfId) {
   const padLeft = (str, len) => String(str).padStart(len, '0')
   const date = new Date()
   const time = `${date.getFullYear()}${padLeft(date.getMonth() + 1, 2)}${padLeft(date.getDate(), 2)}`
-  const title = `${folderName} - ${info.name} - ${time}`
+  const title = `${folderName} - ${info.threadName} - ${time}`
   const { messages, participants } = info
   _chunk(messages, 10000) // split every 10000 messages into chunks
     .forEach((messageChunk, i) => {
@@ -65,7 +65,7 @@ export default async function downloadMessages (info, selfId) {
       ], { type: 'text/html' })
 
       // put file blob into zip
-      zip.file(`${folderName} - ${info.name} - ${time} - ${i + 1}.html`, pageBlob)
+      zip.file(`${folderName} - ${info.threadName} - ${time} - ${i + 1}.html`, pageBlob)
     })
 
   try {
@@ -83,7 +83,7 @@ export default async function downloadMessages (info, selfId) {
 
     // start download
     chrome.downloads.download({
-      filename: `${folderName} - ${info.name} - ${time}.zip`,
+      filename: `${folderName} - ${info.threadName} - ${time}.zip`,
       url: URL.createObjectURL(zipBlob)
     })
   } catch (err) {

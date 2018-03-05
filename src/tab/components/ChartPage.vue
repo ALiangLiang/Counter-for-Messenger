@@ -141,7 +141,7 @@ export default {
       }
       if (!this.isShowDetail) {
         this.chartData = {
-          labels: splicedThreads.map((thread) => thread.name),
+          labels: splicedThreads.map((thread) => thread.threadName),
           datasets: [{
             label: __('total'),
             backgroundColor: '#0083FF',
@@ -170,7 +170,7 @@ export default {
           data: status
         }))
         this.chartData = {
-          labels: splicedThreads.map((info) => info.name),
+          labels: splicedThreads.map((info) => info.threadName),
           datasets
         }
       }

@@ -23,7 +23,7 @@ module.exports = (env) => {
       new OptimizeCSSPlugin({ cssProcessorOptions: { safe: true } }),
       new ExtractTextPlugin({ filename: 'css/[name].[contenthash].css' }),
       new webpack.HashedModuleIdsPlugin(),
-      new ZipPlugin({ path: '..', filename: 'beta.zip' })
+      new ZipPlugin({ path: '../..', filename: 'beta.zip' })
     ]
   })
 }

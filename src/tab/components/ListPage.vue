@@ -36,8 +36,8 @@
       @selection-change="onSelect"
       style="width: 100%">
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column prop="id" sortable label="#" width="180"></el-table-column>
-      <el-table-column prop="name" :label="__('threadName')" width="180">
+      <el-table-column prop="id" sortable label="#" width="150"></el-table-column>
+      <el-table-column prop="name" :label="__('threadName')" width="210">
         <template slot-scope="{ row }">
           <!-- Group -->
           <el-tooltip :content="getTooltip(row.participants)" placement="top-start"
