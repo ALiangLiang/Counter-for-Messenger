@@ -115,11 +115,10 @@ new Vue({
 
         // assist user to login
         let retryCount = 0
-        const appTabId = (await new Promise(function (resolve, reject) {
-          chrome.tabs.getCurrent(resolve)
-        })).id
+        const appTabId = (await new Promise((resolve, reject) =>
+          chrome.tabs.getCurrent(resolve))).id
         const onMessage = (request, sender, sendResponse) => {
-          chrome.tabs.update(appTabId, { highlighted: true })
+          chrome.tabs.update(appTabId, { active: true })
           const retry = async () => {
             try {
               await createJar()

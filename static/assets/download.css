@@ -36,6 +36,7 @@ body {
   border-radius: 50%;
   float: left;
   position: absolute;
+  display: flex;
 }
 .outer {
   background: #FFFCDD;

@@ -19,9 +19,9 @@ const manifest = {
   },
   permissions: [
     'tabs',
+    'downloads',
     'webRequest',
     'webRequestBlocking',
-    'downloads',
     '*://*.facebook.com/*'
   ],
   background: {
@@ -54,7 +54,7 @@ if (!process.env.FIREFOX) {
   Object.assign(manifest, {
     applications: {
       gecko: {
-        id: 'counterformessenger@aliangliang.top',
+        id: 'counter-for-messenger@aliangliang.top',
         strict_min_version: '56.0'
       }
     },
