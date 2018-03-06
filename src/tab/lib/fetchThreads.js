@@ -15,7 +15,7 @@ function formatParticipant (participant, threadNode) {
   const participantCustomizations = (threadNode && threadNode.customization_info)
     ? threadNode.customization_info
       .participant_customizations
-      .find((participantId) => participantId === participant.id)
+      .find((participantCustomization) => participantCustomization.participant_id === participant.id)
     : null
 
   return {
@@ -53,14 +53,11 @@ function formatThread (threadNode) {
     const otherUserId = threadNode.other_user_id
     const otherUser = participants.find((participant) =>
       participant.user.id !== otherUserId)
-    const otherUserName = otherUser.user.name
     type = (otherUser.user.type) ? otherUser.user.type.toUpperCase() : 'USER'
-    threadName = otherUserName
 
-    if (otherUserName === null) console.warn(threadNode)
     if (!otherUser.user.type) console.warn(otherUser)
 
-    threadName = otherUserName
+    threadName = otherUser.user.nickname || otherUser.user.name
   } else if (threadNode.thread_type === 'GROUP') {
     type = threadNode.thread_type
 
@@ -91,6 +88,7 @@ function formatThread (threadNode) {
     color: _toString(_get(threadNode, 'customization_info.outgoing_bubble_color', null)).replace(/^FF/, '#') || null,
     type,
     participants,
+    otherUserId: threadNode.other_user_id,
     messageCount: threadNode.messages_count,
     characterCount: null
   }

@@ -52,7 +52,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 #about {
   text-align: center;
   max-width: 768px;

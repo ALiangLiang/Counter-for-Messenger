@@ -106,12 +106,12 @@ export async function fetchService (...args) {
           if (!response.ok) throw new Error('No ok.')
           return resolve(response)
         } catch (err) {
-          console.error(err)
+          // console.error(err)
           return reject(err)
         }
       }
     } catch (err) {
-      console.error(err)
+      // console.error(err)
       return reject(err)
     }
     _queue.add(wrapper)

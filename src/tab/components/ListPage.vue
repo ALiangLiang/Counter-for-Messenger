@@ -60,9 +60,9 @@
           <div class="outer-name">
             <avatar :images="(row.image) ? [{ text: row.threadName, src: row.image}] : row.participants.map((p) => ({ text: p.user.name, src: p.user.avatar }))" />
             <thread-name
-              :name="row.threadName"
-              :tooltip="(row.type === 'GROUP') ? getTooltip(row.participants) : null"
-              @change="onChangeThreadName(row, $event)"></thread-name>
+              class="thread-name"
+              :thread="row"
+              @change="((row.type === 'GROUP') ? onChangeThreadName : onChangeNickname)(row, $event)"></thread-name>
           </div>
         </template>
       </el-table-column>
@@ -257,18 +257,16 @@ export default {
       const totalTextCount = data.reduce((sum, row) => row.characterCount + sum, 0)
       return ['', '', '', '', '', totalMessageCount, totalTextCount]
     },
-    getTooltip (participants) {
-      return participants.map((participant) => participant.user.name)
-        .join(__('comma'))
-    },
     onSelect (items) {
       this.selectedThreads = items
     },
-    onChangeThreadName (thread, threadName) {
+    onChangeThreadName (thread, [ threadName ]) {
+      console.log(threadName)
       return changeThreadName(this.jar, thread, threadName)
     },
-    onChangeNickname (thread, nickname) {
-      return changeThreadNickname(this.jar, thread, nickname)
+    onChangeNickname (thread, [ nickname, otherUserId ]) {
+      console.log(nickname, otherUserId)
+      return changeThreadNickname(this.jar, thread, otherUserId, nickname)
     },
     onChangeColor (thread, color) {
       return changeThreadColor(this.jar, thread, color)
@@ -309,12 +307,6 @@ export default {
 }
 </script>
 
-<style>
-.el-tooltip__popper {
-  max-width: 240px;
-}
-</style>
-
 <style scoped>
 .outer-name {
   display: inline-block;
@@ -329,10 +321,8 @@ export default {
   height: 14px;
   display: inline-block;
 }
-.el-tooltip {
-  position: absolute;
-  width: 100%;
-  height: 100%;
+.thread-name {
+  max-width: 150px;
 }
 .thread-form-inline>.el-form-item {
   margin-bottom: 0;

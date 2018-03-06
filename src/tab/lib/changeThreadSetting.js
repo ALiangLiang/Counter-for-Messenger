@@ -22,10 +22,10 @@ export function changeThreadName (jar, thread, newThreadName) {
   return graphql('https://www.messenger.com/messaging/send/?dpr=1', form)
 }
 
-export function changeThreadNickname (jar, thread, participant, nickname) {
+export function changeThreadNickname (jar, thread, participantId, nickname) {
   const formData = {
     thread_or_other_fbid: thread.id,
-    participant_id: participant.user.id,
+    participant_id: participantId,
     nickname
   }
   const form = getMessengerApiForm(formData, jar)
