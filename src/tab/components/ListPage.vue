@@ -38,7 +38,7 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column type="expand" width="60">
         <template slot-scope="props">
-          <el-form :inline="true" :model="formInline" class="thread-form-inline">
+          <el-form :inline="true" class="thread-form-inline">
             <!-- <el-form-item label="Nickname">
               <el-input v-model="props.row.nickname" @change="onChangeNickname()" placeholder="Nickname"></el-input>
             </el-form-item> -->

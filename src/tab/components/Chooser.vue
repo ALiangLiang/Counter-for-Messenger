@@ -17,7 +17,7 @@
         class="chooser__trigger color-chooser__trigger"
         :style="{ 'background-color': value || '#0084ff' }"
         @click="handleTrigger">
-        {{ value || 'Default' }}
+        {{ (value) ? (colors[value.toLowerCase()] || value) : 'Default' }}
       </div>
       <color-chooser-dropdown
         v-if="type.toLowerCase() === 'color'"
