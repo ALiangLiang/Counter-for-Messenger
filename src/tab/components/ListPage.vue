@@ -38,11 +38,23 @@
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column type="expand" width="60">
         <template slot-scope="props">
-          <p>Emoji: {{ props.row.emoji || 'Default' }}</p>
-          <div>
-            Color: {{ props.row.color || 'Default' }}
-            <color-chooser @change="onChangeColor(props.row, $event)" v-model="props.row.color"></color-chooser>
-          </div>
+          <el-form :inline="true" :model="formInline" class="thread-form-inline">
+            <!-- <el-form-item label="Nickname">
+              <el-input v-model="props.row.nickname" @change="onChangeNickname()" placeholder="Nickname"></el-input>
+            </el-form-item> -->
+            <el-form-item label="Emoji:">
+              <chooser
+                type="emoji"
+                @change="onChangeEmoji(props.row, $event)"
+                v-model="props.row.emoji"></chooser>
+            </el-form-item>
+            <el-form-item label="Color:">
+              <chooser
+                type="color"
+                @change="onChangeColor(props.row, $event)"
+                v-model="props.row.color"></chooser>
+            </el-form-item>
+          </el-form>
         </template>
       </el-table-column>
       <el-table-column prop="id" sortable label="#" width="150"></el-table-column>
@@ -126,16 +138,16 @@ import Icon from 'vue-awesome/components/Icon'
 import _get from 'lodash/get'
 import Thread from '../classes/Thread.js'
 import Avatar from './Avatar.vue'
-import ColorChooser from './ColorChooser.vue'
+import Chooser from './Chooser.vue'
 import fetchThreadDetail from '../lib/fetchThreadDetail.js'
 import downloadMessages from '../lib/downloadMessages.js'
-import changeThreadColor from '../lib/changeThreadColor.js'
+import { changeThreadNickname, changeThreadColor, changeThreadEmoji } from '../lib/changeThreadSetting.js'
 const __ = chrome.i18n.getMessage
 
 export default {
   name: 'ListPage',
   props: [ 'threadsInfo', 'jar', 'db' ],
-  components: { Icon, Avatar, ColorChooser },
+  components: { Icon, Avatar, Chooser },
   data () {
     return {
       keyword: '',
@@ -252,8 +264,14 @@ export default {
     onSelect (items) {
       this.selectedThreads = items
     },
+    onChangeNickname (thread, color) {
+      return changeThreadNickname(this.jar, thread, color)
+    },
     onChangeColor (thread, color) {
       return changeThreadColor(this.jar, thread, color)
+    },
+    onChangeEmoji (thread, emoji) {
+      return changeThreadEmoji(this.jar, thread, emoji)
     },
     determineThreadType (type) {
       switch (type) {
@@ -289,27 +307,34 @@ export default {
 </script>
 
 <style>
-  .outer-name {
-    display: inline-block;
-  }
-  .outer-name div, span {
-    display: inline-block;
-    vertical-align: middle;
-  }
-  .color-box {
-    width: 14px;
-    height: 14px;
-    display: inline-block;
-  }
-  .el-tooltip__popper {
-    max-width: 240px;
-  }
-  .el-color-picker {
-    height: auto;
-  }
-  .el-color-picker__trigger {
-    padding: 0px;
-    width: 14px;
-    height: 14px;
-  }
+.outer-name {
+  display: inline-block;
+}
+.outer-name div, span {
+  display: inline-block;
+  vertical-align: middle;
+}
+.color-box {
+  width: 14px;
+  height: 14px;
+  display: inline-block;
+}
+.el-tooltip__popper {
+  max-width: 240px;
+}
+.el-color-picker {
+  height: auto;
+}
+.el-color-picker__trigger {
+  padding: 0px;
+  width: 14px;
+  height: 14px;
+}
+.thread-form-inline>.el-form-item {
+  margin-bottom: 0;
+}
+.thread-form-inline>div:nth-child(n+2) {
+  border-left: 1px solid #e6e6e6;
+  padding-left: 12px;
+}
 </style>

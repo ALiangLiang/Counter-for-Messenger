@@ -3,12 +3,11 @@
     <div
       class="el-color-dropdown"
       v-show="showPopper">
-      <div
-        v-for="(name, hex) in colors"
-        :key="hex"
-        class="color-circle"
-        :style="{ 'background-color': hex }"
-        @click="choose(hex)"></div>
+      <span
+        v-for="(emoji, i) in emojis"
+        :key="i"
+        class="emoji"
+        @click="choose(emoji)">{{ emoji }}</span>
     </div>
   </transition>
 </template>
@@ -17,27 +16,22 @@
 import Popper from 'element-ui/src/utils/vue-popper'
 
 export default {
-  name: 'ColorChooserDropdown',
+  name: 'EmojiChooserDropdown',
   mixins: [Popper],
-  props: { colors: { required: true } },
+  props: { emojis: { required: true } },
   mounted () {
     this.$parent.popperElm = this.popperElm = this.$el
     this.referenceElm = this.$parent.$el
   },
   methods: {
-    choose (hex) {
-      this.$emit('pick', hex)
+    choose (emoji) {
+      this.$emit('pick', emoji)
     }
   }
 }
 </script>
 <style>
-.color-circle {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
+.emoji {
   cursor: pointer;
-  display: inline-block;
-  margin: 4px;
 }
 </style>
