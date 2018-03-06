@@ -2,7 +2,25 @@
 // Fetch threads information used by Messenger native API. But this API //
 // cannot get Messages.                                                 //
 /// //////////////////////////////////////////////////////////////////////
-import { graphql, getMessengerApiForm } from './util'
+import { graphql, getMessengerApiForm, generateOfflineThreadingID } from './util'
+
+export function changeThreadName (jar, thread, newThreadName) {
+  const offlineThreadingId = generateOfflineThreadingID()
+  const formData = {
+    client: 'messenger',
+    action_type: 'ma-type:log-message',
+    ephemeral_ttl_mode: 0,
+    'log_message_data[name]': newThreadName,
+    log_message_type: 'log:thread-name',
+    message_id: offlineThreadingId,
+    offline_threading_id: offlineThreadingId,
+    source: 'source:chat:web',
+    thread_fbid: thread.id,
+    timestamp: Date.now()
+  }
+  const form = getMessengerApiForm(formData, jar)
+  return graphql('https://www.messenger.com/messaging/send/?dpr=1', form)
+}
 
 export function changeThreadNickname (jar, thread, participant, nickname) {
   const formData = {

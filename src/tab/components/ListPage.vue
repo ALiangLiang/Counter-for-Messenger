@@ -39,9 +39,6 @@
       <el-table-column type="expand" width="60">
         <template slot-scope="props">
           <el-form :inline="true" class="thread-form-inline">
-            <!-- <el-form-item label="Nickname">
-              <el-input v-model="props.row.nickname" @change="onChangeNickname()" placeholder="Nickname"></el-input>
-            </el-form-item> -->
             <el-form-item label="Emoji:">
               <chooser
                 type="emoji"
@@ -60,21 +57,13 @@
       <el-table-column prop="id" sortable label="#" width="150"></el-table-column>
       <el-table-column prop="name" :label="__('threadName')" width="210">
         <template slot-scope="{ row }">
-          <!-- Group -->
-          <el-tooltip :content="getTooltip(row.participants)" placement="top-start"
-            v-if="row.type === 'GROUP'">
-            <div class="outer-name">
-              <avatar :images="(row.image) ? [{ text: row.threadName, src: row.image}] : row.participants.map((p) => ({ text: p.user.name, src: p.user.avatar }))" />
-              <span>{{ row.threadName }}</span>
-            </div>
-          </el-tooltip>
-          <!-- End Group -->
-          <!-- One to one -->
-          <div v-else class="outer-name">
-            <avatar :images="row.participants.filter((p) => p.user.id !== jar.selfId).map((p) => ({ text: p.user.name, src: p.user.avatar }))" />
-            <span>{{ row.threadName }}</span>
+          <div class="outer-name">
+            <avatar :images="(row.image) ? [{ text: row.threadName, src: row.image}] : row.participants.map((p) => ({ text: p.user.name, src: p.user.avatar }))" />
+            <thread-name
+              :name="row.threadName"
+              :tooltip="(row.type === 'GROUP') ? getTooltip(row.participants) : null"
+              @change="onChangeThreadName(row, $event)"></thread-name>
           </div>
-          <!-- End One to one -->
         </template>
       </el-table-column>
       <el-table-column
@@ -139,15 +128,24 @@ import _get from 'lodash/get'
 import Thread from '../classes/Thread.js'
 import Avatar from './Avatar.vue'
 import Chooser from './Chooser.vue'
+import ThreadName from './ThreadName.vue'
 import fetchThreadDetail from '../lib/fetchThreadDetail.js'
 import downloadMessages from '../lib/downloadMessages.js'
-import { changeThreadNickname, changeThreadColor, changeThreadEmoji } from '../lib/changeThreadSetting.js'
+import {
+  changeThreadName,
+  changeThreadNickname,
+  changeThreadColor,
+  changeThreadEmoji
+} from '../lib/changeThreadSetting.js'
 const __ = chrome.i18n.getMessage
 
 export default {
   name: 'ListPage',
+
   props: [ 'threadsInfo', 'jar', 'db' ],
-  components: { Icon, Avatar, Chooser },
+
+  components: { Icon, Avatar, Chooser, ThreadName },
+
   data () {
     return {
       keyword: '',
@@ -161,12 +159,14 @@ export default {
         }))
     }
   },
+
   computed: {
     tableData () {
       return this.threadsInfo.filter((thread) =>
         thread.threadName.match(new RegExp(this.keyword, 'i')))
     }
   },
+
   methods: {
     async fetchSelectedThreads () {
       this.$ga.event('ThreadDetails', 'fetch', 'length', this.selectedThreads.length)
@@ -264,8 +264,11 @@ export default {
     onSelect (items) {
       this.selectedThreads = items
     },
-    onChangeNickname (thread, color) {
-      return changeThreadNickname(this.jar, thread, color)
+    onChangeThreadName (thread, threadName) {
+      return changeThreadName(this.jar, thread, threadName)
+    },
+    onChangeNickname (thread, nickname) {
+      return changeThreadNickname(this.jar, thread, nickname)
     },
     onChangeColor (thread, color) {
       return changeThreadColor(this.jar, thread, color)
@@ -307,8 +310,15 @@ export default {
 </script>
 
 <style>
+.el-tooltip__popper {
+  max-width: 240px;
+}
+</style>
+
+<style scoped>
 .outer-name {
   display: inline-block;
+  position: relative;
 }
 .outer-name div, span {
   display: inline-block;
@@ -319,16 +329,10 @@ export default {
   height: 14px;
   display: inline-block;
 }
-.el-tooltip__popper {
-  max-width: 240px;
-}
-.el-color-picker {
-  height: auto;
-}
-.el-color-picker__trigger {
-  padding: 0px;
-  width: 14px;
-  height: 14px;
+.el-tooltip {
+  position: absolute;
+  width: 100%;
+  height: 100%;
 }
 .thread-form-inline>.el-form-item {
   margin-bottom: 0;
