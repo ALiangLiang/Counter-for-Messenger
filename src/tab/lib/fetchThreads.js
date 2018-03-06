@@ -3,6 +3,7 @@
 // cannot get Messages.                                                 //
 /// //////////////////////////////////////////////////////////////////////
 import _get from 'lodash/get'
+import _toString from 'lodash/toString'
 import Threads from '../classes/Threads'
 import Thread from '../classes/Thread'
 import User from '../classes/User'
@@ -86,6 +87,8 @@ function formatThread (threadNode) {
     threadName,
     name: threadNode.name,
     image: (threadNode.image) ? threadNode.image.uri : null,
+    emoji: _get(threadNode, 'customization_info.emoji', null),
+    color: _toString(_get(threadNode, 'customization_info.outgoing_bubble_color', null)).replace(/^FF/, '#') || null,
     type,
     participants,
     messageCount: threadNode.messages_count,
@@ -113,7 +116,7 @@ export default async function fetchThreads (jar, limit = 5000, tags = [ 'INBOX',
         }
       }
     }
-    const form = getQraphqlForm(queries, jar)
+    const form = getQraphqlForm({ queries }, jar)
     const json = await graphql('https://www.facebook.com/api/graphqlbatch/', form)
 
     const createdUsers = [] // Use to record user we created.

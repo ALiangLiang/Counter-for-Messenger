@@ -27,6 +27,7 @@
     "dev": "webpack --config ./core/webpack.dev.js --hide-modules --env.CHROME",
     "dev-firefox": "webpack --config ./core/webpack.dev.js --hide-modules --env.FIREFOX",
     "build": "webpack --config ./core/webpack.prod.js -p --progress --hide-modules --colors",
+    "build-firefox": "webpack --config ./core/webpack.prod.js -p --progress --hide-modules --colors --env.FIREFOX",
     "beta-deploy": "webpack --config ./core/webpack.beta.js -p --progress --hide-modules --colors --env.BETA  && node core/deploy.js --beta",
     "deploy": "webpack --config ./core/webpack.prod.js -p --progress --hide-modules --colors && node core/deploy.js"
   },

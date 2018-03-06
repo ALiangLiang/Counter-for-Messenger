@@ -36,6 +36,15 @@
       @selection-change="onSelect"
       style="width: 100%">
       <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column type="expand" width="60">
+        <template slot-scope="props">
+          <p>Emoji: {{ props.row.emoji || 'Default' }}</p>
+          <div>
+            Color: {{ props.row.color || 'Default' }}
+            <color-chooser @change="onChangeColor(props.row, $event)" v-model="props.row.color"></color-chooser>
+          </div>
+        </template>
+      </el-table-column>
       <el-table-column prop="id" sortable label="#" width="150"></el-table-column>
       <el-table-column prop="name" :label="__('threadName')" width="210">
         <template slot-scope="{ row }">
@@ -87,7 +96,7 @@
         width="120"> </el-table-column>
       <el-table-column prop="characterCount" sortable :label="__('threadCharacterCount')"
         width="120"> </el-table-column>
-      <el-table-column :label="__('threadOperation')" width="360">
+      <el-table-column :label="__('threadOperation')" width="300">
         <template slot-scope="{ row }">
           <el-button
             :disabled="!row.needUpdate"
@@ -116,15 +125,17 @@ import 'vue-awesome/icons/download'
 import Icon from 'vue-awesome/components/Icon'
 import _get from 'lodash/get'
 import Thread from '../classes/Thread.js'
-import Avatar from './Avatar'
+import Avatar from './Avatar.vue'
+import ColorChooser from './ColorChooser.vue'
 import fetchThreadDetail from '../lib/fetchThreadDetail.js'
 import downloadMessages from '../lib/downloadMessages.js'
+import changeThreadColor from '../lib/changeThreadColor.js'
 const __ = chrome.i18n.getMessage
 
 export default {
   name: 'ListPage',
   props: [ 'threadsInfo', 'jar', 'db' ],
-  components: { Icon, Avatar },
+  components: { Icon, Avatar, ColorChooser },
   data () {
     return {
       keyword: '',
@@ -241,6 +252,9 @@ export default {
     onSelect (items) {
       this.selectedThreads = items
     },
+    onChangeColor (thread, color) {
+      return changeThreadColor(this.jar, thread, color)
+    },
     determineThreadType (type) {
       switch (type) {
         case 'USER': return { name: __('user'), tagType: 'primary' }
@@ -282,7 +296,20 @@ export default {
     display: inline-block;
     vertical-align: middle;
   }
+  .color-box {
+    width: 14px;
+    height: 14px;
+    display: inline-block;
+  }
   .el-tooltip__popper {
     max-width: 240px;
+  }
+  .el-color-picker {
+    height: auto;
+  }
+  .el-color-picker__trigger {
+    padding: 0px;
+    width: 14px;
+    height: 14px;
   }
 </style>

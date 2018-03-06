@@ -4,11 +4,11 @@
  */
 function handleRequestHeaders (details) {
   const headerOrigin = details.requestHeaders.find((header) => header.name.toUpperCase() === 'ORIGIN')
-  if (headerOrigin) headerOrigin.value = 'https://www.facebook.com'
+  if (headerOrigin) headerOrigin.value = new URL(details.url).origin
   return { requestHeaders: details.requestHeaders }
 }
 chrome.webRequest.onBeforeSendHeaders.addListener(handleRequestHeaders,
-  { urls: ['*://www.facebook.com/api/graphqlbatch/'] }, ['blocking', 'requestHeaders'])
+  { urls: ['*://www.facebook.com/*', '*://www.messenger.com/*'] }, ['blocking', 'requestHeaders'])
 
 /**
  * 當按下 browserAction 按鈕實，觸發開啟 Counter 頁面的事件。

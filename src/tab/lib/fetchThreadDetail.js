@@ -20,7 +20,7 @@ function handleFetch ({ jar, senderID, messageCount, messageLimit = 7500, before
       }
     }
   }
-  const form = getQraphqlForm(queries, jar)
+  const form = getQraphqlForm({ queries }, jar)
   return graphql('https://www.facebook.com/api/graphqlbatch/', form)
 }
 

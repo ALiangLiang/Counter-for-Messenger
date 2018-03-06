@@ -35,19 +35,24 @@ export function post (url, form) {
 export function graphql (url, form) {
   return post(url, form)
     .then((res) => res.text())
-    .then((body) => JSON.parse(body.split('\n')[0]))
+    .then((body) => JSON.parse(body.replace(/for\s*\(\s*;\s*;\s*\)\s*;\s*/, '').split('\n')[0]))
 }
 
-export function getQraphqlForm (queries, jar) {
+export function getMessengerApiForm (form, jar) {
   return Object.assign({
-    batch_name: 'MessengerGraphQLThreadFetcher',
     fb_dtsg: jar.token, // It's required!!
     __rev: jar.revision, // optional
     __user: jar.selfId, // optional
     jazoest: '2' + Array.from(jar.token).map((char) => char.charCodeAt(0)).join(''),
-    client: 'mercury',
     __a: 1
-  }, { queries })
+  }, form)
+}
+
+export function getQraphqlForm (form, jar) {
+  return Object.assign(getMessengerApiForm(form, jar), {
+    batch_name: 'MessengerGraphQLThreadFetcher',
+    client: 'mercury'
+  }, form)
 }
 
 // extract form from html.
