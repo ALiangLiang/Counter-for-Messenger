@@ -39,19 +39,19 @@
       <el-table-column type="expand" width="60">
         <template slot-scope="props">
           <el-form :inline="true" class="thread-form-inline">
-            <el-form-item label="Emoji:">
+            <el-form-item :label="__('emoji') + __('colon')">
               <chooser
                 type="emoji"
                 @change="onChangeEmoji(props.row, $event)"
                 v-model="props.row.emoji"></chooser>
             </el-form-item>
-            <el-form-item label="Color:">
+            <el-form-item :label="__('color') + __('colon')">
               <chooser
                 type="color"
                 @change="onChangeColor(props.row, $event)"
                 v-model="props.row.color"></chooser>
             </el-form-item>
-            <el-form-item label="Mute until:">
+            <el-form-item :label="__('muteUntil') + __('colon')">
               <mute-until
                 v-model="props.row.muteUntil"
                 @change="onMuteThread(props.row, $event)" />

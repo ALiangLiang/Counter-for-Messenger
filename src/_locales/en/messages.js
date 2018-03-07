@@ -48,6 +48,20 @@ module.exports = {
   reset: { message: 'Reset' },
   searchInputLabel: { message: 'Search' },
   searchInputPlaceholder: { message: 'Keyword' },
+  edit: { message: 'Edit' },
+  emoji: { message: 'Emoji' },
+  color: { message: 'Color' },
+  // MuteUntil component
+  muteUntil: { message: 'Mute until' },
+  muteForever: { message: 'End of the world' },
+  unmute: { message: 'Unmute' },
+  minutes: { message: 'minutes' },
+  hour: { message: 'hour' },
+  hours: { message: 'hours' },
+  day: { message: 'day' },
+  week: { message: 'week' },
+  month: { message: 'month' },
+  always: { message: 'Always' },
 
   // Chart page
   operationBar: { message: 'Operation Bar' },

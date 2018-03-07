@@ -12,14 +12,13 @@
         height="32"
         width="32">
       <div v-if="allowUpload" class="allow-click">
-        <div class="edit-zone"><span>編輯</span></div>
+        <div class="edit-zone"><span>{{ __('edit') }}</span></div>
         <input
           class="image-upload-input"
           @change="onChange"
           ref="input"
           type="file"
-          accept=".jpg,.png,.jpeg,.bmp,.tif,.tiff"
-          title="Click to change the image">
+          accept=".jpg,.png,.jpeg,.bmp,.tif,.tiff">
       </div>
     </div>
   </div>

@@ -48,6 +48,20 @@ module.exports = {
   reset: { message: '清除所有資料' },
   searchInputLabel: { message: '搜尋' },
   searchInputPlaceholder: { message: '請輸入關鍵字' },
+  edit: { message: '編輯' },
+  emoji: { message: '表情符號' },
+  color: { message: '顏色' },
+  // MuteUntil 元件
+  muteUntil: { message: '關閉通知直到' },
+  muteForever: { message: '世界末日' },
+  unmute: { message: '開啟通知' },
+  minutes: { message: '分鐘' },
+  hour: { message: '小時' },
+  hours: { message: '小時' },
+  day: { message: '天' },
+  week: { message: '週' },
+  month: { message: '個月' },
+  always: { message: '永遠' },
 
   // 圖表
   operationBar: { message: '工具欄' },
