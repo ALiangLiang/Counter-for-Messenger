@@ -87,6 +87,7 @@ function formatThread (threadNode) {
     emoji: _get(threadNode, 'customization_info.emoji', null),
     color: _toString(_get(threadNode, 'customization_info.outgoing_bubble_color', null)).replace(/^FF/, '#') || null,
     type,
+    muteUntil: (threadNode.mute_until === -1) ? Infinity : threadNode.mute_until,
     participants,
     otherUserId: threadNode.other_user_id,
     messageCount: threadNode.messages_count,

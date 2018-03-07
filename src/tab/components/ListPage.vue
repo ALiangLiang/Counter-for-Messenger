@@ -51,6 +51,11 @@
                 @change="onChangeColor(props.row, $event)"
                 v-model="props.row.color"></chooser>
             </el-form-item>
+            <el-form-item label="Mute until:">
+              <mute-until
+                v-model="props.row.muteUntil"
+                @change="onMuteThread(props.row, $event)" />
+            </el-form-item>
           </el-form>
         </template>
       </el-table-column>
@@ -132,12 +137,14 @@ import Thread from '../classes/Thread.js'
 import Avatar from './Avatar.vue'
 import Chooser from './Chooser.vue'
 import ThreadName from './ThreadName.vue'
+import MuteUntil from './MuteUntil.vue'
 import fetchThreadDetail from '../lib/fetchThreadDetail.js'
 import downloadMessages from '../lib/downloadMessages.js'
 import {
   changeThreadName,
   changeThreadNickname,
   changeThreadImage,
+  muteThread,
   changeThreadColor,
   changeThreadEmoji
 } from '../lib/changeThreadSetting.js'
@@ -148,7 +155,7 @@ export default {
 
   props: [ 'threadsInfo', 'jar', 'db' ],
 
-  components: { Icon, Avatar, Chooser, ThreadName },
+  components: { Icon, Avatar, Chooser, ThreadName, MuteUntil },
 
   data () {
     return {
@@ -272,6 +279,9 @@ export default {
     },
     onChangeThreadImage (thread, image) {
       return changeThreadImage(this.jar, thread, image)
+    },
+    onMuteThread (thread, muteSeconds) {
+      return muteThread(this.jar, thread, muteSeconds)
     },
     onChangeColor (thread, color) {
       return changeThreadColor(this.jar, thread, color)

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueAnalytics from 'vue-analytics'
 // Import element-ui components.
-import { Slider, Loading, Button, Table, TableColumn, Tag, Tooltip, ColorPicker,
+import { Slider, Loading, Button, Table, TableColumn, Tag, Tooltip, DatePicker,
   Pagination, Switch, Container, Menu, MenuItem, Header, Aside, Main, Footer,
   MessageBox, Input, Form, FormItem } from 'element-ui'
 // Customize element-ui theme. Let this style more like FB.
@@ -37,7 +37,7 @@ locale.use((mainLangName === 'zh') ? zhLocale : enLocale)
 
 // Import element-ui components.
 const elements = [ Slider, Loading, Button, Table, TableColumn, Tag, Tooltip,
-  ColorPicker, Pagination, Switch, Container, Menu, MenuItem, Header, Aside,
+  DatePicker, Pagination, Switch, Container, Menu, MenuItem, Header, Aside,
   Main, Footer, Input, Form, FormItem ]
 elements.forEach((el) => Vue.use(el, { locale }))
 
