@@ -97,7 +97,6 @@ export default {
   height: 100%;
 }
 .thread-name {
-  transition: border-color .2s cubic-bezier(.645,.045,.355,1);
   border: 1px solid #ffffff00;
   border-radius: 4px;
   cursor: pointer;

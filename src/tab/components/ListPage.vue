@@ -58,7 +58,10 @@
       <el-table-column prop="name" :label="__('threadName')" width="210">
         <template slot-scope="{ row }">
           <div class="outer-name">
-            <avatar :images="(row.image) ? [{ text: row.threadName, src: row.image}] : row.participants.map((p) => ({ text: p.user.name, src: p.user.avatar }))" />
+            <avatar
+              :images="(row.image) ? [{ text: row.threadName, src: row.image}] : row.participants.map((p) => ({ text: p.user.name, src: p.user.avatar }))"
+              :allow-upload="row.type === 'GROUP'"
+              @change="onChangeThreadImage(row, $event)" />
             <thread-name
               class="thread-name"
               :thread="row"
@@ -134,6 +137,7 @@ import downloadMessages from '../lib/downloadMessages.js'
 import {
   changeThreadName,
   changeThreadNickname,
+  changeThreadImage,
   changeThreadColor,
   changeThreadEmoji
 } from '../lib/changeThreadSetting.js'
@@ -261,12 +265,13 @@ export default {
       this.selectedThreads = items
     },
     onChangeThreadName (thread, [ threadName ]) {
-      console.log(threadName)
       return changeThreadName(this.jar, thread, threadName)
     },
     onChangeNickname (thread, [ nickname, otherUserId ]) {
-      console.log(nickname, otherUserId)
       return changeThreadNickname(this.jar, thread, otherUserId, nickname)
+    },
+    onChangeThreadImage (thread, image) {
+      return changeThreadImage(this.jar, thread, image)
     },
     onChangeColor (thread, color) {
       return changeThreadColor(this.jar, thread, color)

@@ -8,7 +8,7 @@ function handleRequestHeaders (details) {
   return { requestHeaders: details.requestHeaders }
 }
 chrome.webRequest.onBeforeSendHeaders.addListener(handleRequestHeaders,
-  { urls: ['*://www.facebook.com/*', '*://www.messenger.com/*'] }, ['blocking', 'requestHeaders'])
+  { urls: ['*://www.facebook.com/*', '*://*.messenger.com/*'] }, ['blocking', 'requestHeaders'])
 
 /**
  * 當按下 browserAction 按鈕實，觸發開啟 Counter 頁面的事件。

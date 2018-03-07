@@ -11,31 +11,49 @@ export function get (url) {
 }
 
 // http post
-export function post (url, form) {
-  // stringify value of form.
-  const body = Object.keys(form).map(function (key) {
-    const val = (typeof form[key] === 'object')
-      ? JSON.stringify(form[key]) : form[key]
-    return encodeURIComponent(key) +
-      ((form[key] !== undefined) ? ('=' + encodeURIComponent(val)) : '')
-  }).join('&')
+export function post (url, form, headers) {
+  let body
+  if (form instanceof FormData) {
+    body = form
+  } else {
+    // stringify value of form.
+    body = Object.keys(form).map(function (key) {
+      const val = (typeof form[key] === 'object')
+        ? JSON.stringify(form[key]) : form[key]
+      return encodeURIComponent(key) +
+        ((form[key] !== undefined) ? ('=' + encodeURIComponent(val)) : '')
+    }).join('&')
+  }
 
   return fetchService(url, {
     method: 'POST',
-    headers: {
-      'content-type': 'application/x-www-form-urlencoded; charset=utf-8'
-    },
+    headers,
     credentials: 'same-origin',
     mode: 'cors',
     body
   })
 }
 
-// handle graphql response.
-export function graphql (url, form) {
-  return post(url, form)
+export function graphql (url, form, headers = {
+  'content-type': 'application/x-www-form-urlencoded; charset=utf-8'
+}) {
+  return post(url, form, headers)
     .then((res) => res.text())
+    // handle graphql response.
     .then((body) => JSON.parse(body.replace(/for\s*\(\s*;\s*;\s*\)\s*;\s*/, '').split('\n')[0]))
+}
+
+export function uploadImage (jar, thread, image) {
+  const formData = new FormData()
+  formData.append('fb_dtsg', jar.token)
+  formData.append('images_only', true)
+  formData.append('attachment[]', image)
+  const params = getMessengerApiForm({}, jar)
+  const querystring = Object.keys(params)
+    .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
+    .join('&')
+
+  return graphql('https://upload.messenger.com/ajax/mercury/upload.php?' + querystring, formData, {})
 }
 
 export function getMessengerApiForm (form, jar) {
