@@ -272,21 +272,27 @@ export default {
       this.selectedThreads = items
     },
     onChangeThreadName (thread, [ threadName ]) {
+      this.$ga.event('Thread', 'set', 'name')
       return changeThreadName(this.jar, thread, threadName)
     },
     onChangeNickname (thread, [ nickname, otherUserId ]) {
+      this.$ga.event('Thread', 'set', 'nickname')
       return changeThreadNickname(this.jar, thread, otherUserId, nickname)
     },
     onChangeThreadImage (thread, image) {
+      this.$ga.event('Thread', 'set', 'image')
       return changeThreadImage(this.jar, thread, image)
     },
     onMuteThread (thread, muteSeconds) {
+      this.$ga.event('Thread', 'set', 'mute', muteSeconds)
       return muteThread(this.jar, thread, muteSeconds)
     },
     onChangeColor (thread, color) {
+      this.$ga.event('Thread', 'set', 'color')
       return changeThreadColor(this.jar, thread, color)
     },
     onChangeEmoji (thread, emoji) {
+      this.$ga.event('Thread', 'set', 'emoji')
       return changeThreadEmoji(this.jar, thread, emoji)
     },
     determineThreadType (type) {
