@@ -22,8 +22,7 @@ const manifest = {
     'downloads',
     'webRequest',
     'webRequestBlocking',
-    '*://*.facebook.com/*',
-    '*://*.messenger.com/*'
+    '*://*.facebook.com/*'
   ],
   background: {
     persistent: true,

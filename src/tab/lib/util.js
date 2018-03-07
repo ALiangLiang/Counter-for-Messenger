@@ -5,8 +5,7 @@ const _queue = new Queue(40, Infinity)
 // http get
 export function get (url) {
   return fetchService(url, {
-    credentials: 'same-origin',
-    mode: 'cors'
+    credentials: 'same-origin'
   })
 }
 
@@ -29,7 +28,6 @@ export function post (url, form, headers) {
     method: 'POST',
     headers,
     credentials: 'same-origin',
-    mode: 'cors',
     body
   })
 }
@@ -53,7 +51,7 @@ export function uploadImage (jar, thread, image) {
     .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
     .join('&')
 
-  return graphql('https://upload.messenger.com/ajax/mercury/upload.php?' + querystring, formData, {})
+  return graphql('https://upload.facebook.com/ajax/mercury/upload.php?' + querystring, formData, {})
 }
 
 export function getMessengerApiForm (form, jar) {

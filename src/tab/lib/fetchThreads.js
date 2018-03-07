@@ -63,16 +63,11 @@ function formatThread (threadNode) {
 
     // 如果沒有 thread 名稱，代表是沒有設定名稱的團體。
     // If no thread name, means it's no setting name group.
-    let groupParticipants = ''
-    if (threadNode.name === null) {
-      if (participants.length > 3) {
-        groupParticipants = participants.slice(0, 3)
-          .map((participant) => participant.user.name).join(__('comma'))
-        groupParticipants += `${__('comma')}${__('others', String(participants.length - 3))}`
-      }
-    }
-
-    threadName = threadNode.name || groupParticipants
+    threadName = (threadNode.name)
+      ? threadNode.name
+      : participants.slice(0, 3)
+        .map((participant) => participant.user.name).join(__('comma')) +
+      `${__('comma')}${__('others', String(participants.length - 3))}`
   } else {
     console.warn('Unknown thread type: ', threadNode)
     // TODO: handle with thread type 'ROOM' and 'MARKETPLACE'

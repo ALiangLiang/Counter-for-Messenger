@@ -24,7 +24,7 @@ export function changeThreadName (jar, thread, newThreadName) {
     timestamp: Date.now()
   }
   const form = getMessengerApiForm(formData, jar)
-  return graphql('https://www.messenger.com/messaging/send/?dpr=1', form)
+  return graphql('https://www.facebook.com/messaging/send/?dpr=1', form)
 }
 
 export function changeThreadNickname (jar, thread, participantId, nickname) {
@@ -34,7 +34,7 @@ export function changeThreadNickname (jar, thread, participantId, nickname) {
     nickname
   }
   const form = getMessengerApiForm(formData, jar)
-  return graphql('https://www.messenger.com/messaging/save_thread_nickname/?source=thread_settings&dpr=1', form)
+  return graphql('https://www.facebook.com/messaging/save_thread_nickname/?source=thread_settings&dpr=1', form)
 }
 
 export async function changeThreadImage (jar, thread, image) {
@@ -57,7 +57,7 @@ export async function changeThreadImage (jar, thread, image) {
     timestamp: Date.now()
   }
   const form = getMessengerApiForm(formData, jar)
-  return graphql('https://www.messenger.com/messaging/send/?dpr=1', form)
+  return graphql('https://www.facebook.com/messaging/send/?dpr=1', form)
 }
 
 export async function muteThread (jar, thread, muteSeconds) {
@@ -80,7 +80,7 @@ export function changeThreadEmoji (jar, thread, newEmoji) {
     formData['emoji_choice'] = newEmoji.toLowerCase()
   }
   const form = getMessengerApiForm(formData, jar)
-  return graphql('https://www.messenger.com/messaging/save_thread_emoji/?source=thread_settings&dpr=1', form)
+  return graphql('https://www.facebook.com/messaging/save_thread_emoji/?source=thread_settings&dpr=1', form)
 }
 
 export const COLORS = {
@@ -111,5 +111,5 @@ export function changeThreadColor (jar, thread, newColor) {
     formData['color_choice'] = newColor.toLowerCase()
   }
   const form = getMessengerApiForm(formData, jar)
-  return graphql('https://www.messenger.com/messaging/save_thread_color/?source=thread_settings&dpr=1', form)
+  return graphql('https://www.facebook.com/messaging/save_thread_color/?source=thread_settings&dpr=1', form)
 }
