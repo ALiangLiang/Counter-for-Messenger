@@ -29,6 +29,7 @@ Take a look what you and your best friend chat!!
   - Characters in thread
 - 📊 **Rank** all your threads on chart.
 - 💾 **Backup**(Download) your messages.
+- ⚙️ **Customize** your threads. (color, emoji, name...)
 
 ## 📄 Instructions
 After installed, click the logo <img width="20" alt="Logo" src=".github/assets/icon.png"> on the top right of Chrome browser.  
