@@ -46,6 +46,9 @@ export default {
   height: 32px;
   width: 32px;
 }
+.avatar {
+  position: relative;
+}
 .multiple-avatar>.avatar {
   float: left;
 }
