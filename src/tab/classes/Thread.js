@@ -15,7 +15,7 @@ export default class Thread {
    */
   getParticipantById (id) {
     return (this.participants && this.participants.length)
-      ? this.participants.find((participant) => participant.id === id) || null
+      ? this.participants.find((participant) => _get(participant, 'user.id') === id) || null
       : null
   }
 
@@ -42,7 +42,7 @@ export default class Thread {
       .forEach((participantId) => {
         const participantStats = participantsStats[participantId]
         let messageSender = this.getParticipantById(participantId) ||
-        (threads) ? threads.getUserById(participantId) : null
+        ((threads) ? threads.getUserById(participantId) : null)
         if (messageSender) {
           messageSender.messageCount = participantStats.messageCount
           messageSender.characterCount = participantStats.characterCount

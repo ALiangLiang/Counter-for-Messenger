@@ -1,13 +1,17 @@
 <template>
   <div class="outer-name">
     <avatar
-      :images="(thread.image) ? [{ text: thread.threadName, src: thread.image}] : thread.participants.map((p) => ({ text: p.user.name, src: p.user.avatar }))"
+      :images="(thread.image)
+        ? [{ text: thread.threadName, src: thread.image }]
+        : thread.participants.map((p) => ({ text: p.user.name, src: p.user.avatar }))"
       :allow-upload="thread.type === 'GROUP'"
       @change="onChangeThreadImage(thread, $event)" />
     <thread-name
       class="thread-name"
       :thread="thread"
-      @change="((thread.type === 'GROUP') ? onChangeThreadName : onChangeNickname)(thread, $event)"></thread-name>
+      @change="((thread.type === 'GROUP')
+        ? onChangeThreadName
+        : onChangeNickname)(thread, $event)"></thread-name>
   </div>
 </template>
 
@@ -21,6 +25,10 @@ export default {
   props: [ 'thread' ],
 
   components: { Avatar, ThreadName },
+
+  mounted () {
+    console.log(this.thread.threadName, this.thread.participants.length)
+  },
 
   methods: {
     onChangeThreadName (thread, [ threadName ]) {
