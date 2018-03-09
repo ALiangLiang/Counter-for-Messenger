@@ -1,3 +1,4 @@
+import fetchThread from './../lib/fetchThread.js'
 import User from './User.js'
 import _set from 'lodash/set'
 import _get from 'lodash/get'
@@ -66,5 +67,14 @@ export default class Thread {
   static culCharacterCount (messages) {
     return messages.reduce((cur, message) =>
       ((message.body) ? message.body.length : 0) + cur, 0)
+  }
+
+  async reload (jar) {
+    const newThreadData = await fetchThread(jar, this.id)
+    // TODO: this API cannot load detail of participant information like name, nickname...
+    // So don't overwrite original participants data.
+    delete newThreadData.participants
+    Object.assign(this, newThreadData)
+    return this
   }
 }

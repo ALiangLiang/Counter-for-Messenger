@@ -233,8 +233,6 @@ export default {
       }
     },
     onChange (type, thread, ...args) {
-      const funcArgs = [ this.jar, thread, ...args ]
-
       function determinFunc () {
         switch (type) {
           case 'name': return changeThreadName
@@ -246,7 +244,9 @@ export default {
           default: throw new Error('No type named: ' + type)
         }
       }
+
       const func = determinFunc()
+      const funcArgs = [ this.jar, thread, ...args ]
       func(...funcArgs)
         .then((res) => {
           if (res.error) {
@@ -256,6 +256,7 @@ export default {
           }
           return res
         })
+        .then(() => thread.reload(this.jar))
         .catch((err) => console.error(err))
     },
     getSummaries ({ columns, data }) {
