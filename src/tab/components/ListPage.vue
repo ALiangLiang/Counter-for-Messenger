@@ -57,6 +57,10 @@ export default {
     }
   },
 
+  mounted () {
+    this.keyword = this.$route.query.keyword || ''
+  },
+
   methods: {
     async fetchSelectedThreads () {
       this.$ga.event('ThreadDetails', 'fetch', 'length', this.selectedThreads.length)
