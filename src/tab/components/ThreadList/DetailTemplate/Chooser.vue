@@ -34,7 +34,7 @@
 <script>
 import EmojiChooserDropdown from './EmojiChooserDropdown.vue'
 import ColorChooserDropdown from './ColorChooserDropdown.vue'
-import { EMOJIS, COLORS } from '../lib/changeThreadSetting.js'
+import { EMOJIS, COLORS } from '../../../lib/changeThreadSetting.js'
 import Clickoutside from 'element-ui/src/utils/clickoutside'
 
 export default {

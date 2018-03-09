@@ -19,41 +19,14 @@
       style="width: 100%">
       <el-table-column type="selection" width="55"></el-table-column>
       <el-table-column type="expand" width="60">
-        <template slot-scope="props">
-          <el-form :inline="true" class="thread-form-inline">
-            <el-form-item :label="__('emoji') + __('colon')">
-              <chooser
-                type="emoji"
-                @change="onChangeEmoji(props.row, $event)"
-                v-model="props.row.emoji"></chooser>
-            </el-form-item>
-            <el-form-item :label="__('color') + __('colon')">
-              <chooser
-                type="color"
-                @change="onChangeColor(props.row, $event)"
-                v-model="props.row.color"></chooser>
-            </el-form-item>
-            <el-form-item :label="__('muteUntil') + __('colon')">
-              <mute-until
-                v-model="props.row.muteUntil"
-                @change="onMuteThread(props.row, $event)" />
-            </el-form-item>
-          </el-form>
+        <template slot-scope="{ row }">
+          <detail-template :thread="row" @change="onChange" />
         </template>
       </el-table-column>
       <el-table-column prop="id" sortable label="#" width="150"></el-table-column>
       <el-table-column prop="name" :label="__('threadName')" width="210">
         <template slot-scope="{ row }">
-          <div class="outer-name">
-            <avatar
-              :images="(row.image) ? [{ text: row.threadName, src: row.image}] : row.participants.map((p) => ({ text: p.user.name, src: p.user.avatar }))"
-              :allow-upload="row.type === 'GROUP'"
-              @change="onChangeThreadImage(row, $event)" />
-            <thread-name
-              class="thread-name"
-              :thread="row"
-              @change="((row.type === 'GROUP') ? onChangeThreadName : onChangeNickname)(row, $event)"></thread-name>
-          </div>
+          <name-template :thread="row" @change="onChange" />
         </template>
       </el-table-column>
       <el-table-column
@@ -116,13 +89,11 @@ import 'vue-awesome/icons/cloud-download'
 import 'vue-awesome/icons/download'
 import Icon from 'vue-awesome/components/Icon'
 import _get from 'lodash/get'
-import Thread from '../classes/Thread.js'
-import Avatar from './Avatar.vue'
-import Chooser from './Chooser.vue'
-import ThreadName from './ThreadName.vue'
-import MuteUntil from './MuteUntil.vue'
-import fetchThreadDetail from '../lib/fetchThreadDetail.js'
-import downloadMessages from '../lib/downloadMessages.js'
+import Thread from '../../classes/Thread.js'
+import fetchThreadDetail from '../../lib/fetchThreadDetail.js'
+import downloadMessages from '../../lib/downloadMessages.js'
+import DetailTemplate from './DetailTemplate'
+import NameTemplate from './NameTemplate'
 import {
   changeThreadName,
   changeThreadNickname,
@@ -130,7 +101,7 @@ import {
   muteThread,
   changeThreadColor,
   changeThreadEmoji
-} from '../lib/changeThreadSetting.js'
+} from '../../lib/changeThreadSetting.js'
 const __ = chrome.i18n.getMessage
 
 export default {
@@ -138,7 +109,7 @@ export default {
 
   props: [ 'value', 'keyword', 'currentPage', 'jar' ],
 
-  components: { Icon, Avatar, Chooser, ThreadName, MuteUntil },
+  components: { Icon, DetailTemplate, NameTemplate },
 
   data () {
     return {
@@ -256,6 +227,17 @@ export default {
         }
       }
     },
+    onChange (type, thread, ...args) {
+      const funcArgs = [ this.jar, thread, ...args ]
+      switch (type) {
+        case 'name': return changeThreadName(...funcArgs)
+        case 'nickname': return changeThreadNickname(...funcArgs)
+        case 'image': return changeThreadImage(...funcArgs)
+        case 'mute': return muteThread(...funcArgs)
+        case 'color': return changeThreadColor(...funcArgs)
+        case 'emoji': return changeThreadEmoji(...funcArgs)
+      }
+    },
     getSummaries ({ columns, data }) {
       const totalMessageCount = data.reduce((sum, row) => row.messageCount + sum, 0)
       const totalTextCount = data.reduce((sum, row) => row.characterCount + sum, 0)
@@ -263,30 +245,6 @@ export default {
     },
     onSelect (items) {
       this.selectedThreads = items
-    },
-    onChangeThreadName (thread, [ threadName ]) {
-      this.$ga.event('Thread', 'set', 'name')
-      return changeThreadName(this.jar, thread, threadName)
-    },
-    onChangeNickname (thread, [ nickname, otherUserId ]) {
-      this.$ga.event('Thread', 'set', 'nickname')
-      return changeThreadNickname(this.jar, thread, otherUserId, nickname)
-    },
-    onChangeThreadImage (thread, image) {
-      this.$ga.event('Thread', 'set', 'image')
-      return changeThreadImage(this.jar, thread, image)
-    },
-    onMuteThread (thread, muteSeconds) {
-      this.$ga.event('Thread', 'set', 'mute', muteSeconds)
-      return muteThread(this.jar, thread, muteSeconds)
-    },
-    onChangeColor (thread, color) {
-      this.$ga.event('Thread', 'set', 'color')
-      return changeThreadColor(this.jar, thread, color)
-    },
-    onChangeEmoji (thread, emoji) {
-      this.$ga.event('Thread', 'set', 'emoji')
-      return changeThreadEmoji(this.jar, thread, emoji)
     },
     determineThreadType (type) {
       switch (type) {
@@ -325,31 +283,5 @@ export default {
 .el-table__expand-icon>.el-icon-arrow-right:before {
   color: #f03c24;
   font-size: 16px;
-}
-</style>
-
-<style scoped>
-.outer-name {
-  display: inline-block;
-  position: relative;
-}
-.outer-name div, span {
-  display: inline-block;
-  vertical-align: middle;
-}
-.color-box {
-  width: 14px;
-  height: 14px;
-  display: inline-block;
-}
-.thread-name {
-  max-width: 150px;
-}
-.thread-form-inline>.el-form-item {
-  margin-bottom: 0;
-}
-.thread-form-inline>div:nth-child(n+2) {
-  border-left: 1px solid #e6e6e6;
-  padding-left: 12px;
 }
 </style>

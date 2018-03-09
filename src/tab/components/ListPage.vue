@@ -30,7 +30,7 @@ import 'vue-awesome/icons/cloud-download'
 import 'vue-awesome/icons/download'
 import _get from 'lodash/get'
 import Thread from '../classes/Thread.js'
-import ThreadList from './ThreadList.vue'
+import ThreadList from './ThreadList'
 import fetchThreadDetail from '../lib/fetchThreadDetail.js'
 import downloadMessages from '../lib/downloadMessages.js'
 import {
@@ -211,31 +211,5 @@ export default {
 .el-table__expand-icon>.el-icon-arrow-right:before {
   color: #f03c24;
   font-size: 16px;
-}
-</style>
-
-<style scoped>
-.outer-name {
-  display: inline-block;
-  position: relative;
-}
-.outer-name div, span {
-  display: inline-block;
-  vertical-align: middle;
-}
-.color-box {
-  width: 14px;
-  height: 14px;
-  display: inline-block;
-}
-.thread-name {
-  max-width: 150px;
-}
-.thread-form-inline>.el-form-item {
-  margin-bottom: 0;
-}
-.thread-form-inline>div:nth-child(n+2) {
-  border-left: 1px solid #e6e6e6;
-  padding-left: 12px;
 }
 </style>
