@@ -2371,7 +2371,7 @@ electron-to-chromium@^1.2.7, electron-to-chromium@^1.3.30:
   version "1.3.34"
   resolved "https://registry.yarnpkg.com/electron-to-chromium/-/electron-to-chromium-1.3.34.tgz#d93498f40391bb0c16a603d8241b9951404157ed"
 
-element-ui@^2.2.0:
+element-ui@^2.0.7, element-ui@^2.2.0:
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/element-ui/-/element-ui-2.2.1.tgz#9efb17a37d161b5cbca9998f3f217ccb4fa7da55"
   dependencies:
@@ -7301,6 +7301,14 @@ vue-chartjs@^3.1.0:
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/vue-chartjs/-/vue-chartjs-3.2.1.tgz#8fd207e7f09a6bf13d86026071f598c4c2ff1f68"
 
+vue-data-tables@^3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/vue-data-tables/-/vue-data-tables-3.1.4.tgz#317badd15a641e72e1bb95ff0a04fe3349fd29c7"
+  dependencies:
+    element-ui "^2.0.7"
+    lodash "^4.17.4"
+    vue "^2.5.2"
+
 vue-hot-reload-api@^2.2.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.0.tgz#97976142405d13d8efae154749e88c4e358cf926"
@@ -7359,7 +7367,7 @@ vue-template-es2015-compiler@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.6.0.tgz#dc42697133302ce3017524356a6c61b7b69b4a18"
 
-vue@^2.5.13:
+vue@^2.5.13, vue@^2.5.2:
   version "2.5.13"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.5.13.tgz#95bd31e20efcf7a7f39239c9aa6787ce8cf578e1"
 

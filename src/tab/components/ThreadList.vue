@@ -1,36 +1,126 @@
 <template>
   <div>
     <div style="margin: 20px">
-      <el-form :inline="true">
-        <el-form-item :label="__('searchInputLabel') + __('colon')">
-          <el-input
-            :placeholder="__('searchInputPlaceholder')"
-            v-model="keyword"
-            :maxlength="120"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="fetchSelectedThreads()">
-            {{ __('fetchDetailOfselected') }}
-          </el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="danger" @click="reset()">
-            {{ __('reset') }}
-          </el-button>
-        </el-form-item>
-      </el-form>
+      <el-pagination
+        @size-change="(val) => (threadsPerPage = val)"
+        :current-page.sync="currentPage"
+        :page-sizes="[5, 10, 20, 40]"
+        :page-size="10"
+        layout="total, sizes, prev, pager, next, jumper"
+        :total="tableData.length">
+      </el-pagination>
     </div>
-    <thread-list v-model="threadsInfo" :keyword="keyword" :current-page="page" :jar="jar">
-    </thread-list>
+    <el-table
+      :data="tableData"
+      :max-height="720"
+      show-summary
+      :summary-method="getSummaries"
+      @selection-change="onSelect"
+      style="width: 100%">
+      <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column type="expand" width="60">
+        <template slot-scope="props">
+          <el-form :inline="true" class="thread-form-inline">
+            <el-form-item :label="__('emoji') + __('colon')">
+              <chooser
+                type="emoji"
+                @change="onChangeEmoji(props.row, $event)"
+                v-model="props.row.emoji"></chooser>
+            </el-form-item>
+            <el-form-item :label="__('color') + __('colon')">
+              <chooser
+                type="color"
+                @change="onChangeColor(props.row, $event)"
+                v-model="props.row.color"></chooser>
+            </el-form-item>
+            <el-form-item :label="__('muteUntil') + __('colon')">
+              <mute-until
+                v-model="props.row.muteUntil"
+                @change="onMuteThread(props.row, $event)" />
+            </el-form-item>
+          </el-form>
+        </template>
+      </el-table-column>
+      <el-table-column prop="id" sortable label="#" width="150"></el-table-column>
+      <el-table-column prop="name" :label="__('threadName')" width="210">
+        <template slot-scope="{ row }">
+          <div class="outer-name">
+            <avatar
+              :images="(row.image) ? [{ text: row.threadName, src: row.image}] : row.participants.map((p) => ({ text: p.user.name, src: p.user.avatar }))"
+              :allow-upload="row.type === 'GROUP'"
+              @change="onChangeThreadImage(row, $event)" />
+            <thread-name
+              class="thread-name"
+              :thread="row"
+              @change="((row.type === 'GROUP') ? onChangeThreadName : onChangeNickname)(row, $event)"></thread-name>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="type"
+        :label="__('threadType')"
+        width="90"
+        :filters="typeFilters"
+        :filter-method="typeFilterMethod"
+        filter-placement="bottom-end">
+        <template slot-scope="{ row }">
+          <el-tag
+            :type="determineThreadType(row.type).tagType"
+            close-transition>
+            {{ determineThreadType(row.type).name }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column
+        prop="tag"
+        :label="__('threadTag')"
+        width="90">
+        <template slot-scope="{ row }">
+          <el-tag
+            :type="determineThreadTag(row.tag).tagType"
+            close-transition>
+            {{ determineThreadTag(row.tag).name }}
+          </el-tag>
+        </template>
+      </el-table-column>
+      <el-table-column prop="messageCount" sortable :label="__('threadMessageCount')"
+        width="120"> </el-table-column>
+      <el-table-column prop="characterCount" sortable :label="__('threadCharacterCount')"
+        width="120"> </el-table-column>
+      <el-table-column :label="__('threadOperation')" width="300">
+        <template slot-scope="{ row }">
+          <el-button
+            :disabled="!row.needUpdate"
+            :loading="row.isLoading"
+            @click="fetchMessages(row)"
+            type="text" size="small">
+            <icon name="cloud-download"></icon>
+            {{ (row.needUpdate) ? __('importMessageHistory') : __('importedMessageHistory')}}
+          </el-button>
+          <el-button
+            @click="downloadHistory(row)"
+            type="text"
+            size="small">
+            <icon name="download"></icon>
+            {{ __('downloadMessageHistory') }}
+          </el-button>
+        </template>
+      </el-table-column>
+    </el-table>
   </div>
 </template>
+
 <script>
 import 'vue-awesome/icons/spinner'
 import 'vue-awesome/icons/cloud-download'
 import 'vue-awesome/icons/download'
+import Icon from 'vue-awesome/components/Icon'
 import _get from 'lodash/get'
 import Thread from '../classes/Thread.js'
-import ThreadList from './ThreadList.vue'
+import Avatar from './Avatar.vue'
+import Chooser from './Chooser.vue'
+import ThreadName from './ThreadName.vue'
+import MuteUntil from './MuteUntil.vue'
 import fetchThreadDetail from '../lib/fetchThreadDetail.js'
 import downloadMessages from '../lib/downloadMessages.js'
 import {
@@ -44,16 +134,40 @@ import {
 const __ = chrome.i18n.getMessage
 
 export default {
-  name: 'ListPage',
+  name: 'ThreadList',
 
-  props: [ 'threadsInfo', 'jar', 'db' ],
+  props: [ 'value', 'keyword', 'currentPage', 'jar' ],
 
-  components: { ThreadList },
+  components: { Icon, Avatar, Chooser, ThreadName, MuteUntil },
 
   data () {
     return {
-      keyword: '',
-      page: 1
+      threadsPerPage: 10,
+      selectedThreads: [],
+      typeFilters: [ 'GROUP', 'USER', 'PAGE', 'REDUCEDMESSAGINGACTOR' ]
+        .map((type) => ({
+          text: this.determineThreadType(type).name,
+          value: type
+        }))
+    }
+  },
+
+  computed: {
+    tableData () {
+      const regexPattern = new RegExp(this.keyword, 'i')
+      // filter
+      return this.value.filter((thread) =>
+        !!(thread.threadName || '').match(regexPattern) || // search thread display name
+        !!(thread.id || '').match(regexPattern) || // search id
+        thread.participants.some((participant) =>
+          // search participants's name
+          (_get(participant, 'user.name', '') || '').match(regexPattern) ||
+          // search participants's nickname
+          (_get(participant, 'user.nickname', '') || '').match(regexPattern) ||
+          // search participants's id
+          (_get(participant, 'user.id', '') || '').match(regexPattern)))
+        // slice to one list page size
+        .slice((this.currentPage - 1) * this.threadsPerPage, this.currentPage * this.threadsPerPage)
     }
   },
 
