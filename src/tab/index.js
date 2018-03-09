@@ -53,8 +53,10 @@ Vue.use(VueAnalytics, {
   router
 })
 
+Vue.prototype.$message = MessageBox
 Vue.prototype.$alert = MessageBox.alert
 Vue.prototype.$confirm = MessageBox.confirm
+Vue.prototype.$prompt = MessageBox.prompt
 
 /* eslint-disable no-new */
 new Vue({

@@ -21,7 +21,10 @@ module.exports = {
   resetConfirmContent: { message: 'Are you sure you want to clear all cached data?' },
   error: { message: 'Error' },
   cannotDetectLoginContent: { message: 'Cannot detect facebook login.' },
+  editNicknameTitle: { message: 'Edit Nickname' }, // ThreadList/DetailTemplate
+  editNicknameContent: { message: 'Everyone in this conversation will see this.' }, // ThreadList/DetailTemplate
   iSee: { message: 'Got it!' },
+  ok: { message: 'OK' },
   sure: { message: 'Sure!!' },
   refresh: { message: 'Refresh' },
   cancel: { message: 'Cancel' },
@@ -51,6 +54,7 @@ module.exports = {
   edit: { message: 'Edit' },
   emoji: { message: 'Emoji' },
   color: { message: 'Color' },
+  participants: { message: 'Participants' },
   // MuteUntil component
   muteUntil: { message: 'Mute until' },
   muteForever: { message: 'End of the world' },

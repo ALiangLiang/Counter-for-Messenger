@@ -229,14 +229,29 @@ export default {
     },
     onChange (type, thread, ...args) {
       const funcArgs = [ this.jar, thread, ...args ]
-      switch (type) {
-        case 'name': return changeThreadName(...funcArgs)
-        case 'nickname': return changeThreadNickname(...funcArgs)
-        case 'image': return changeThreadImage(...funcArgs)
-        case 'mute': return muteThread(...funcArgs)
-        case 'color': return changeThreadColor(...funcArgs)
-        case 'emoji': return changeThreadEmoji(...funcArgs)
+
+      function determinFunc () {
+        switch (type) {
+          case 'name': return changeThreadName
+          case 'nickname': return changeThreadNickname
+          case 'image': return changeThreadImage
+          case 'mute': return muteThread
+          case 'color': return changeThreadColor
+          case 'emoji': return changeThreadEmoji
+          default: throw new Error('No type named: ' + type)
+        }
       }
+      const func = determinFunc()
+      func(...funcArgs)
+        .then((res) => {
+          if (res.error) {
+            const err = new Error(res.errorDescription)
+            err.message = res.errorSummary
+            throw err
+          }
+          return res
+        })
+        .catch((err) => console.error(err))
     },
     getSummaries ({ columns, data }) {
       const totalMessageCount = data.reduce((sum, row) => row.messageCount + sum, 0)

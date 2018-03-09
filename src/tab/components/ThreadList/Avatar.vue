@@ -31,7 +31,9 @@ export default {
 
   methods: {
     onClick () {
-      this.$refs.input[0].click()
+      if (this.allowUpload) {
+        this.$refs.input[0].click()
+      }
     },
     onChange () {
       this.$emit('change', this.$refs.input[0].files[0])

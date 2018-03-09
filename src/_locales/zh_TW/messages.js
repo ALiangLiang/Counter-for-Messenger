@@ -21,7 +21,10 @@ module.exports = {
   resetConfirmContent: { message: '你確定要清除所有快取資料？' },
   error: { message: '錯誤' },
   cannotDetectLoginContent: { message: '無法偵測登入 Facebook。' },
+  editNicknameTitle: { message: '編輯暱稱' }, // ThreadList/DetailTemplate
+  editNicknameContent: { message: '此對話中的所有人都會看到這個。' }, // ThreadList/DetailTemplate
   iSee: { message: '我瞭解' },
+  ok: { message: '確定' },
   sure: { message: '確定' },
   refresh: { message: '重新整理' },
   cancel: { message: '取消' },
@@ -51,6 +54,7 @@ module.exports = {
   edit: { message: '編輯' },
   emoji: { message: '表情符號' },
   color: { message: '顏色' },
+  participants: { message: '成員' },
   // MuteUntil 元件
   muteUntil: { message: '關閉通知直到' },
   muteForever: { message: '世界末日' },

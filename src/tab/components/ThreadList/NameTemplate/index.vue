@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import Avatar from './Avatar.vue'
+import Avatar from '../Avatar.vue'
 import ThreadName from './ThreadName.vue'
 
 export default {
