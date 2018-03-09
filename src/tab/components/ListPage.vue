@@ -20,7 +20,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <thread-list v-model="threadsInfo" :keyword="keyword" :current-page="page" :jar="jar">
+    <thread-list v-model="threadsInfo" :keyword="keyword" :page="page" :jar="jar">
     </thread-list>
   </div>
 </template>

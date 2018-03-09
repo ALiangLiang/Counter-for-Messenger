@@ -26,10 +26,6 @@ export default {
 
   components: { Avatar, ThreadName },
 
-  mounted () {
-    console.log(this.thread.threadName, this.thread.participants.length)
-  },
-
   methods: {
     onChangeThreadName (thread, [ threadName ]) {
       this.$ga.event('Thread', 'set', 'name')

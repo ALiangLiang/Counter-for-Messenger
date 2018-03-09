@@ -11,7 +11,7 @@
       </el-pagination>
     </div>
     <el-table
-      :data="tableData"
+      :data="tableData.slice((this.currentPage - 1) * this.threadsPerPage, this.currentPage * this.threadsPerPage)"
       :max-height="720"
       show-summary
       :summary-method="getSummaries"
@@ -107,19 +107,26 @@ const __ = chrome.i18n.getMessage
 export default {
   name: 'ThreadList',
 
-  props: [ 'value', 'keyword', 'currentPage', 'jar' ],
+  props: [ 'value', 'keyword', 'page', 'jar' ],
 
   components: { Icon, DetailTemplate, NameTemplate },
 
   data () {
     return {
       threadsPerPage: 10,
+      currentPage: this.page,
       selectedThreads: [],
       typeFilters: [ 'GROUP', 'USER', 'PAGE', 'REDUCEDMESSAGINGACTOR' ]
         .map((type) => ({
           text: this.determineThreadType(type).name,
           value: type
         }))
+    }
+  },
+
+  watch: {
+    page (val) {
+      this.currentPage = val
     }
   },
 
@@ -137,8 +144,6 @@ export default {
           (_get(participant, 'user.nickname', '') || '').match(regexPattern) ||
           // search participants's id
           (_get(participant, 'user.id', '') || '').match(regexPattern)))
-        // slice to one list page size
-        .slice((this.currentPage - 1) * this.threadsPerPage, this.currentPage * this.threadsPerPage)
     }
   },
 
