@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="margin: 20px">
-      <el-form :inline="true">
+      <el-form :inline="true" @submit.native.prevent>
         <el-form-item :label="__('searchInputLabel') + __('colon')">
           <el-input
             :placeholder="__('searchInputPlaceholder')"
