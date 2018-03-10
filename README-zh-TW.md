@@ -1,4 +1,4 @@
-# ![Logo](.github/assets/icon.png) Messenger 計數器
+# ![Logo](.github/assets/icon.png) Messenger 計數器  [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/ALiangLiang/5)
 
 Chome
 [<img src="https://img.shields.io/chrome-web-store/v/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Chrome%20Web%20Store"> ](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
@@ -6,10 +6,12 @@ Chome
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/rating/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Rating&colorB=dfb317)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store BETA](https://img.shields.io/chrome-web-store/v/flkejcheidpcclcdokndihmnlejfabil.svg?label=Beta)](https://chrome.google.com/webstore/detail/flkejcheidpcclcdokndihmnlejfabil)
 
-Firfox
+Firefox
 [<img src="https://img.shields.io/amo/v/counter-for-messenger.svg?label=Mozilla%20Add-on"> ](https://addons.mozilla.org/firefox/addon/counter-for-messenger/)
 [![Mozilla Add-on](https://img.shields.io/amo/users/counter-for-messenger.svg)](https://addons.mozilla.org/firefox/addon/counter-for-messenger/)
 [![Mozilla Add-on](https://img.shields.io/amo/rating/counter-for-messenger.svg)](https://addons.mozilla.org/firefox/addon/counter-for-messenger/)
+
+
 
 🌎 | [English](README.md) | 正體中文 (Traditional Chinese)
 ------------- | ------------- | -------------
@@ -60,7 +62,7 @@ Firfox
 - **這是非官方專案**  
 - **不會收集使用者從 Messenger 來的數據**
 
-## Development
+## 👨‍💻 開發
 
 ```
 yarn # 安裝相依套件
@@ -71,3 +73,9 @@ npm run build-chrome # 生產
 npm run dev-firefox # 開發
 npm run build-firefox # 生產
 ```
+
+## ☕ 捐獻
+
+如果你喜歡這個專案，歡迎抖內(donate)，讓我買杯咖啡好熬肝 XDDD
+
+<a href="https://www.buymeacoffee.com/ALiangLiang" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
