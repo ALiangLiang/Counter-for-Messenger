@@ -6,6 +6,7 @@ module.exports = {
   // Router
   listPage: { message: 'List' },
   chartPage: { message: 'Chart' },
+  shareOnFacebook: { message: 'Share on Facebook' },
 
   // Message of loading
   interceptingToken: { message: 'Extracting token...' },
@@ -28,6 +29,36 @@ module.exports = {
   sure: { message: 'Sure!!' },
   refresh: { message: 'Refresh' },
   cancel: { message: 'Cancel' },
+
+  // About Page
+  support: { message: 'Support' },
+  support1Title: { message: 'Found a bug? Got a question or new idea?' },
+  support1Content: {
+    message: 'Why don\'t you send us a <a href="$url$" target="_blank">report</a>?',
+    placeholders: { url: { content: '$1' } }
+  },
+  support2Title: { message: 'Like this extension?' },
+  support2Content: {
+    message: 'Let us know on <a href="$url$" target="_blank">Chrome web store</a>!',
+    placeholders: { url: { content: '$1' } }
+  },
+  support3Title: { message: 'Want to add feature or help translating?' },
+  support3Content: {
+    message: 'Why not fork in <a href="$github$" target="_blank">github</a>? 😄',
+    placeholders: { github: { content: '$1' } }
+  },
+  QA: { message: 'Frequently Asked Questions' },
+  QA1Title: { message: 'Is my information safe?' },
+  QA1Content: { message: 'This extension only fetches your data from Messenger to your local device. If your device is not public, your information is safe. On the other hand, if you\'re using a public device, be sure to remove this extension after you finish using this extension. ' },
+  QA2Title: { message: 'How can I help Counter of Messenger?' },
+  QA2Content: {
+    message: 'You can donate to support our work. You can tell others to try Counter of Messenger. And, if you\'re technically-savvy, you can <a href="$beta_url$" target="_blank">use our beta version</a> and help us find bugs before they\'re released to the public.',
+    placeholders: { beta_url: { content: '$1' } }
+  },
+  QA3Title: { message: 'How to switch FB account?' },
+  QA3Content: { message: 'Just changing your account in Facebook page and reload this extension page.' },
+  note: { message: 'Note' },
+  noteContent: { message: 'It\'a web extension you know. Inspired by the fact that I want to know how many messages I have with my best friends. In the beginning it was just a little project. Very simple and ugly. But recently, more and more users installed this extension, and encouraged me to develop it further. I don\'t want to disappoint them. So I\'ve updated this project, Making it more powerful and beautiful. If you really like this extension, tell me. I would very happy. 😄😄😄 Thanks everyone. ' },
 
   // List Page
   threadName: { message: 'Name' },

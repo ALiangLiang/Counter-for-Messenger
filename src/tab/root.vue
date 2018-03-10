@@ -17,7 +17,7 @@
         <el-menu-item index="">
           <a class="share-link" target="_blank"
             href="https://www.facebook.com/sharer/sharer.php?u=https%3A//chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca">
-            <icon name="facebook-square" scale="2" label="Share on Facebook"></icon> Share on Facebook
+            <icon name="facebook-square" scale="2" label="Share on Facebook"></icon> {{ __('shareOnFacebook') }}
           </a>
         </el-menu-item>
       </el-menu>
