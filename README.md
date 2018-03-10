@@ -60,7 +60,7 @@ Welcome every language support. Help your countryman to use this application. Re
 - **It's a unofficial project.**
 - **We would not collect any user data from Messenger.**
 
-## Development
+## 👨‍💻 Development
 
 ```
 yarn # install dependencies
@@ -72,7 +72,7 @@ npm run dev-firefox # for development
 npm run build-firefox # for production
 ```
 
-## Donation
+## ☕ Donation
 
 If you like this project, you can give me a cup of coffee 🙂
 
