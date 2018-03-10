@@ -31,7 +31,7 @@ webStoreClient.fetchToken()
         .catch((err) => console.error(err))
     }
 
-    const file = fs.createReadStream(`./${mode}.zip`)
+    const file = fs.createReadStream(`./${mode}-chrome.zip`)
     console.log('Start upload.')
     try {
       const res = await webStoreClient.uploadExisting(file, token)

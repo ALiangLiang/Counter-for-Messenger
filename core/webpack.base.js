@@ -3,6 +3,7 @@ const webpack = require('webpack')
 const ChromeReloadPlugin = require('wcer')
 const { cssLoaders, htmlPage } = require('./tools')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const CleanWebpackPlugin = require('clean-webpack-plugin')
 const GenerateLocaleJsonPlugin = require('../plugins/GenerateLocaleJsonPlugin')
 
 let resolve = (dir) => path.join(__dirname, '..', 'src', dir)
@@ -82,9 +83,10 @@ module.exports = (env) => {
       }]
     },
     plugins: [
-      htmlPage('Counter for Messenger', 'app', ['manifest', 'vendor', 'tab']),
-      htmlPage('options', 'options', ['manifest', 'vendor', 'options']),
-      htmlPage('background', 'background', ['manifest', 'vendor', 'background']),
+      new CleanWebpackPlugin([path.join('..', 'build', (env.FIREFOX) ? 'firefox' : 'chrome') + '/*.*'], { allowExternal: true }),
+      htmlPage('Counter for Messenger', 'app', ['vendor', 'element', 'chartjs', 'tab']),
+      htmlPage('options', 'options', ['vendor', 'element', 'chartjs', 'options']),
+      htmlPage('background', 'background', ['vendor', 'element', 'chartjs', 'background']),
       new webpack.DefinePlugin({
         chrome: (!env.FIREFOX) ? 'chrome' : 'browser',
         'process.env.FIREFOX': (env.FIREFOX) ? 'true' : 'false'
@@ -99,17 +101,18 @@ module.exports = (env) => {
       }),
       new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
-        minChunks: function (module) {
-          return (
-            module.resource &&
-            /\.js$/.test(module.resource) &&
-            module.resource.indexOf(
-              path.join(__dirname, '../node_modules')
-            ) === 0
-          )
-        }
+        minChunks: (m) => /node_modules/.test(m.context)
       }),
-      new webpack.optimize.CommonsChunkPlugin({ name: 'manifest', chunks: ['vendor'] })
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'element',
+        minChunks: (m) => m.context.indexOf(path.join('node_modules', 'element-ui')) > -1 ||
+          m.context.indexOf(path.join('node_modules', 'chart.js')) > -1
+      }),
+      new webpack.optimize.CommonsChunkPlugin({
+        name: 'chartjs',
+        minChunks: (m) => m.context.indexOf(path.join('node_modules', 'chart.js')) > -1
+      }),
+      new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
     ],
     performance: { hints: false }
   }

@@ -1,6 +1,6 @@
 {
   "name": "counter-for-messenger",
-  "version": "0.2.1",
+  "version": "0.2.3",
   "description": "Count and rank your friends by analysing your Messenger! Check out and download the messaging history of you and your best friends!",
   "author": "ALiangLiang <me@aliangliang.top>",
   "license": "MIT",
@@ -27,10 +27,10 @@
     "lint": "eslint --ext .js,.vue src",
     "dev": "webpack --config ./core/webpack.dev.js --hide-modules --env.CHROME",
     "dev-firefox": "webpack --config ./core/webpack.dev.js --hide-modules --env.FIREFOX",
-    "build": "webpack --config ./core/webpack.prod.js -p --progress --hide-modules --colors",
+    "build": "webpack --config ./core/webpack.prod.js -p --progress --hide-modules --colors --env.CHROME",
     "build-firefox": "webpack --config ./core/webpack.prod.js -p --progress --hide-modules --colors --env.FIREFOX",
     "beta-deploy": "webpack --config ./core/webpack.beta.js -p --progress --hide-modules --colors --env.BETA  && node core/deploy.js --beta",
-    "deploy": "webpack --config ./core/webpack.prod.js -p --progress --hide-modules --colors && node core/deploy.js"
+    "deploy": "webpack --config ./core/webpack.prod.js -p --progress --hide-modules --colors --env.CHROME && node core/deploy.js"
   },
   "devDependencies": {
     "archiver": "^2.1.0",
@@ -79,6 +79,7 @@
     "vue-template-compiler": "^2.5.2",
     "wcer": "^1.0.2",
     "webpack": "^3.8.1",
+    "webpack-bundle-analyzer": "^2.11.1",
     "webpack-dev-server": "^2.9.3",
     "webpack-merge": "^4.1.0",
     "ws": "^3.2.0",
