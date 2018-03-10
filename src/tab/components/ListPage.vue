@@ -20,7 +20,7 @@
         </el-form-item>
       </el-form>
     </div>
-    <thread-list v-model="threadsInfo" :keyword="keyword" :page="page" :jar="jar">
+    <thread-list v-model="ctx.threads" :keyword="keyword" :page="page" :jar="ctx.jar" :db="ctx.db">
     </thread-list>
   </div>
 </template>
@@ -46,7 +46,7 @@ const __ = chrome.i18n.getMessage
 export default {
   name: 'ListPage',
 
-  props: [ 'threadsInfo', 'jar', 'db' ],
+  props: [ 'ctx' ],
 
   components: { ThreadList },
 
@@ -65,7 +65,7 @@ export default {
     async fetchSelectedThreads () {
       this.$ga.event('ThreadDetails', 'fetch', 'length', this.selectedThreads.length)
 
-      const allCacheThreads = await this.db.getAll()
+      const allCacheThreads = await this.ctx.db.getAll()
       const results = await Promise.all(this.selectedThreads.map(async (thread) => {
         thread.isLoading = true
 
@@ -88,7 +88,7 @@ export default {
             jar: this.jar, thread, $set: this.$set, messageLimit
           })
           const updatedMessages = (_get(cachedThread, 'messages') || []).concat(result)
-          this.db.put({ id: thread.id, messages: updatedMessages })
+          this.ctx.db.put({ id: thread.id, messages: updatedMessages })
           return [thread, updatedMessages]
         }
         return [thread]
@@ -106,7 +106,7 @@ export default {
       this.$ga.event('ThreadDetails', 'fetch', 'length', 1)
 
       thread.isLoading = true
-      const cachedThread = await this.db.get(thread.id)
+      const cachedThread = await this.ctx.db.get(thread.id)
       let messageLimit
       if (cachedThread) {
         const cachedThreadMessagesLength = _get(cachedThread, 'messages.length')
@@ -121,11 +121,11 @@ export default {
 
       if (!thread.messages) {
         const result = await fetchThreadDetail({
-          jar: this.jar, thread, $set: this.$set, messageLimit
+          jar: this.ctx.jar, thread, $set: this.$set, messageLimit
         })
         thread.messages = (_get(cachedThread, 'messages') || []).concat(result)
         thread.characterCount = Thread.culCharacterCount(thread.messages)
-        this.db.put({ id: thread.id, messages: thread.messages })
+        this.ctx.db.put({ id: thread.id, messages: thread.messages })
         thread.needUpdate = false
         thread.isLoading = false
       }
@@ -135,14 +135,14 @@ export default {
       this.$ga.event('Thread', 'download')
 
       if (thread.messages) {
-        return downloadMessages(thread, this.jar.selfId)
+        return downloadMessages(thread, this.ctx.jar.selfId)
       } else {
-        const cachedThread = await this.db.get(thread.id)
+        const cachedThread = await this.ctx.db.get(thread.id)
         if (cachedThread) {
           thread.messages = cachedThread.messages
-          return downloadMessages(thread, this.jar.selfId)
+          return downloadMessages(thread, this.ctx.jar.selfId)
         } else {
-          return downloadMessages(await this.fetchMessages(thread), this.jar.selfId)
+          return downloadMessages(await this.fetchMessages(thread), this.ctx.jar.selfId)
         }
       }
     },
@@ -156,27 +156,27 @@ export default {
     },
     onChangeThreadName (thread, [ threadName ]) {
       this.$ga.event('Thread', 'set', 'name')
-      return changeThreadName(this.jar, thread, threadName)
+      return changeThreadName(this.ctx.jar, thread, threadName)
     },
     onChangeNickname (thread, [ nickname, otherUserId ]) {
       this.$ga.event('Thread', 'set', 'nickname')
-      return changeThreadNickname(this.jar, thread, otherUserId, nickname)
+      return changeThreadNickname(this.ctx.jar, thread, otherUserId, nickname)
     },
     onChangeThreadImage (thread, image) {
       this.$ga.event('Thread', 'set', 'image')
-      return changeThreadImage(this.jar, thread, image)
+      return changeThreadImage(this.ctx.jar, thread, image)
     },
     onMuteThread (thread, muteSeconds) {
       this.$ga.event('Thread', 'set', 'mute', muteSeconds)
-      return muteThread(this.jar, thread, muteSeconds)
+      return muteThread(this.ctx.jar, thread, muteSeconds)
     },
     onChangeColor (thread, color) {
       this.$ga.event('Thread', 'set', 'color')
-      return changeThreadColor(this.jar, thread, color)
+      return changeThreadColor(this.ctx.jar, thread, color)
     },
     onChangeEmoji (thread, emoji) {
       this.$ga.event('Thread', 'set', 'emoji')
-      return changeThreadEmoji(this.jar, thread, emoji)
+      return changeThreadEmoji(this.ctx.jar, thread, emoji)
     },
     determineThreadType (type) {
       switch (type) {
@@ -205,7 +205,7 @@ export default {
         showCancelButton: true,
         cancelButtonText: __('cancel'),
         center: true
-      }).then(() => this.db.destroy(), () => null)
+      }).then(() => this.ctx.db.destroy(), () => null)
     }
   }
 }

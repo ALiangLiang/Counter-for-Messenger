@@ -24,7 +24,7 @@
     </el-header>
     <el-main>
       <transition name="fade">
-        <router-view :threadsInfo="threadsInfo" :jar="jar" :db="db"/>
+        <router-view :ctx="ctx"/>
       </transition>
     </el-main>
     <el-footer height="30px" class="offset-footer"></el-footer>
@@ -56,7 +56,7 @@ Icon.register({
 
 export default {
   name: 'Root',
-  props: [ 'threadsInfo', 'jar', 'db' ],
+  props: [ 'ctx' ],
   components: {
     Icon
   }

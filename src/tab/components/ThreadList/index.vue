@@ -107,7 +107,7 @@ const __ = chrome.i18n.getMessage
 export default {
   name: 'ThreadList',
 
-  props: [ 'value', 'keyword', 'page', 'jar' ],
+  props: [ 'value', 'keyword', 'page', 'jar', 'db' ],
 
   components: { Icon, DetailTemplate, NameTemplate },
 

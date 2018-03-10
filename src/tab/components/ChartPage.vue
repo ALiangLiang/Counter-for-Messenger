@@ -48,7 +48,7 @@
           vertical
           :height="chartHeight - 18 + 'px'"
           :min="1"
-          :max="this.threadsInfo.length"
+          :max="this.threads.length"
           @change="renderChart()">
         </el-slider>
       </el-tooltip>
@@ -63,9 +63,13 @@ const __ = chrome.i18n.getMessage
 
 export default {
   name: 'ChartPage',
+
   components: { BarChart },
-  props: [ 'threadsInfo', 'jar', 'db' ],
+
+  props: [ 'ctx' ],
+
   data () {
+    const threads = this.ctx.threads
     return {
       chartHeight: document.documentElement.clientHeight - 130,
       chartContainerStyles: {
@@ -78,7 +82,8 @@ export default {
       loading: null,
       loadingCount: 0,
       chartData: null,
-      rank: this.threadsInfo.length,
+      threads,
+      rank: threads.length,
       sliderMax: 1,
       isShowCharacter: false,
       isShowDetail: false,
@@ -134,8 +139,8 @@ export default {
       itemVm.$emit('input', !itemVm.value)
     },
     async renderChart () {
-      const startSliceIndex = this.threadsInfo.length - Number(this.rank)
-      const splicedThreads = this.threadsInfo.slice(startSliceIndex, startSliceIndex + this.amountOfMaxDisplay)
+      const startSliceIndex = this.threads.length - Number(this.rank)
+      const splicedThreads = this.threads.slice(startSliceIndex, startSliceIndex + this.amountOfMaxDisplay)
       if (!(!this.isShowCharacter && !this.isShowDetail)) {
         await this.syncThreadDetail(splicedThreads)
       }
@@ -154,7 +159,7 @@ export default {
             let me = 0
             let other = 0
             thread.participants.forEach((participant) => {
-              if (participant.user.id === this.jar.selfId) me = this.selectCountType(participant)
+              if (participant.user.id === this.ctx.jar.selfId) me = this.selectCountType(participant)
               else other += this.selectCountType(participant)
             })
             return [me, other]
@@ -187,16 +192,16 @@ export default {
       await Promise.all(threads.map(async (thread) => {
         if (thread.characterCount) return
         if (!thread.messages) {
-          const cachedThread = await this.db.get(thread.id)
+          const cachedThread = await this.ctx.db.get(thread.id)
           if (cachedThread && cachedThread.messages) return
           thread.isLoading = true
           try {
             const result = await fetchThreadDetail({
-              jar: this.jar, thread, $set: this.$set
+              jar: this.ctx.jar, thread, $set: this.$set
             })
             thread.needUpdate = false
             thread.analyzeMessages(result)
-            await this.db.put({ id: thread.id, messages: result })
+            await this.ctx.db.put({ id: thread.id, messages: result })
           } catch (err) {
             console.error(err)
             if (errorQueue.indexOf(err.message) === -1) {

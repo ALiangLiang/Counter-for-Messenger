@@ -66,13 +66,15 @@ new Vue({
   el: '#root',
   router,
   components: { Root },
-  template: '<Root :threads-info="threadsInfo" :jar="jar" :db="db"></Root>',
+  template: '<Root :ctx="ctx"></Root>',
   data () {
     return {
       loading: null,
-      threadsInfo: [],
-      jar: null,
-      db: null,
+      ctx: {
+        threads: [],
+        jar: null,
+        db: null
+      },
       iSee: storage.get('iSee', false)
     }
   },
@@ -102,8 +104,8 @@ new Vue({
     // extract token and user id from facebook page.
     const createJar = async () => {
       const jar = await getJar()
-      this.jar = jar
-      this.db = new Indexeddb(jar.selfId)
+      this.ctx.jar = jar
+      this.ctx.db = new Indexeddb(jar.selfId)
     }
     try {
       await createJar()
@@ -160,12 +162,12 @@ new Vue({
     // fetch threads information
     try {
       this.loading.text = __('fetchingThreads')
-      this.db.onload = async () => {
+      this.ctx.db.onload = async () => {
         const [ threads, cachedThreads ] = await Promise.all([
-          fetchThreads(this.jar),
-          this.db.getAll()
+          fetchThreads(this.ctx.jar),
+          this.ctx.db.getAll()
         ])
-        this.threadsInfo = threads.map((thread) => {
+        this.ctx.threads = threads.map((thread) => {
           const mappingCacheThread = cachedThreads.find((cachedThread) =>
             cachedThread.id === thread.id)
           if (mappingCacheThread) {
