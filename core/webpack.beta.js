@@ -17,8 +17,7 @@ module.exports = (env) => {
       new webpack.NoEmitOnErrorsPlugin(),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': '"production"',
-        'process.env.BETA': 'true',
-        'process.env.FIREFOX': (env.FIREFOX) ? 'true' : 'false'
+        'process.env.BETA': 'true'
       }),
       new OptimizeCSSPlugin({ cssProcessorOptions: { safe: true } }),
       new ExtractTextPlugin({ filename: 'css/[name].[contenthash].css' }),

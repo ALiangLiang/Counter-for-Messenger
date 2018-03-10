@@ -86,7 +86,8 @@ module.exports = (env) => {
       htmlPage('options', 'options', ['manifest', 'vendor', 'options']),
       htmlPage('background', 'background', ['manifest', 'vendor', 'background']),
       new webpack.DefinePlugin({
-        chrome: (!env.FIREFOX) ? 'chrome' : 'browser'
+        chrome: (!env.FIREFOX) ? 'chrome' : 'browser',
+        'process.env.FIREFOX': (env.FIREFOX) ? 'true' : 'false'
       }),
       new CopyWebpackPlugin([{ from: path.join(__dirname, '..', 'static') }]),
       new ChromeReloadPlugin({

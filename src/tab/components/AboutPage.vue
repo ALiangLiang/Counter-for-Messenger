@@ -2,9 +2,9 @@
   <div id="about">
     <h1>{{ __('support') }}</h1>
     <h3>{{ __('support1Title') }}</h3>
-    <p v-html="__('support1Content', [ webstorePageUrl + '/support' ])"></p>
+    <p v-html="__('support1Content', [ supportPage ])"></p>
     <h3>{{ __('support2Title') }}</h3>
-    <p v-html="__('support2Content', [ webstorePageUrl + '/reviews' ])"></p>
+    <p v-html="__('support2Content', [ reviewPage ])"></p>
     <h3>{{ __('support3Title') }}</h3>
     <p v-html="__('support3Content', [ 'https://github.com/ALiangLiang/Counter-for-Messenger' ])"></p>
 
@@ -26,7 +26,8 @@ const __ = chrome.i18n.getMessage
 export default {
   name: 'About',
   data: () => ({
-    webstorePageUrl: 'https://chrome.google.com/webstore/detail/' + __('@@extension_id')
+    supportPage: (!process.env.FIREFOX) ? `https://chrome.google.com/webstore/detail/${__('@@extension_id')}/support` : 'https://github.com/ALiangLiang/Counter-for-Messenger/issues',
+    reviewPage: (!process.env.FIREFOX) ? `https://chrome.google.com/webstore/detail/${__('@@extension_id')}/reviews` : 'https://addons.mozilla.org/firefox/addon/counter-for-messenger/'
   })
 }
 </script>
