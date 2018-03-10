@@ -1,9 +1,15 @@
 # ![Logo](.github/assets/icon.png) Messenger 計數器
 
+Chome
 [<img src="https://img.shields.io/chrome-web-store/v/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Chrome%20Web%20Store"> ](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Users)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/rating/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Rating&colorB=dfb317)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store BETA](https://img.shields.io/chrome-web-store/v/flkejcheidpcclcdokndihmnlejfabil.svg?label=Beta)](https://chrome.google.com/webstore/detail/flkejcheidpcclcdokndihmnlejfabil)
+
+Firfox
+[<img src="https://img.shields.io/amo/v/counter-for-messenger.svg?label=Mozilla%20Add-on"> ](https://addons.mozilla.org/firefox/addon/counter-for-messenger/)
+[![Mozilla Add-on](https://img.shields.io/amo/users/counter-for-messenger.svg)](https://addons.mozilla.org/firefox/addon/counter-for-messenger/)
+[![Mozilla Add-on](https://img.shields.io/amo/rating/counter-for-messenger.svg)](https://addons.mozilla.org/firefox/addon/counter-for-messenger/)
 
 🌎 | [English](README.md) | 正體中文 (Traditional Chinese)
 ------------- | ------------- | -------------
@@ -53,3 +59,15 @@
 
 - **這是非官方專案**  
 - **不會收集使用者從 Messenger 來的數據**
+
+## Development
+
+```
+yarn # 安裝相依套件
+# Chrome
+npm run dev # 開發
+npm run build-chrome # 生產
+# Firefox
+npm run dev-firefox # 開發
+npm run build-firefox # 生產
+```
