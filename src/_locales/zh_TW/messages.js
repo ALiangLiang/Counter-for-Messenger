@@ -115,7 +115,7 @@ module.exports = {
   // 錯誤訊息
   fetchError: { message: '啊！撈取資料時發生錯誤。' },
   contactDevelper: { message: '請聯絡開發者以解決問題。' },
-  messengerIsDead: { message: '你的 Messenger 暫時無法使用，請稍後再試。' },
+  loginRequired: { message: '請先登入您的 Facebook。' },
 
   // 符號
   comma: { message: '、' },
