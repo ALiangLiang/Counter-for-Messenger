@@ -6,7 +6,7 @@ Chome
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/rating/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Rating&colorB=dfb317)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store BETA](https://img.shields.io/chrome-web-store/v/flkejcheidpcclcdokndihmnlejfabil.svg?label=Beta)](https://chrome.google.com/webstore/detail/flkejcheidpcclcdokndihmnlejfabil)
 
-Firfox
+Firefox
 [<img src="https://img.shields.io/amo/v/counter-for-messenger.svg?label=Mozilla%20Add-on"> ](https://addons.mozilla.org/firefox/addon/counter-for-messenger/)
 [![Mozilla Add-on](https://img.shields.io/amo/users/counter-for-messenger.svg)](https://addons.mozilla.org/firefox/addon/counter-for-messenger/)
 [![Mozilla Add-on](https://img.shields.io/amo/rating/counter-for-messenger.svg)](https://addons.mozilla.org/firefox/addon/counter-for-messenger/)
