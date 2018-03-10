@@ -53,3 +53,15 @@ Welcome every language support. Help your countryman to use this application. Re
 
 - **It's a unofficial project.**
 - **We would not collect any user data from Messenger.**
+
+## Development
+
+```
+yarn # install dependencies
+# Chrome
+npm run dev # for development
+npm run build-chrome # for production
+# Firefox
+npm run dev-firefox # for development
+npm run build-firefox # for production
+```
