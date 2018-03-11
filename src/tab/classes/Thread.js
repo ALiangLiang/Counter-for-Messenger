@@ -1,16 +1,12 @@
+import fetchThread from './../lib/fetchThread.js'
 import User from './User.js'
 import _set from 'lodash/set'
 import _get from 'lodash/get'
 
 export default class Thread {
   constructor (data) {
-    // Public properties name.
-    const publicPropNames = ['id', 'name', 'tooltop', 'type', 'messages', 'participants', 'messageCount', 'textCount', 'needUpdate']
+    Object.assign(this, data)
     this.isLoading = false
-    // Initial properties.
-    publicPropNames.forEach((propName) => {
-      this[propName] = data[propName] || null
-    })
   }
 
   /**
@@ -20,26 +16,26 @@ export default class Thread {
    */
   getParticipantById (id) {
     return (this.participants && this.participants.length)
-      ? this.participants.find((participant) => participant.id === id) || null
+      ? this.participants.find((participant) => _get(participant, 'user.id') === id) || null
       : null
   }
 
   analyzeMessages (messages = this.messages, threads) {
     if (!messages) throw new Error('Need messages.')
 
-    let textSum = 0
-    // Statistic messages with every participants. And count text.
+    let characterSum = 0
+    // Statistic messages with every participants. And count character.
     const participantsStats = {}
     messages.forEach((message) => {
-      const textLength = (message.text) ? message.text.length : 0
-      textSum += textLength
-      const participantStats = participantsStats[message.senderId]
-      _set(participantsStats, `${message.senderId}.messageCount`,
+      const textLength = (message.body) ? message.body.length : 0
+      characterSum += textLength
+      const participantStats = participantsStats[message.senderID]
+      _set(participantsStats, `${message.senderID}.messageCount`,
         _get(participantStats, 'messageCount', 0) + 1)
-      _set(participantsStats, `${message.senderId}.textCount`,
-        _get(participantStats, 'textCount', 0) + textLength)
+      _set(participantsStats, `${message.senderID}.characterCount`,
+        _get(participantStats, 'characterCount', 0) + textLength)
     })
-    this.textCount = textSum
+    this.characterCount = characterSum
 
     // Set statistic results on Thread Object.
     // Don't let vue instance trigger "messages". Will cause memory leak.
@@ -47,10 +43,10 @@ export default class Thread {
       .forEach((participantId) => {
         const participantStats = participantsStats[participantId]
         let messageSender = this.getParticipantById(participantId) ||
-        (threads) ? threads.getUserById(participantId) : null
+        ((threads) ? threads.getUserById(participantId) : null)
         if (messageSender) {
           messageSender.messageCount = participantStats.messageCount
-          messageSender.textCount = participantStats.textCount
+          messageSender.characterCount = participantStats.characterCount
         } else { // This sender is not inside the thread.
           messageSender = {
             user: new User({
@@ -60,7 +56,7 @@ export default class Thread {
               url: null
             }),
             messageCount: participantStats.messageCount,
-            textCount: participantStats.textCount,
+            characterCount: participantStats.characterCount,
             inGroup: false
           }
           this.participants.push(messageSender)
@@ -68,8 +64,17 @@ export default class Thread {
       })
   }
 
-  static culTextCount (messages) {
+  static culCharacterCount (messages) {
     return messages.reduce((cur, message) =>
-      ((message.text) ? message.text.length : 0) + cur, 0)
+      ((message.body) ? message.body.length : 0) + cur, 0)
+  }
+
+  async reload (jar) {
+    const newThreadData = await fetchThread(jar, this.id)
+    // TODO: this API cannot load detail of participant information like name, nickname...
+    // So don't overwrite original participants data.
+    delete newThreadData.participants
+    Object.assign(this, newThreadData)
+    return this
   }
 }

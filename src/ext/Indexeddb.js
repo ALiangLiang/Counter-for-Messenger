@@ -1,6 +1,8 @@
+const __VERSION__ = 2
+
 function promisifyRequestResult (request) {
   return new Promise(function (resolve, reject) {
-    request.onerror = (event) => reject(event)
+    request.onerror = reject
     request.onsuccess = (event) => resolve(request.result)
   })
 }
@@ -12,7 +14,8 @@ export default class Indexeddb {
       window.alert('Your browser doesn\'t support a stable version of IndexedDB. Such and such feature will not be available.')
     }
     this._loaded = false
-    const request = this._indexedDB.open(selfId)
+    this._dbName = selfId
+    const request = this._indexedDB.open(this._dbName, __VERSION__)
     request.onerror = function (err) { console.error(err) }
     request.onsuccess = (event) => {
       this._db = event.currentTarget.result
@@ -22,9 +25,19 @@ export default class Indexeddb {
       }
     }
     request.onupgradeneeded = function (event) {
-      event.currentTarget.result.createObjectStore('Threads', {
-        keyPath: 'id'
-      })
+      if (event.oldVersion < 1) {
+        // do initial schema creation
+        event.currentTarget.result.createObjectStore('Threads', {
+          keyPath: 'id'
+        })
+      }
+      if (event.oldVersion < 2) {
+        // rebuild db
+        event.currentTarget.result.deleteObjectStore('Threads')
+        event.currentTarget.result.createObjectStore('Threads', {
+          keyPath: 'id'
+        })
+      }
     }
   }
 
@@ -37,10 +50,10 @@ export default class Indexeddb {
     return this._onload
   }
 
-  get (threadId) {
+  get (senderID) {
     const request = this._db.transaction('Threads')
       .objectStore('Threads')
-      .get(threadId)
+      .get(senderID)
     return promisifyRequestResult(request)
   }
 
@@ -53,7 +66,6 @@ export default class Indexeddb {
 
   add (values) {
     values = (values instanceof Array) ? values : [values]
-    console.log(this._db)
     const objectStore = this._db.transaction('Threads', 'readwrite').objectStore('Threads')
     return Promise.all(values.map((val) => promisifyRequestResult(objectStore.add(val))))
   }
@@ -64,15 +76,22 @@ export default class Indexeddb {
     return Promise.all(values.map((val) => promisifyRequestResult(objectStore.put(val))))
   }
 
-  remove (threadId) {
-    const request = this._db.transaction('Threads')
+  remove (senderID) {
+    const request = this._db.transaction('Threads', 'readwrite')
       .objectStore('Threads')
-      .delete(threadId)
+      .delete(senderID)
+    return promisifyRequestResult(request)
+  }
+
+  clear () {
+    const request = this._db.transaction('Threads', 'readwrite')
+      .objectStore('Threads')
+      .clear()
     return promisifyRequestResult(request)
   }
 
   destroy () {
-    const request = this._indexedDB.deleteDatabase(this._selfId)
+    const request = this._indexedDB.deleteDatabase(this._dbName)
     return promisifyRequestResult(request)
   }
 }

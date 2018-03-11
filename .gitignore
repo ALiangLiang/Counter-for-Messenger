@@ -1,15 +1,20 @@
+# env
+core/.env.*
+!core/.env.example.*
+
 # IDE
 .vscode
 
 # dependencies
 node_modules
+package-lock.json
 
 # logs
 npm-debug.log
-yarn.lock
 
 # Backpack build
 build
 
 # package zip
-build.zip
+beta-*.zip
+release-*.zip

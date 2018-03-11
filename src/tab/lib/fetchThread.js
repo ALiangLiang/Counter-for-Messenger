@@ -4,8 +4,6 @@
 /// //////////////////////////////////////////////////////////////////////
 import _get from 'lodash/get'
 import _toString from 'lodash/toString'
-import Threads from '../classes/Threads'
-import Thread from '../classes/Thread'
 import User from '../classes/User'
 import { graphql, getQraphqlForm } from './util'
 const __ = chrome.i18n.getMessage
@@ -82,6 +80,7 @@ function formatThread (threadNode) {
     emoji: _get(threadNode, 'customization_info.emoji', null),
     color: _toString(_get(threadNode, 'customization_info.outgoing_bubble_color', null)).replace(/^FF/, '#') || null,
     type,
+    tag: threadNode.folder,
     muteUntil: (threadNode.mute_until === -1) ? Infinity : threadNode.mute_until,
     participants,
     otherUserId: threadNode.other_user_id,
@@ -90,37 +89,24 @@ function formatThread (threadNode) {
   }
 }
 
-function createThreadObject (threadNode, createdUsers, tag) {
-  const thread = formatThread(threadNode)
-  return new Thread(Object.assign({ tag }, thread))
-}
-
-export default async function fetchThreads (jar, limit = 5000, tags = [ 'INBOX', 'ARCHIVED', 'PENDING' ]) {
-  const threadsData = (await Promise.all(tags.map(async (tag) => {
-    // Prepare request form body.
-    const queries = {
-      o0: {
-        doc_id: '1475048592613093',
-        query_params: {
-          limit,
-          before: null,
-          tags: [tag],
-          includeDeliveryReceipts: true,
-          includeSeqID: false
-        }
+export default async function fetchThread (jar, threadID) {
+  // Prepare request form body.
+  const queries = {
+    o0: {
+      doc_id: '1498317363570230',
+      query_params: {
+        id: threadID,
+        message_limit: 0,
+        load_messages: 0,
+        load_read_receipts: false,
+        before: null
       }
     }
-    const form = getQraphqlForm({ queries }, jar)
-    const json = await graphql('https://www.facebook.com/api/graphqlbatch/', form)
+  }
+  const form = getQraphqlForm({ queries }, jar)
+  const json = await graphql('https://www.facebook.com/api/graphqlbatch/', form)
 
-    const createdUsers = [] // Use to record user we created.
-    return json.o0.data.viewer.message_threads.nodes
-      .map((threadsData) => createThreadObject(threadsData, createdUsers, tag))
-      .filter((thread) => !!thread)
-  })))
-    .reduce((cur, threadsData) => cur.concat(threadsData), [])
-    // Sort by message count. From more to less.
-    .sort((threadA, threadB) => threadB.messageCount - threadA.messageCount)
-
-  return new Threads(threadsData)
+  const threadData = json.o0.data.message_thread
+  const thread = formatThread(threadData)
+  return thread
 }

@@ -29,13 +29,13 @@ usage.
   participants: [{
     user: User, // User Object
     messageCount: 'message count of this participant',
-    textCount: 'text count of this participant',
+    characterCount: 'character count of this participant',
     // Is this user still in the thread? true or false. If somebody ever send
     // messages in thread, means he was a participant. And then inGroup is false.
     inGroup: true || false
   }]
   messageCount: 'total message count',
-  textCount: 'total text count'
+  characterCount: 'total character count'
 }
 ```
 

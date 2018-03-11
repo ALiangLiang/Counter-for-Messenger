@@ -9,6 +9,17 @@ If you have any questions, feel free to contact with me in English or Chinese.
 - Make sure you are using *Node.js 8*.
 - Install dependencies.
 
+### Develop
+
+You can develop on both browser at same time.
+```sh
+npm run dev # Chrome
+npm run dev-firefox # Firefox
+```
+
+> Hint: Going to firefox's about:config and toggling `network.websocket.allowInsecureFromHTTPS`.
+> https:// to ws:// is disallowed by default on firefox.
+
 ### Submitting Pull Request
 
 > Please use meaningful commit messages.

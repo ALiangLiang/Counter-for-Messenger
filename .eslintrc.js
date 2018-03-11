@@ -7,8 +7,7 @@ module.exports = {
     sourceType: 'module'
   },
   globals: {
-     "chrome": true,
-     "__": true
+     "chrome": true
     // chrome: true
   },
   env: {

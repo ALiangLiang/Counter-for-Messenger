@@ -1,15 +1,15 @@
 module.exports = {
   // Extension information
   extName: { message: 'Counter for Messenger' },
-  extDescription: { message: 'Count and rank your friends or lover by analysis you Messenger!! Take a look what you and your best friend chat!!' },
+  extDescription: { message: 'Count and rank your friends by analysing your Messenger! Check out and download the messaging history of you and your best friends!' },
 
   // Router
-  indexPage: { message: 'Index' },
-  messageChart: { message: 'Chart of Messages' },
-  textChart: { message: 'Chart of Text' },
+  listPage: { message: 'List' },
+  chartPage: { message: 'Chart' },
+  shareOnFacebook: { message: 'Share on Facebook' },
 
   // Message of loading
-  interceptingToken: { message: 'Intercept token...' },
+  interceptingToken: { message: 'Extracting token...' },
   fetchingThreads: { message: 'Fetching threads...' },
   fetchingMessages: { message: 'Fetching messages...' },
   rendering: { message: 'Rendering...' },
@@ -17,15 +17,55 @@ module.exports = {
 
   // Alert model
   openingAlertTitle: { message: 'Please be patient' },
-  openingAlertContent: { message: '1. Fetch data from FB maybe take a long time. 2. If you fetch a lot of messages in a short time, may cause some functions of your FB and Messenger could\'t be used.' },
+  openingAlertContent: { message: 'Fetching data from FB may take a long time.' },
+  resetConfirmTitle: { message: 'Sure?' },
+  resetConfirmContent: { message: 'Are you sure you want to clear all cached data?' },
+  error: { message: 'Error' },
+  cannotDetectLoginContent: { message: 'Cannot detect facebook login.' },
+  editNicknameTitle: { message: 'Edit Nickname' }, // ThreadList/DetailTemplate
+  editNicknameContent: { message: 'Everyone in this conversation will see this.' }, // ThreadList/DetailTemplate
   iSee: { message: 'Got it!' },
+  ok: { message: 'OK' },
+  sure: { message: 'Sure!!' },
+  refresh: { message: 'Refresh' },
   cancel: { message: 'Cancel' },
 
-  // Index
+  // About Page
+  support: { message: 'Support' },
+  support1Title: { message: 'Found a bug? Got a question or new idea?' },
+  support1Content: {
+    message: 'Why don\'t you send us a <a href="$url$" target="_blank">report</a>?',
+    placeholders: { url: { content: '$1' } }
+  },
+  support2Title: { message: 'Like this extension?' },
+  support2Content: {
+    message: 'Let us know on <a href="$url$" target="_blank">Chrome web store</a>!',
+    placeholders: { url: { content: '$1' } }
+  },
+  support3Title: { message: 'Want to add feature or help translating?' },
+  support3Content: {
+    message: 'Why not fork in <a href="$github$" target="_blank">github</a>? 😄',
+    placeholders: { github: { content: '$1' } }
+  },
+  QA: { message: 'Frequently Asked Questions' },
+  QA1Title: { message: 'Is my information safe?' },
+  QA1Content: { message: 'This extension only fetches your data from Messenger to your local device. If your device is not public, your information is safe. On the other hand, if you\'re using a public device, be sure to remove this extension after you finish using this extension. ' },
+  QA2Title: { message: 'How can I help Counter of Messenger?' },
+  QA2Content: {
+    message: 'You can donate to support our work. You can tell others to try Counter of Messenger. And, if you\'re technically-savvy, you can <a href="$beta_url$" target="_blank">use our beta version</a> and help us find bugs before they\'re released to the public.',
+    placeholders: { beta_url: { content: '$1' } }
+  },
+  QA3Title: { message: 'How to switch FB account?' },
+  QA3Content: { message: 'Just changing your account in Facebook page and reload this extension page.' },
+  note: { message: 'Note' },
+  noteContent: { message: 'It\'a web extension you know. Inspired by the fact that I want to know how many messages I have with my best friends. In the beginning it was just a little project. Very simple and ugly. But recently, more and more users installed this extension, and encouraged me to develop it further. I don\'t want to disappoint them. So I\'ve updated this project, Making it more powerful and beautiful. If you really like this extension, tell me. I would very happy. 😄😄😄 Thanks everyone. ' },
+
+  // List Page
   threadName: { message: 'Name' },
   threadType: { message: 'Type' },
+  threadTag: { message: 'Tag' },
   threadMessageCount: { message: 'Messages' },
-  threadTextCount: { message: 'Texts' },
+  threadCharacterCount: { message: 'Characters' },
   threadOperation: { message: 'Operations' },
   importMessageHistory: { message: 'Import Messages' },
   importedMessageHistory: { message: 'Imported' },
@@ -34,23 +74,48 @@ module.exports = {
   user: { message: 'User' },
   fanpage: { message: 'Fanpage' },
   group: { message: 'Group' },
+  inbox: { message: 'Inbox' },
+  archived: { message: 'Archived' },
+  pending: { message: 'Request' },
   unknown: { message: 'Unknown' },
   fetchDetailOfselected: { message: 'Import Messages of Selected Threads' },
+  reset: { message: 'Reset' },
   searchInputLabel: { message: 'Search' },
   searchInputPlaceholder: { message: 'Keyword' },
+  edit: { message: 'Edit' },
+  emoji: { message: 'Emoji' },
+  color: { message: 'Color' },
+  participants: { message: 'Participants' },
+  // MuteUntil component
+  muteUntil: { message: 'Mute until' },
+  muteForever: { message: 'End of the world' },
+  unmute: { message: 'Unmute' },
+  minutes: { message: 'minutes' },
+  hour: { message: 'hour' },
+  hours: { message: 'hours' },
+  day: { message: 'day' },
+  week: { message: 'week' },
+  month: { message: 'month' },
+  always: { message: 'Always' },
 
-  // Charts
+  // Chart page
+  operationBar: { message: 'Operation Bar' },
   drapToLookOtherUsers: { message: 'Drag slider to look other users.' },
   showDetail: { message: 'Show Detail' },
   showTotal: { message: 'Show Total' },
+  showMessage: { message: 'Show Messages' },
+  showCharacter: { message: 'Show Characters' },
+  detail: { message: 'Detail' },
   total: { message: 'Total' },
+  message: { message: 'Messages' },
+  character: { message: 'Characters' },
   me: { message: 'Me' },
   other: { message: 'Other' },
 
   // Error message
   fetchError: { message: 'Oops, cannot fetch messages.' },
   contactDevelper: { message: 'Please contact developer.' },
-  messengerIsDead: { message: 'Your Messenger is temporarily unavailable. Please take a while to use again.' },
+  loginRequired: { message: 'Please login Facebook first.' },
 
   // Symbol
   comma: { message: ', ' },

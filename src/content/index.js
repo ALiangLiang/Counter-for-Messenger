@@ -1,14 +1,7 @@
-const __ = chrome.i18n.getMessage
-
-if (location.pathname === '/login.php') {
-  // location = location.href.replace(/#/, '%23')
-  chrome.runtime.sendMessage({}, function () {
-    alert(__('loginAlert'))
-  })
-}
-
-chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-  if (request === 'ping') {
-    sendResponse('pong')
-  }
+// submit a message about submit. means "login"
+console.log(0)
+document.addEventListener('submit', function () {
+  console.log(chrome)
+  chrome.runtime.sendMessage({})
 })
+console.log(1)

@@ -1,21 +1,35 @@
-# ![Logo](.github/assets/icon.png) Messenger 計數器
+# ![Logo](.github/assets/icon.png) Messenger 計數器  [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/ALiangLiang/5)
 
+Chome
 [<img src="https://img.shields.io/chrome-web-store/v/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Chrome%20Web%20Store"> ](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Users)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/rating/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Rating&colorB=dfb317)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store BETA](https://img.shields.io/chrome-web-store/v/flkejcheidpcclcdokndihmnlejfabil.svg?label=Beta)](https://chrome.google.com/webstore/detail/flkejcheidpcclcdokndihmnlejfabil)
 
+Firefox
+[<img src="https://img.shields.io/amo/v/counter-for-messenger.svg?label=Mozilla%20Add-on"> ](https://addons.mozilla.org/firefox/addon/counter-for-messenger/)
+[![Mozilla Add-on](https://img.shields.io/amo/users/counter-for-messenger.svg)](https://addons.mozilla.org/firefox/addon/counter-for-messenger/)
+[![Mozilla Add-on](https://img.shields.io/amo/rating/counter-for-messenger.svg)](https://addons.mozilla.org/firefox/addon/counter-for-messenger/)
+
+
+
 🌎 | [English](README.md) | 正體中文 (Traditional Chinese)
 ------------- | ------------- | -------------
-
-![示意圖](.github/assets/screenshot1.png)
 
 統計你在 Messenger 中，與朋友們的訊息數量，並且排名！！
 快來看看你與哪個朋友最麻吉唄！
 想不想知道與好朋友聊了幾句？想回味與她聊天的點點滴滴嗎？
 這時候這碗糕就派上用場了！！還不快安裝！？
 
-[![從 Chrome Web Store 安裝](.github/assets/tryitnowbutton_small.png)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
+<p align="center">
+  <a href="https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca">
+    <img src=".github/assets/tryitnowbutton_small.png" alt="從 Chrome Web Store 安裝" />
+  </a>
+</p>
+
+<p align="center">
+  <img src=".github/assets/screenshot3.png" alt="示意圖" />
+</p>
 
 ## 🔥 特色
 
@@ -25,6 +39,7 @@
   - 聊天室的文字量
 - 📊 將所有聊天室**排名**
 - 💾 **下載**聊天紀錄
+- ⚙️ **設定**你的聊天室 (表情符號、顏色、名稱等...)
 
 ## 📄 使用
 安裝完畢後，點擊 Chrome 右上角的 LOGO 圖示 <img width="20" alt="Logo" src=".github/assets/icon.png">，如果找不到，點擊右上角的「三顆點」按鈕，就可以找到了。  
@@ -38,14 +53,29 @@
 如果你有一定的技術，可以使用[公開測試版本](https://chrome.google.com/webstore/detail/flkejcheidpcclcdokndihmnlejfabil)
 ，並且幫助我們在釋出正式版前找出錯誤。
 
-## 如何運作
+### 🌎 翻譯
 
-簡單來說，就是開啟 Messenger 網頁版頁面，攔截它發出資訊，然後以這些資訊向 FB 請求我們所要的資訊 (訊息數)。
-
-稍微技術點的講法，就是開啟 Messenger 頁面後，以 Chrome Extension 的 API「webRequest」
-，攔截下我們要的 token 等資訊，然後再拿它們去向 FB 發 request，最後再丟到新的頁面，呈現給大家。
+我們歡迎大家增加各種語言的支援，協助各位的同胞使用這個擴充套件。可以參考 [CONTRIBUTING - Working with translations](.github/CONTRIBUTING.md#working-with-translations)。
 
 ## 📣 聲明
 
 - **這是非官方專案**  
-- **不會收集使用者數據**
+- **不會收集使用者從 Messenger 來的數據**
+
+## 👨‍💻 開發
+
+```
+yarn # 安裝相依套件
+# Chrome
+npm run dev # 開發
+npm run build-chrome # 生產
+# Firefox
+npm run dev-firefox # 開發
+npm run build-firefox # 生產
+```
+
+## ☕ 捐獻
+
+如果你喜歡這個專案，歡迎抖內(donate)，讓我買杯咖啡好熬肝 XDDD
+
+<a href="https://www.buymeacoffee.com/ALiangLiang" target="_blank"><img src="https://www.buymeacoffee.com/assets/img/custom_images/orange_img.png" alt="Buy Me A Coffee" style="height: 41px !important;width: 174px !important;box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;-webkit-box-shadow: 0px 3px 2px 0px rgba(190, 190, 190, 0.5) !important;" ></a>
