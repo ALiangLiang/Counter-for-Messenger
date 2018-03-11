@@ -162,6 +162,7 @@ export default {
         }
       } else {
         // Show Detail
+        // TODO: change to "if (!process.pro) {", it's for testing currently.
         if (process.pro) {
           const participantsStatus = splicedThreads
             .map((thread, i) => {
@@ -192,6 +193,7 @@ export default {
           const labels = splicedThreads.map((thread) => thread.threadName)
           const datasetsMap = new Map()
           splicedThreads.forEach((thread, i) => {
+            const color = (thread.type !== 'GROUP') ? thread.color : null
             thread.participants.forEach((participant) => {
               const userId = participant.user.id
               const userName = participant.user.name
@@ -203,7 +205,7 @@ export default {
                 datasetsMap.set(userId, {
                   label: userName,
                   backgroundColor: (userId === this.ctx.jar.selfId)
-                    ? '#4BCC1F' : colorHash.hex(participant.user.name),
+                    ? '#4BCC1F' : (color || colorHash.hex(participant.user.name)),
                   data
                 })
               }
