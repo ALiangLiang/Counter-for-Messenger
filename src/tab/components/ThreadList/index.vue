@@ -11,14 +11,16 @@
       </el-pagination>
     </div>
     <el-table
+      ref="thread-list"
       :data="tableData.slice((this.currentPage - 1) * this.threadsPerPage, this.currentPage * this.threadsPerPage)"
       :max-height="720"
       show-summary
       :summary-method="getSummaries"
       @selection-change="onSelect"
+      @row-click.self="onRowClick"
       style="width: 100%">
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column type="expand" width="60">
+      <el-table-column type="expand" label="Customize" width="60">
         <template slot-scope="{ row }">
           <detail-template :thread="row" @change="onChange" />
         </template>
@@ -266,6 +268,9 @@ export default {
     },
     onSelect (items) {
       this.selectedThreads = items
+    },
+    onRowClick (row, event, column) {
+      this.$refs['thread-list'].toggleRowExpansion(row)
     },
     determineThreadType (type) {
       switch (type) {
