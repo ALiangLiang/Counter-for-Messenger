@@ -42,10 +42,7 @@ const elements = [ Slider, Loading, Button, Table, TableColumn, Tag, Tooltip,
 elements.forEach((el) => Vue.use(el, { locale }))
 
 // In Chrome extension, must close checking protocol.
-const gaSet = [
-  { field: 'checkProtocolTask', value: null },
-  { field: 'appVersion', value: chrome.runtime.getManifest().version }
-]
+const gaSet = [{ field: 'checkProtocolTask', value: null }]
 if (process.env.NODE_ENV !== 'production') {
   // If not in production mode, don't send any data to ga service.
   gaSet.push({ field: 'sendHitTask', value: null })
