@@ -33,3 +33,9 @@ chrome.browserAction.onClicked.addListener(async () => {
   // create app page
   chrome.tabs.create({ url: '/pages/app.html' })
 })
+
+// Mark beta version by badge.
+if (process.env.BETA) {
+  chrome.browserAction.setBadgeText({ text: 'Beta' })
+  chrome.browserAction.setBadgeBackgroundColor({ color: [255, 0, 0, 255] })
+}
