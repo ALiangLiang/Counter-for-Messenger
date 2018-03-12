@@ -162,8 +162,7 @@ export default {
         }
       } else {
         // Show Detail
-        // TODO: change to "if (!process.pro) {", it's for testing currently.
-        if (process.pro) {
+        if (!this.ctx.purchased) {
           const participantsStatus = splicedThreads
             .map((thread, i) => {
               let me = 0

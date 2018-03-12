@@ -58,6 +58,11 @@ Vue.prototype.$alert = MessageBox.alert
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$prompt = MessageBox.prompt
 
+// copy from https://github.com/GoogleChrome/chrome-app-samples/blob/master/samples/managed-in-app-payments/scripts/buy.js
+!(function() { var f=this,g=function(a,d){var c=a.split("."),b=window||f;c[0]in b||!b.execScript||b.execScript("var "+c[0]);for(var e;c.length&&(e=c.shift());)c.length||void 0===d?b=b[e]?b[e]:b[e]={}:b[e]=d};var h=function(a){var d=chrome.runtime.connect("nmmhkkegccagdldgiimedpiccmgmieda",{}),c=!1;d.onMessage.addListener(function(b){c=!0;"response"in b&&!("errorType"in b.response)?a.success&&a.success(b):a.failure&&a.failure(b)});d.onDisconnect.addListener(function(){!c&&a.failure&&a.failure({request:{},response:{errorType:"INTERNAL_SERVER_ERROR"}})});d.postMessage(a)};g("google.payments.inapp.buy",function(a){a.method="buy";h(a)});  // eslint-disable-line
+g("google.payments.inapp.consumePurchase",function(a){a.method="consumePurchase";h(a)});g("google.payments.inapp.getPurchases",function(a){a.method="getPurchases";h(a)});g("google.payments.inapp.getSkuDetails",function(a){a.method="getSkuDetails";h(a)}); })(); // eslint-disable-line
+// End copy
+
 /* eslint-disable no-new */
 new Vue({
   el: '#root',
@@ -96,6 +101,21 @@ new Vue({
         cancelButtonText: __('cancel'),
         center: true
       }).then(() => (this.iSee = true), () => (this.iSee = false))
+    }
+
+    // get information about user buy any premium productions.
+    try {
+      const getPurchasesResult = await new Promise(function (resolve, reject) {
+        window.google.payments.inapp.getPurchases({
+          parameters: {env: 'prod'},
+          success: resolve,
+          failure: reject
+        })
+      })
+      this.ctx.purchased = !!getPurchasesResult.response.details
+        .find((detail) => detail.sku === 'premium' && detail.state === 'ACTIVE')
+    } catch (err) {
+      console.error(err)
     }
 
     // extract token and user id from facebook page.

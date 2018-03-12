@@ -89,8 +89,10 @@ module.exports = (env) => {
       htmlPage('background', 'background', ['vendor', 'element', 'chartjs', 'background']),
       new webpack.DefinePlugin({
         chrome: (!env.FIREFOX) ? 'chrome' : 'browser',
+        'process.env.CHROME': (env.CHROME) ? 'true' : 'false',
         'process.env.FIREFOX': (env.FIREFOX) ? 'true' : 'false',
-        'process.env.BETA': (env.BETA) ? 'true' : 'false'
+        'process.env.BETA': (env.BETA) ? 'true' : 'false',
+        'process.env.ALPHA': (env.ALPHA) ? 'true' : 'false'
       }),
       new CopyWebpackPlugin([{ from: path.join(__dirname, '..', 'static') }]),
       new ChromeReloadPlugin({

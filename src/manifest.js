@@ -19,10 +19,13 @@ const manifest = {
   },
   permissions: [
     'tabs',
+    'identity',
     'downloads',
     'webRequest',
     'webRequestBlocking',
-    '*://*.facebook.com/*'
+    '*://*.facebook.com/*',
+    'https://www.googleapis.com/',
+    'https://www-googleapis-staging.sandbox.google.com/'
   ],
   background: {
     persistent: true,
@@ -43,14 +46,24 @@ const manifest = {
 }
 
 const optionPage = 'pages/options.html'
+const stage = (process.env.ALPHA) ? 'alpha' : ((process.env.BETA) ? 'beta' : 'release')
+console.info('Stage:', stage)
+const browser = (process.env.FIREFOX) ? 'Firefox' : 'Chrome'
+console.info('Browser:', browser)
 if (!process.env.FIREFOX) {
-  console.info('chrome')
   Object.assign(manifest, {
     options_page: optionPage,
-    key: config[(!process.env.BETA) ? 'release' : 'beta'].key
+    oauth2: {
+      client_id: config[stage].clientId,
+      scopes: [
+        'https://www.googleapis.com/auth/plus.login',
+        'https://www.googleapis.com/auth/chromewebstore',
+        'https://www.googleapis.com/auth/chromewebstore.readonly'
+      ]
+    },
+    key: config[stage].key
   })
 } else {
-  console.info('firefox')
   delete manifest.background.persistent // Firefox not support background.persistent
   Object.assign(manifest, {
     applications: {
