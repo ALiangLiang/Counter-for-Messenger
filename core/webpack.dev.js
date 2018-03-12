@@ -11,7 +11,7 @@ function genPlugins (isFirefox) {
     new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"development"' }),
     new FriendlyErrorsPlugin()
   ]
-  if (!isFirefox) {
+  if (process.env.ANALYZER) {
     plugins.push(new BundleAnalyzerPlugin())
   }
   return plugins
