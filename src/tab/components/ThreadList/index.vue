@@ -86,7 +86,6 @@
 </template>
 
 <script>
-import 'vue-awesome/icons/spinner'
 import 'vue-awesome/icons/cloud-download'
 import 'vue-awesome/icons/download'
 import Icon from 'vue-awesome/components/Icon'
