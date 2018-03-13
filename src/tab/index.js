@@ -3,7 +3,7 @@ import VueAnalytics from 'vue-analytics'
 // Import element-ui components.
 import { Slider, Loading, Button, Table, TableColumn, Tag, Tooltip, DatePicker,
   Pagination, Switch, Container, Menu, MenuItem, Header, Aside, Main, Footer,
-  MessageBox, Input, Form, FormItem } from 'element-ui'
+  MessageBox, Input, Form, FormItem, Dialog } from 'element-ui'
 // Customize element-ui theme. Let this style more like FB.
 import '../../element-variables.scss'
 /**
@@ -38,7 +38,7 @@ locale.use((mainLangName === 'zh') ? zhLocale : enLocale)
 // Import element-ui components.
 const elements = [ Slider, Loading, Button, Table, TableColumn, Tag, Tooltip,
   DatePicker, Pagination, Switch, Container, Menu, MenuItem, Header, Aside,
-  Main, Footer, Input, Form, FormItem ]
+  Main, Footer, Input, Form, FormItem, Dialog ]
 elements.forEach((el) => Vue.use(el, { locale }))
 
 // In Chrome extension, must close checking protocol.
