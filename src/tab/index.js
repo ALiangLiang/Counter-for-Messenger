@@ -1,4 +1,6 @@
+// Vue.js
 import Vue from 'vue'
+// Google analytics
 import VueAnalytics from 'vue-analytics'
 // Import element-ui components.
 import { Slider, Loading, Button, Table, TableColumn, Tag, Tooltip, DatePicker,
@@ -23,6 +25,9 @@ import { getJar } from './lib/util.js'
 import Indexeddb from '../ext/Indexeddb.js'
 import storage from '../ext/storage.js'
 
+// environment information
+import { fb } from '../../core/.env.js'
+
 // Alias i18n function.
 const __ = chrome.i18n.getMessage
 Vue.prototype.__ = __
@@ -31,6 +36,24 @@ Vue.prototype.__ = __
 document.title = __('extName')
 
 Vue.config.productionTip = false
+
+!(function (d, s, id) { // eslint-disable-line no-unused-expressions
+  var js
+  var fjs = d.getElementsByTagName(s)[0]
+  if (d.getElementById(id)) { return }
+  js = d.createElement(s); js.id = id
+  js.src = `https://connect.facebook.net/${__('@@ui_locale')}/sdk.js`
+  fjs.parentNode.insertBefore(js, fjs)
+}(document, 'script', 'facebook-jssdk'))
+
+window.fbAsyncInit = function () {
+  window.FB.init({
+    appId: fb.id,
+    status: true,
+    xfbml: false,
+    version: 'v2.12'
+  })
+}
 
 const mainLangName = chrome.i18n.getUILanguage().split('-')[0]
 locale.use((mainLangName === 'zh') ? zhLocale : enLocale)

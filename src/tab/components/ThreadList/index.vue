@@ -65,6 +65,12 @@
       <el-table-column :label="__('threadOperation')" width="300">
         <template slot-scope="{ row }">
           <el-button
+            @click="shareOnFb"
+            type="text" size="small">
+            <icon name="facebook-f"></icon>
+            Share on Facebook
+          </el-button>
+          <el-button
             :disabled="!row.needUpdate"
             :loading="row.isLoading"
             @click="fetchMessages(row)"
@@ -88,6 +94,7 @@
 <script>
 import 'vue-awesome/icons/cloud-download'
 import 'vue-awesome/icons/download'
+import 'vue-awesome/icons/facebook-f'
 import Icon from 'vue-awesome/components/Icon'
 import _get from 'lodash/get'
 import Thread from '../../classes/Thread.js'
@@ -259,6 +266,23 @@ export default {
         })
         .then(() => thread.reload(this.jar))
         .catch((err) => console.error(err))
+    },
+    shareOnFb () {
+      window.FB.ui({
+        method: 'share_open_graph',
+        action_type: 'og.shares',
+        action_properties: JSON.stringify({
+          object: {
+            'og:url': 'https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca',
+            'og:title': __('extName'),
+            'og:description': __('extDescription'),
+            'og:image': 'https://p2.bahamut.com.tw/B/2KU/85/3a2c987278da27338809e390be106x55.JPG'
+          }
+        })
+      },
+      function (response) {
+        console.log(response)
+      })
     },
     getSummaries ({ columns, data }) {
       const totalMessageCount = data.reduce((sum, row) => row.messageCount + sum, 0)
