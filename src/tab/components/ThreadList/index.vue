@@ -65,7 +65,7 @@
       <el-table-column :label="__('threadOperation')" width="300">
         <template slot-scope="{ row }">
           <el-button
-            @click="shareOnFb"
+            @click="shareOnFb(row)"
             type="text" size="small">
             <icon name="facebook-f"></icon>
             Share on Facebook
@@ -97,6 +97,7 @@ import 'vue-awesome/icons/download'
 import 'vue-awesome/icons/facebook-f'
 import Icon from 'vue-awesome/components/Icon'
 import _get from 'lodash/get'
+import { toQuerystring, uploadImage } from '../../lib/util.js'
 import Thread from '../../classes/Thread.js'
 import fetchThreadDetail from '../../lib/fetchThreadDetail.js'
 import downloadMessages from '../../lib/downloadMessages.js'
@@ -110,6 +111,7 @@ import {
   changeThreadColor,
   changeThreadEmoji
 } from '../../lib/changeThreadSetting.js'
+import { fb } from '../../../../core/.env.js'
 const __ = chrome.i18n.getMessage
 
 export default {
@@ -267,22 +269,75 @@ export default {
         .then(() => thread.reload(this.jar))
         .catch((err) => console.error(err))
     },
-    shareOnFb () {
-      window.FB.ui({
-        method: 'share_open_graph',
-        action_type: 'og.shares',
-        action_properties: JSON.stringify({
-          object: {
-            'og:url': 'https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca',
-            'og:title': __('extName'),
-            'og:description': __('extDescription'),
-            'og:image': 'https://p2.bahamut.com.tw/B/2KU/85/3a2c987278da27338809e390be106x55.JPG'
-          }
+    async shareOnFb (thread) {
+      function loadImage (src) {
+        const img = new Image()
+        img.crossOrigin = 'Anonymous'
+        img.src = src
+        return new Promise((resolve, reject) => (img.onload = () => resolve(img)))
+      }
+
+      try {
+        /** @see https://developers.facebook.com/docs/sharing/best-practices/#images **/
+        const imageSize = { width: 1200, height: 630 }
+
+        // draw sharing image
+        const canvas = document.createElement('canvas')
+        canvas.width = imageSize.width
+        canvas.height = imageSize.height
+        const ctx = canvas.getContext('2d')
+        const img = await loadImage('../assets/background-1200x630.png')
+        ctx.drawImage(img, 0, 0)
+        const [ leftImg, rightImg ] = await Promise.all(thread.participants.map((participant) => loadImage(participant.user.avatar)))
+        ctx.drawImage(leftImg, 100, 100)
+        ctx.drawImage(rightImg, 300, 100)
+
+        // output blob
+        const blob = await new Promise((resolve, reject) => canvas.toBlob(resolve))
+
+        // upload image to fb
+        const metadata = (await uploadImage(this.jar, blob)).payload.metadata[0]
+
+        // construct fb sharing dialog url
+        const channelUrlHash = toQuerystring({
+          cb: 'f2c3a60a05f73a4',
+          domain: fb.domain,
+          origin: fb.website,
+          relation: 'opener'
         })
-      },
-      function (response) {
-        console.log(response)
-      })
+        const channelUrl = 'http://staticxx.facebook.com/connect/xd_arbiter/r/Ms1VZf1Vg1J.js?version=42#' + channelUrlHash
+        const next = `${channelUrl}&relation=opener&frame=f236fd3a78b853&result=%22xxRESULTTOKENxx%22`
+        const qs = toQuerystring({
+          action_properties: {
+            object: {
+              'og:url': fb.website,
+              'og:title': __('extName'),
+              'og:description': __('extDescription'),
+              'og:image': metadata.src,
+              'og:image:width': imageSize.width,
+              'og:image:height': imageSize.height,
+              'og:image:type': metadata.filetype
+            }
+          },
+          action_type: 'og.likes', // Coz "og.shares" cannot show bigger preview image, use "og.likes" instead of "og.shares".
+          app_id: fb.id,
+          channel_url: channelUrl,
+          e2e: {},
+          locale: __('@@ui_locale'),
+          mobile_iframe: false,
+          next,
+          sdk: 'joey',
+          version: fb.version
+        })
+        const url = `https://www.facebook.com/${fb.version}/dialog/share_open_graph?${qs}`
+
+        // create fb dialog page
+        chrome.tabs.create({
+          url
+        })
+      } catch (err) {
+        console.error(err)
+      }
     },
     getSummaries ({ columns, data }) {
       const totalMessageCount = data.reduce((sum, row) => row.messageCount + sum, 0)

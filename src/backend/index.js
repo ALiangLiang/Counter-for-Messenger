@@ -1,5 +1,3 @@
-import { fb } from '../../core/.env.js'
-
 // get url origin of self
 const selfOrigin = document.location.origin
 
@@ -26,16 +24,6 @@ const requestFilter = { urls: ['*://*.facebook.com/*'], types: ['xmlhttprequest'
 
 chrome.webRequest.onBeforeSendHeaders.addListener(handleRequestHeaders,
   requestFilter, ['blocking', 'requestHeaders'])
-
-chrome.webRequest.onBeforeRequest.addListener(function (details) {
-  const url = new URL(details.url)
-  if (url.search.match(/ldlagicdigidgnhniajpmoddkoakdoca/)) {
-    url.search = url.search.replace(/domain=.*?&/g, `domain=${fb.domain}&`)
-    url.search = url.search.replace(/domain%3D.*?%26/g, `domain%3D${fb.domain}%26`)
-    url.search = url.search.replace(/origin%3D.*?%26/g, `origin%3D${encodeURIComponent(encodeURIComponent(fb.website))}%26`)
-  }
-  return { redirectUrl: url.href }
-}, { urls: ['https://www.facebook.com/*'] }, ['blocking'])
 
 /**
  * 當按下 browserAction 按鈕實，觸發開啟 Counter 頁面的事件。

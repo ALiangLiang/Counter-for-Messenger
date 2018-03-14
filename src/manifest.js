@@ -35,7 +35,7 @@ const manifest = {
       'js/chartjs.js',
       'js/content.js'
     ],
-    matches: ['*://*.facebook.com/*'],
+    matches: ['*://*.facebook.com/'],
     run_at: 'document_end'
   }],
   default_locale: 'en',
