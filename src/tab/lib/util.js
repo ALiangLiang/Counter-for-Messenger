@@ -51,9 +51,7 @@ export function uploadImage (jar, image) {
   formData.append('images_only', true)
   formData.append('attachment[]', image)
   const params = getMessengerApiForm({}, jar)
-  const querystring = Object.keys(params)
-    .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
-    .join('&')
+  const querystring = toQuerystring(params)
 
   return graphql('https://upload.facebook.com/ajax/mercury/upload.php?' + querystring, formData, {})
 }
@@ -62,7 +60,7 @@ export function getMessengerApiForm (form, jar) {
   return Object.assign({
     fb_dtsg: jar.token, // It's required!!
     __rev: jar.revision, // optional
-    __user: jar.selfId, // optional
+    __user: jar.selfId,
     jazoest: '2' + Array.from(jar.token).map((char) => char.charCodeAt(0)).join(''),
     __a: 1
   }, form)

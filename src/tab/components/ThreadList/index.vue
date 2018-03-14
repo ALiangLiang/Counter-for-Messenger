@@ -384,6 +384,9 @@ export default {
 </script>
 
 <style>
+.el-table__row {
+  cursor: pointer;
+}
 .el-table__expand-icon>.el-icon-arrow-right:before {
   color: #f03c24;
   font-size: 16px;
