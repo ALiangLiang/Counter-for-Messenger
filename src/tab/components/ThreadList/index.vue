@@ -279,6 +279,7 @@ export default {
         const userNameSize = 40
         const avatarPosition = [ [ 100, 220 ], [ imageSize.width - avatarWidth - 100, 220 ] ]
         const lineHeight = 10
+        const fontSet = 'Verdana, Microsoft JhengHei'
 
         // draw sharing image
         const canvas = document.createElement('canvas')
@@ -294,20 +295,20 @@ export default {
         ctx.drawImage(leftImg, avatarPosition[0][0], avatarPosition[0][1], avatarWidth, avatarWidth)
         ctx.drawImage(rightImg, avatarPosition[1][0], avatarPosition[1][1], avatarWidth, avatarWidth)
         // write user name
-        ctx.font = userNameSize + 'px Verdana, Microsoft JhengHei'
+        ctx.font = `${userNameSize}px ${fontSet}`
         ctx.fillStyle = '#fff'
         ctx.textAlign = 'center'
         ctx.fillText(leftUser.name, avatarPosition[0][0] + avatarWidth / 2, avatarPosition[0][1] + avatarWidth + userNameSize + 10)
         ctx.fillText(rightUser.name, avatarPosition[1][0] + avatarWidth / 2, avatarPosition[1][1] + avatarWidth + userNameSize + 10)
         // write message count
-        ctx.font = '60px Verdana, Microsoft JhengHei'
+        ctx.font = `60px ${fontSet}`
         ctx.fillStyle = '#fff'
         ctx.textAlign = 'center'
         let textOffsetY = 200
         ctx.fillText('They have', imageSize.width / 2, textOffsetY += 60 + lineHeight)
-        ctx.font = '90px Verdana, Microsoft JhengHei'
+        ctx.font = `90px ${fontSet}`
         ctx.fillText(thread.messageCount, imageSize.width / 2, textOffsetY += 90 + lineHeight)
-        ctx.font = '60px Verdana, Microsoft JhengHei'
+        ctx.font = `60px ${fontSet}`
         ctx.fillText('messages!!', imageSize.width / 2, textOffsetY += 60 + lineHeight)
         // write rank
         ctx.fillText(`${leftUser.name} is #${index + 1} of ${rightUser.name}'s friends`, imageSize.width / 2, textOffsetY += 60 + 30)
