@@ -63,7 +63,13 @@
       <el-table-column prop="characterCount" sortable :label="__('threadCharacterCount')"
         width="120"> </el-table-column>
       <el-table-column :label="__('threadOperation')" width="300">
-        <template slot-scope="{ row }">
+        <template slot-scope="{ row, $index }">
+          <el-button
+            @click="shareOnFb(row, $index)"
+            type="text" size="small">
+            <icon name="facebook-f"></icon>
+            Share on Facebook
+          </el-button>
           <el-button
             :disabled="!row.needUpdate"
             :loading="row.isLoading"
@@ -88,8 +94,10 @@
 <script>
 import 'vue-awesome/icons/cloud-download'
 import 'vue-awesome/icons/download'
+import 'vue-awesome/icons/facebook-f'
 import Icon from 'vue-awesome/components/Icon'
 import _get from 'lodash/get'
+import { toQuerystring, uploadImage } from '../../lib/util.js'
 import Thread from '../../classes/Thread.js'
 import fetchThreadDetail from '../../lib/fetchThreadDetail.js'
 import downloadMessages from '../../lib/downloadMessages.js'
@@ -103,6 +111,7 @@ import {
   changeThreadColor,
   changeThreadEmoji
 } from '../../lib/changeThreadSetting.js'
+import { fb } from '../../../../core/.env.js'
 const __ = chrome.i18n.getMessage
 
 export default {
@@ -260,6 +269,107 @@ export default {
         .then(() => thread.reload(this.jar))
         .catch((err) => console.error(err))
     },
+    async shareOnFb (thread, index) {
+      function loadImage (src) {
+        const img = new Image()
+        img.crossOrigin = 'Anonymous'
+        img.src = src
+        return new Promise((resolve, reject) => (img.onload = () => resolve(img)))
+      }
+
+      try {
+        /** @see https://developers.facebook.com/docs/sharing/best-practices/#images **/
+        const imageSize = { width: 1200, height: 630 }
+
+        const avatarWidth = 150
+        const userNameSize = 40
+        const avatarPosition = [ [ 100, 220 ], [ imageSize.width - avatarWidth - 100, 220 ] ]
+        const lineHeight = 10
+
+        // draw sharing image
+        const canvas = document.createElement('canvas')
+        canvas.width = imageSize.width
+        canvas.height = imageSize.height
+        const ctx = canvas.getContext('2d')
+        // paste background
+        const img = await loadImage('../assets/background-1200x630.png')
+        ctx.drawImage(img, 0, 0)
+        const [ leftUser, rightUser ] = thread.participants.map((participant) => participant.user)
+        const [ leftImg, rightImg ] = await Promise.all([ loadImage(leftUser.avatar), loadImage(rightUser.avatar) ])
+        // placed avatars
+        ctx.drawImage(leftImg, avatarPosition[0][0], avatarPosition[0][1], avatarWidth, avatarWidth)
+        ctx.drawImage(rightImg, avatarPosition[1][0], avatarPosition[1][1], avatarWidth, avatarWidth)
+        // write user name
+        ctx.font = userNameSize + 'px Verdana, Microsoft JhengHei'
+        ctx.fillStyle = '#fff'
+        ctx.textAlign = 'center'
+        ctx.fillText(leftUser.name, avatarPosition[0][0] + avatarWidth / 2, avatarPosition[0][1] + avatarWidth + userNameSize)
+        ctx.fillText(rightUser.name, avatarPosition[1][0] + avatarWidth / 2, avatarPosition[1][1] + avatarWidth + userNameSize)
+        // write text
+        ctx.font = '60px Verdana, Microsoft JhengHei'
+        ctx.fillStyle = '#fff'
+        ctx.textAlign = 'center'
+        let textOffsetY = 200
+        if (thread.characterCount) {
+          ctx.fillText(`They have ${thread.messageCount} messages`, imageSize.width / 2, textOffsetY += 60 + lineHeight)
+          ctx.font = '90px Verdana, Microsoft JhengHei'
+          ctx.fillText(`and ${thread.characterCount} characters!!`, imageSize.width / 2, textOffsetY += 90 + lineHeight)
+        } else {
+          ctx.fillText('They have', imageSize.width / 2, textOffsetY += 60 + lineHeight)
+          ctx.font = '90px Verdana, Microsoft JhengHei'
+          ctx.fillText(thread.messageCount, imageSize.width / 2, textOffsetY += 90 + lineHeight)
+          ctx.font = '60px Verdana, Microsoft JhengHei'
+          ctx.fillText('messages!!', imageSize.width / 2, textOffsetY += 60 + lineHeight)
+        }
+        ctx.fillText(`${leftUser.name} is #${index + 1} of ${rightUser.name}'s friends`, imageSize.width / 2, textOffsetY += 60 + 30)
+
+        // output blob
+        const blob = await new Promise((resolve, reject) => canvas.toBlob(resolve))
+
+        // upload image to fb
+        const metadata = (await uploadImage(this.jar, blob)).payload.metadata[0]
+
+        // construct fb sharing dialog url
+        const channelUrlHash = toQuerystring({
+          cb: 'f2c3a60a05f73a4',
+          domain: fb.domain,
+          origin: fb.website,
+          relation: 'opener'
+        })
+        const channelUrl = 'http://staticxx.facebook.com/connect/xd_arbiter/r/Ms1VZf1Vg1J.js?version=42#' + channelUrlHash
+        const next = `${channelUrl}&relation=opener&frame=f236fd3a78b853&result=%22xxRESULTTOKENxx%22`
+        const qs = toQuerystring({
+          action_properties: {
+            object: {
+              'og:url': fb.website,
+              'og:title': __('extName'),
+              'og:description': __('extDescription'),
+              'og:image': metadata.src,
+              'og:image:width': imageSize.width,
+              'og:image:height': imageSize.height,
+              'og:image:type': metadata.filetype
+            }
+          },
+          action_type: 'og.likes', // Coz "og.shares" cannot show bigger preview image, use "og.likes" instead of "og.shares".
+          app_id: fb.id,
+          channel_url: channelUrl,
+          e2e: {},
+          locale: __('@@ui_locale'),
+          mobile_iframe: false,
+          next,
+          sdk: 'joey',
+          version: fb.version
+        })
+        const url = `https://www.facebook.com/${fb.version}/dialog/share_open_graph?${qs}`
+
+        // create fb dialog page
+        chrome.tabs.create({
+          url
+        })
+      } catch (err) {
+        console.error(err)
+      }
+    },
     getSummaries ({ columns, data }) {
       const totalMessageCount = data.reduce((sum, row) => row.messageCount + sum, 0)
       const totalTextCount = data.reduce((sum, row) => row.characterCount + sum, 0)
@@ -305,6 +415,9 @@ export default {
 </script>
 
 <style>
+.el-table__row {
+  cursor: pointer;
+}
 .el-table__expand-icon>.el-icon-arrow-right:before {
   color: #f03c24;
   font-size: 16px;

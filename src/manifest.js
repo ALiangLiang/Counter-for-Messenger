@@ -38,11 +38,11 @@ const manifest = {
       'js/chartjs.js',
       'js/content.js'
     ],
-    matches: ['*://*.facebook.com/*'],
+    matches: ['*://*.facebook.com/'],
     run_at: 'document_end'
   }],
   default_locale: 'en',
-  content_security_policy: "script-src 'self' 'unsafe-eval' https://www.google-analytics.com https://www.google.com https://checkout.google.com; object-src 'self'"
+  content_security_policy: "script-src 'self' 'unsafe-eval' https://connect.facebook.net https://www.google-analytics.com https://www.google.com https://checkout.google.com; object-src 'self'"
 }
 
 const optionPage = 'pages/options.html'

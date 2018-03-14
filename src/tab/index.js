@@ -1,4 +1,6 @@
+// Vue.js
 import Vue from 'vue'
+// Google analytics
 import VueAnalytics from 'vue-analytics'
 // Import element-ui components.
 import { Slider, Loading, Button, Table, TableColumn, Tag, Tooltip, DatePicker,

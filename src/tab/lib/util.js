@@ -9,6 +9,15 @@ export function get (url) {
   })
 }
 
+export function toQuerystring (form) {
+  return Object.keys(form).map(function (key) {
+    const val = (typeof form[key] === 'object')
+      ? JSON.stringify(form[key]) : form[key]
+    return encodeURIComponent(key) +
+      ((form[key] !== undefined) ? ('=' + encodeURIComponent(val)) : '')
+  }).join('&')
+}
+
 // http post
 export function post (url, form, headers) {
   let body
@@ -16,12 +25,7 @@ export function post (url, form, headers) {
     body = form
   } else {
     // stringify value of form.
-    body = Object.keys(form).map(function (key) {
-      const val = (typeof form[key] === 'object')
-        ? JSON.stringify(form[key]) : form[key]
-      return encodeURIComponent(key) +
-        ((form[key] !== undefined) ? ('=' + encodeURIComponent(val)) : '')
-    }).join('&')
+    body = toQuerystring(form)
   }
 
   return fetchService(url, {
@@ -41,15 +45,13 @@ export function graphql (url, form, headers = {
     .then((body) => JSON.parse(body.replace(/for\s*\(\s*;\s*;\s*\)\s*;\s*/, '').split('\n')[0]))
 }
 
-export function uploadImage (jar, thread, image) {
+export function uploadImage (jar, image) {
   const formData = new FormData()
   formData.append('fb_dtsg', jar.token)
   formData.append('images_only', true)
   formData.append('attachment[]', image)
   const params = getMessengerApiForm({}, jar)
-  const querystring = Object.keys(params)
-    .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(params[k]))
-    .join('&')
+  const querystring = toQuerystring(params)
 
   return graphql('https://upload.facebook.com/ajax/mercury/upload.php?' + querystring, formData, {})
 }
@@ -58,7 +60,7 @@ export function getMessengerApiForm (form, jar) {
   return Object.assign({
     fb_dtsg: jar.token, // It's required!!
     __rev: jar.revision, // optional
-    __user: jar.selfId, // optional
+    __user: jar.selfId,
     jazoest: '2' + Array.from(jar.token).map((char) => char.charCodeAt(0)).join(''),
     __a: 1
   }, form)
