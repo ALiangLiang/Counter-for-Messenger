@@ -64,27 +64,23 @@
         width="120"> </el-table-column>
       <el-table-column :label="__('threadOperation')" width="300">
         <template slot-scope="{ row, $index }">
-          <el-button
+          <operation-button
             @click="shareOnFb(row, $index)"
-            type="text" size="small">
-            <icon name="facebook-f"></icon>
-            Share on Facebook
-          </el-button>
-          <el-button
-            :disabled="!row.needUpdate"
-            :loading="row.isLoading"
+            icon="share-alt"
+            text="Share on Facebook">
+          </operation-button>
+          <operation-button
             @click="fetchMessages(row)"
-            type="text" size="small">
-            <icon name="cloud-download"></icon>
-            {{ (row.needUpdate) ? __('importMessageHistory') : __('importedMessageHistory')}}
-          </el-button>
-          <el-button
+            icon="cloud-download"
+            :text="(row.needUpdate) ? __('importMessageHistory') : __('importedMessageHistory')"
+            :disabled="!row.needUpdate"
+            :loading="row.isLoading">
+          </operation-button>
+          <operation-button
             @click="downloadHistory(row)"
-            type="text"
-            size="small">
-            <icon name="download"></icon>
-            {{ __('downloadMessageHistory') }}
-          </el-button>
+            icon="download"
+            :text="__('downloadMessageHistory')">
+          </operation-button>
         </template>
       </el-table-column>
     </el-table>
@@ -92,10 +88,6 @@
 </template>
 
 <script>
-import 'vue-awesome/icons/cloud-download'
-import 'vue-awesome/icons/download'
-import 'vue-awesome/icons/facebook-f'
-import Icon from 'vue-awesome/components/Icon'
 import _get from 'lodash/get'
 import { toQuerystring, uploadImage } from '../../lib/util.js'
 import Thread from '../../classes/Thread.js'
@@ -103,6 +95,7 @@ import fetchThreadDetail from '../../lib/fetchThreadDetail.js'
 import downloadMessages from '../../lib/downloadMessages.js'
 import DetailTemplate from './DetailTemplate'
 import NameTemplate from './NameTemplate'
+import OperationButton from './OperationButton'
 import {
   changeThreadName,
   changeThreadNickname,
@@ -119,13 +112,14 @@ export default {
 
   props: [ 'value', 'keyword', 'page', 'jar', 'db' ],
 
-  components: { Icon, DetailTemplate, NameTemplate },
+  components: { DetailTemplate, NameTemplate, OperationButton },
 
   data () {
     return {
       threadsPerPage: 10,
       currentPage: this.page,
       selectedThreads: [],
+      test: false,
       typeFilters: [ 'GROUP', 'USER', 'PAGE', 'REDUCEDMESSAGINGACTOR' ]
         .map((type) => ({
           text: this.determineThreadType(type).name,
@@ -303,24 +297,19 @@ export default {
         ctx.font = userNameSize + 'px Verdana, Microsoft JhengHei'
         ctx.fillStyle = '#fff'
         ctx.textAlign = 'center'
-        ctx.fillText(leftUser.name, avatarPosition[0][0] + avatarWidth / 2, avatarPosition[0][1] + avatarWidth + userNameSize)
-        ctx.fillText(rightUser.name, avatarPosition[1][0] + avatarWidth / 2, avatarPosition[1][1] + avatarWidth + userNameSize)
-        // write text
+        ctx.fillText(leftUser.name, avatarPosition[0][0] + avatarWidth / 2, avatarPosition[0][1] + avatarWidth + userNameSize + 10)
+        ctx.fillText(rightUser.name, avatarPosition[1][0] + avatarWidth / 2, avatarPosition[1][1] + avatarWidth + userNameSize + 10)
+        // write message count
         ctx.font = '60px Verdana, Microsoft JhengHei'
         ctx.fillStyle = '#fff'
         ctx.textAlign = 'center'
         let textOffsetY = 200
-        if (thread.characterCount) {
-          ctx.fillText(`They have ${thread.messageCount} messages`, imageSize.width / 2, textOffsetY += 60 + lineHeight)
-          ctx.font = '90px Verdana, Microsoft JhengHei'
-          ctx.fillText(`and ${thread.characterCount} characters!!`, imageSize.width / 2, textOffsetY += 90 + lineHeight)
-        } else {
-          ctx.fillText('They have', imageSize.width / 2, textOffsetY += 60 + lineHeight)
-          ctx.font = '90px Verdana, Microsoft JhengHei'
-          ctx.fillText(thread.messageCount, imageSize.width / 2, textOffsetY += 90 + lineHeight)
-          ctx.font = '60px Verdana, Microsoft JhengHei'
-          ctx.fillText('messages!!', imageSize.width / 2, textOffsetY += 60 + lineHeight)
-        }
+        ctx.fillText('They have', imageSize.width / 2, textOffsetY += 60 + lineHeight)
+        ctx.font = '90px Verdana, Microsoft JhengHei'
+        ctx.fillText(thread.messageCount, imageSize.width / 2, textOffsetY += 90 + lineHeight)
+        ctx.font = '60px Verdana, Microsoft JhengHei'
+        ctx.fillText('messages!!', imageSize.width / 2, textOffsetY += 60 + lineHeight)
+        // write rank
         ctx.fillText(`${leftUser.name} is #${index + 1} of ${rightUser.name}'s friends`, imageSize.width / 2, textOffsetY += 60 + 30)
 
         // output blob
@@ -422,4 +411,16 @@ export default {
   color: #f03c24;
   font-size: 16px;
 }
+.collapse {
+  transition: all 500ms ease;
+  width: 0px;
+  overflow: hidden;
+  display: inline-block;
+}
+.collapse.active {
+  width: auto;
+}
+</style>
+
+<style scoped>
 </style>
