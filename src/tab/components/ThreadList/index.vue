@@ -63,9 +63,9 @@
       <el-table-column prop="characterCount" sortable :label="__('threadCharacterCount')"
         width="120"> </el-table-column>
       <el-table-column :label="__('threadOperation')" width="300">
-        <template slot-scope="{ row }">
+        <template slot-scope="{ row, $index }">
           <el-button
-            @click="shareOnFb(row)"
+            @click="shareOnFb(row, $index)"
             type="text" size="small">
             <icon name="facebook-f"></icon>
             Share on Facebook
@@ -269,7 +269,7 @@ export default {
         .then(() => thread.reload(this.jar))
         .catch((err) => console.error(err))
     },
-    async shareOnFb (thread) {
+    async shareOnFb (thread, index) {
       function loadImage (src) {
         const img = new Image()
         img.crossOrigin = 'Anonymous'
@@ -281,16 +281,47 @@ export default {
         /** @see https://developers.facebook.com/docs/sharing/best-practices/#images **/
         const imageSize = { width: 1200, height: 630 }
 
+        const avatarWidth = 150
+        const userNameSize = 40
+        const avatarPosition = [ [ 100, 220 ], [ imageSize.width - avatarWidth - 100, 220 ] ]
+        const lineHeight = 10
+
         // draw sharing image
         const canvas = document.createElement('canvas')
         canvas.width = imageSize.width
         canvas.height = imageSize.height
         const ctx = canvas.getContext('2d')
+        // paste background
         const img = await loadImage('../assets/background-1200x630.png')
         ctx.drawImage(img, 0, 0)
-        const [ leftImg, rightImg ] = await Promise.all(thread.participants.map((participant) => loadImage(participant.user.avatar)))
-        ctx.drawImage(leftImg, 100, 100)
-        ctx.drawImage(rightImg, 300, 100)
+        const [ leftUser, rightUser ] = thread.participants.map((participant) => participant.user)
+        const [ leftImg, rightImg ] = await Promise.all([ loadImage(leftUser.avatar), loadImage(rightUser.avatar) ])
+        // placed avatars
+        ctx.drawImage(leftImg, avatarPosition[0][0], avatarPosition[0][1], avatarWidth, avatarWidth)
+        ctx.drawImage(rightImg, avatarPosition[1][0], avatarPosition[1][1], avatarWidth, avatarWidth)
+        // write user name
+        ctx.font = userNameSize + 'px Verdana, Microsoft JhengHei'
+        ctx.fillStyle = '#fff'
+        ctx.textAlign = 'center'
+        ctx.fillText(leftUser.name, avatarPosition[0][0] + avatarWidth / 2, avatarPosition[0][1] + avatarWidth + userNameSize)
+        ctx.fillText(rightUser.name, avatarPosition[1][0] + avatarWidth / 2, avatarPosition[1][1] + avatarWidth + userNameSize)
+        // write text
+        ctx.font = '60px Verdana, Microsoft JhengHei'
+        ctx.fillStyle = '#fff'
+        ctx.textAlign = 'center'
+        let textOffsetY = 200
+        if (thread.characterCount) {
+          ctx.fillText(`They have ${thread.messageCount} messages`, imageSize.width / 2, textOffsetY += 60 + lineHeight)
+          ctx.font = '90px Verdana, Microsoft JhengHei'
+          ctx.fillText(`and ${thread.characterCount} characters!!`, imageSize.width / 2, textOffsetY += 90 + lineHeight)
+        } else {
+          ctx.fillText('They have', imageSize.width / 2, textOffsetY += 60 + lineHeight)
+          ctx.font = '90px Verdana, Microsoft JhengHei'
+          ctx.fillText(thread.messageCount, imageSize.width / 2, textOffsetY += 90 + lineHeight)
+          ctx.font = '60px Verdana, Microsoft JhengHei'
+          ctx.fillText('messages!!', imageSize.width / 2, textOffsetY += 60 + lineHeight)
+        }
+        ctx.fillText(`${leftUser.name} is #${index + 1} of ${rightUser.name}'s friends`, imageSize.width / 2, textOffsetY += 60 + 30)
 
         // output blob
         const blob = await new Promise((resolve, reject) => canvas.toBlob(resolve))
