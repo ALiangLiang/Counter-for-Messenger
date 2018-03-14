@@ -24,10 +24,8 @@
     </thread-list>
   </div>
 </template>
+
 <script>
-import 'vue-awesome/icons/spinner'
-import 'vue-awesome/icons/cloud-download'
-import 'vue-awesome/icons/download'
 import _get from 'lodash/get'
 import Thread from '../classes/Thread.js'
 import ThreadList from './ThreadList'

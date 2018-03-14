@@ -34,13 +34,18 @@
             :inactive-text="__('showTotal')"></el-switch>
         </span>
       </el-menu-item>
+      <el-menu-item index="3" @click="generateSharingDialog">
+        Generate Image
+      </el-menu-item>
     </el-menu>
     <bar-chart
-     :chart-data="chartData"
-     :styles="chartContainerStyles"
-     :height="chartHeight"
-     :options="barOption">
+      ref="barChart"
+      :chart-data="chartData"
+      :styles="chartContainerStyles"
+      :height="chartHeight"
+      :options="barOption">
     </bar-chart>
+    <sharing-dialog ref="sharingDialog" :canvas="sharingCanvas" />
     <el-aside width="50px">
       <el-tooltip class="item" effect="dark" :content="__('drapToLookOtherUsers')" placement="left">
         <el-slider
@@ -59,6 +64,7 @@
 import { Message } from 'element-ui'
 import ColorHash from 'color-hash'
 import BarChart from './BarChart.js'
+import SharingDialog from './SharingDialog.vue'
 import fetchThreadDetail from '../lib/fetchThreadDetail.js'
 const __ = chrome.i18n.getMessage
 const colorHash = new ColorHash({lightness: [0.35, 0.5, 0.65]})
@@ -66,7 +72,7 @@ const colorHash = new ColorHash({lightness: [0.35, 0.5, 0.65]})
 export default {
   name: 'ChartPage',
 
-  components: { BarChart },
+  components: { BarChart, SharingDialog },
 
   props: [ 'ctx' ],
 
@@ -106,15 +112,18 @@ export default {
           xAxes: [{ stacked: true }],
           yAxes: [{ stacked: true, barPercentage: 0.7 }]
         }
-      }
+      },
+      sharingCanvas: null
     }
   },
+
   async created () {
     this.$nextTick(() => window.addEventListener('resize', () =>
       (this.chartHeight = document.documentElement.clientHeight - 130)))
     this.renderChart()
     this.changeChartTitle()
   },
+
   watch: {
     chartHeight (height) {
       this.chartContainerStyles.height = height + 'px'
@@ -129,9 +138,9 @@ export default {
       this.renderChart()
     }
   },
-  computed: {
-    amountOfMaxDisplay () { return this.chartHeight / 20 }
-  },
+
+  computed: { amountOfMaxDisplay () { return this.chartHeight / 20 } },
+
   methods: {
     changeChartTitle () {
       const specs = [
@@ -143,6 +152,11 @@ export default {
     clickMenuItemHandle (refName) {
       const itemVm = this.$refs[refName]
       itemVm.$emit('input', !itemVm.value)
+    },
+    generateSharingDialog () {
+      this.sharingCanvas = this.$refs.barChart.canvas
+      console.log(this.sharingCanvas)
+      this.$refs.sharingDialog.show()
     },
     async renderChart () {
       const startSliceIndex = this.threads.length - Number(this.rank)

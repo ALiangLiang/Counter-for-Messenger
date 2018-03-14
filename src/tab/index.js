@@ -3,7 +3,7 @@ import VueAnalytics from 'vue-analytics'
 // Import element-ui components.
 import { Slider, Loading, Button, Table, TableColumn, Tag, Tooltip, DatePicker,
   Pagination, Switch, Container, Menu, MenuItem, Header, Aside, Main, Footer,
-  MessageBox, Input, Form, FormItem } from 'element-ui'
+  MessageBox, Input, Form, FormItem, Dialog } from 'element-ui'
 // Customize element-ui theme. Let this style more like FB.
 import '../../element-variables.scss'
 /**
@@ -38,7 +38,7 @@ locale.use((mainLangName === 'zh') ? zhLocale : enLocale)
 // Import element-ui components.
 const elements = [ Slider, Loading, Button, Table, TableColumn, Tag, Tooltip,
   DatePicker, Pagination, Switch, Container, Menu, MenuItem, Header, Aside,
-  Main, Footer, Input, Form, FormItem ]
+  Main, Footer, Input, Form, FormItem, Dialog ]
 elements.forEach((el) => Vue.use(el, { locale }))
 
 // In Chrome extension, must close checking protocol.
@@ -57,11 +57,6 @@ Vue.prototype.$message = MessageBox
 Vue.prototype.$alert = MessageBox.alert
 Vue.prototype.$confirm = MessageBox.confirm
 Vue.prototype.$prompt = MessageBox.prompt
-
-// copy from https://github.com/GoogleChrome/chrome-app-samples/blob/master/samples/managed-in-app-payments/scripts/buy.js
-!(function() { var f=this,g=function(a,d){var c=a.split("."),b=window||f;c[0]in b||!b.execScript||b.execScript("var "+c[0]);for(var e;c.length&&(e=c.shift());)c.length||void 0===d?b=b[e]?b[e]:b[e]={}:b[e]=d};var h=function(a){var d=chrome.runtime.connect("nmmhkkegccagdldgiimedpiccmgmieda",{}),c=!1;d.onMessage.addListener(function(b){c=!0;"response"in b&&!("errorType"in b.response)?a.success&&a.success(b):a.failure&&a.failure(b)});d.onDisconnect.addListener(function(){!c&&a.failure&&a.failure({request:{},response:{errorType:"INTERNAL_SERVER_ERROR"}})});d.postMessage(a)};g("google.payments.inapp.buy",function(a){a.method="buy";h(a)});  // eslint-disable-line
-g("google.payments.inapp.consumePurchase",function(a){a.method="consumePurchase";h(a)});g("google.payments.inapp.getPurchases",function(a){a.method="getPurchases";h(a)});g("google.payments.inapp.getSkuDetails",function(a){a.method="getSkuDetails";h(a)}); })(); // eslint-disable-line
-// End copy
 
 /* eslint-disable no-new */
 new Vue({
