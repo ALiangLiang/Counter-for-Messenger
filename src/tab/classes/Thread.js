@@ -3,6 +3,7 @@ import fetchThread from './../lib/fetchThread.js'
 import User from './User.js'
 import _set from 'lodash/set'
 import _get from 'lodash/get'
+const __ = chrome.i18n.getMessage
 
 export default class Thread {
   constructor (data) {
@@ -51,7 +52,7 @@ export default class Thread {
           messageSender = {
             user: new User({
               id: participantId,
-              name: null,
+              name: `<${__('unknown')}>`,
               type: null,
               url: null
             }),
