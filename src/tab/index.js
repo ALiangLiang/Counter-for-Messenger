@@ -24,6 +24,9 @@ import fetchThreads from './lib/fetchThreads.js'
 import { getJar } from './lib/util.js'
 import Indexeddb from '../ext/Indexeddb.js'
 import storage from '../ext/storage.js'
+import Queue from 'promise-queue'
+
+const _queue = new Queue(10, Infinity)
 
 // Alias i18n function.
 const __ = chrome.i18n.getMessage
@@ -179,26 +182,31 @@ new Vue({
     }
 
     // fetch threads information
-    try {
-      this.loading.text = __('fetchingThreads')
+    this.loading.text = __('fetchingThreads')
+    await new Promise((resolve, reject) => {
       this.ctx.db.onload = async () => {
-        const [ threads, cachedThreads ] = await Promise.all([
-          fetchThreads(this.ctx.jar),
-          this.ctx.db.getAll()
-        ])
-        this.ctx.threads = threads.map((thread) => {
-          const mappingCacheThread = cachedThreads.find((cachedThread) =>
-            cachedThread.id === thread.id)
-          if (mappingCacheThread) {
-            thread.analyzeMessages(mappingCacheThread.messages)
-          }
-          thread.needUpdate = (thread.messageCount !== _get(mappingCacheThread, 'messages.length'))
-          return thread
-        })
-        this.loading.close()
+        try {
+          const [ threads, cachedThreads ] = await Promise.all([
+            fetchThreads(this.ctx.jar),
+            this.ctx.db.getAll()
+          ])
+          this.ctx.threads = threads.map((thread) => {
+            const mappingCacheThread = cachedThreads.find((cachedThread) =>
+              cachedThread.id === thread.id)
+            if (mappingCacheThread) {
+              thread.analyzeMessages(mappingCacheThread.messages)
+            }
+            thread.needUpdate = (thread.messageCount !== _get(mappingCacheThread, 'messages.length'))
+            return thread
+          })
+          this.loading.close()
+          return resolve()
+        } catch (err) {
+          return reject(err)
+        }
       }
-    } catch (err) {
-      console.error(err)
-    }
+    })
+
+    this.ctx.threads.forEach((thread) => _queue.add(thread.loadDetail.bind(thread, this.ctx, this.$set)))
   }
 })

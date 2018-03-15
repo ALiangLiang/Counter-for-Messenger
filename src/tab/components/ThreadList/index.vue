@@ -93,8 +93,6 @@
 <script>
 import _get from 'lodash/get'
 import { toQuerystring, uploadImage } from '../../lib/util.js'
-import Thread from '../../classes/Thread.js'
-import fetchThreadDetail from '../../lib/fetchThreadDetail.js'
 import downloadMessages from '../../lib/downloadMessages.js'
 import DetailTemplate from './DetailTemplate'
 import NameTemplate from './NameTemplate'
@@ -158,71 +156,14 @@ export default {
     async fetchSelectedThreads () {
       this.$ga.event('ThreadDetails', 'fetch', 'length', this.selectedThreads.length)
 
-      const allCacheThreads = await this.db.getAll()
-      const results = await Promise.all(this.selectedThreads.map(async (thread) => {
-        thread.isLoading = true
-
-        const cachedThread = allCacheThreads.find((cacheThread) =>
-          cacheThread.id === thread.id)
-
-        let messageLimit
-        if (cachedThread) {
-          const cachedThreadMessagesLength = _get(cachedThread, 'messages.length')
-          if (cachedThreadMessagesLength !== undefined) {
-            if (cachedThreadMessagesLength >= thread.messageCount) { // No need to update cache.
-              return []
-            }
-            messageLimit = thread.messageCount - cachedThreadMessagesLength
-          }
-        }
-
-        if (!thread.messages) {
-          const result = await fetchThreadDetail({
-            jar: this.jar, thread, $set: this.$set, messageLimit
-          })
-          const updatedMessages = (_get(cachedThread, 'messages') || []).concat(result)
-          this.db.put({ id: thread.id, messages: updatedMessages })
-          return [thread, updatedMessages]
-        }
-        return [thread]
-      }))
-
-      results.forEach(([thread, updatedMessages]) => {
-        if (updatedMessages) {
-          thread.characterCount = Thread.culCharacterCount(updatedMessages)
-          thread.needUpdate = false
-          thread.isLoading = false
-        }
-      })
+      const ctx = { db: this.db, jar: this.jar }
+      return this.selectedThreads.map((thread) => thread.loadDetail(ctx, this.$set))
     },
     async fetchMessages (thread) {
       this.$ga.event('ThreadDetails', 'fetch', 'length', 1)
 
-      thread.isLoading = true
-      const cachedThread = await this.db.get(thread.id)
-      let messageLimit
-      if (cachedThread) {
-        const cachedThreadMessagesLength = _get(cachedThread, 'messages.length')
-        if (cachedThreadMessagesLength !== undefined) {
-          if (cachedThreadMessagesLength === thread.messageCount) { // No need to update cache.
-            thread.isLoading = false
-            return
-          }
-          messageLimit = thread.messageCount - cachedThreadMessagesLength
-        }
-      }
-
-      if (!thread.messages) {
-        const result = await fetchThreadDetail({
-          jar: this.jar, thread, $set: this.$set, messageLimit
-        })
-        thread.messages = (_get(cachedThread, 'messages') || []).concat(result)
-        thread.characterCount = Thread.culCharacterCount(thread.messages)
-        this.db.put({ id: thread.id, messages: thread.messages })
-        thread.needUpdate = false
-        thread.isLoading = false
-      }
-      return thread
+      const ctx = { db: this.db, jar: this.jar }
+      return thread.loadDetail(ctx, this.$set)
     },
     async downloadHistory (thread) {
       this.$ga.event('Thread', 'download')
@@ -254,7 +195,7 @@ export default {
 
       const func = determinFunc()
       const funcArgs = [ this.jar, thread, ...args ]
-      func(...funcArgs)
+      return func(...funcArgs)
         .then((res) => {
           if (res.error) {
             const err = new Error(res.errorDescription)

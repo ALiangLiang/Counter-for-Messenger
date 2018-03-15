@@ -1,3 +1,4 @@
+import fetchThreadDetail from '../lib/fetchThreadDetail.js'
 import fetchThread from './../lib/fetchThread.js'
 import User from './User.js'
 import _set from 'lodash/set'
@@ -20,7 +21,7 @@ export default class Thread {
       : null
   }
 
-  analyzeMessages (messages = this.messages, threads) {
+  analyzeMessages (messages = this.messages) {
     if (!messages) throw new Error('Need messages.')
 
     let characterSum = 0
@@ -42,12 +43,11 @@ export default class Thread {
     Object.keys(participantsStats)
       .forEach((participantId) => {
         const participantStats = participantsStats[participantId]
-        let messageSender = this.getParticipantById(participantId) ||
-        ((threads) ? threads.getUserById(participantId) : null)
+        let messageSender = this.getParticipantById(participantId)
         if (messageSender) {
           messageSender.messageCount = participantStats.messageCount
           messageSender.characterCount = participantStats.characterCount
-        } else { // This sender is not inside the thread.
+        } else {
           messageSender = {
             user: new User({
               id: participantId,
@@ -71,10 +71,41 @@ export default class Thread {
 
   async reload (jar) {
     const newThreadData = await fetchThread(jar, this.id)
-    // TODO: this API cannot load detail of participant information like name, nickname...
+    // This API cannot load detail of participant information like name, nickname...
     // So don't overwrite original participants data.
     delete newThreadData.participants
     Object.assign(this, newThreadData)
+    return this
+  }
+
+  async loadDetail (ctx, $set) {
+    this.isLoading = true
+    const cachedThread = await ctx.db.get(this.id)
+    let messageLimit
+    if (cachedThread) {
+      const cachedThreadMessagesLength = _get(cachedThread, 'messages.length')
+      if (cachedThreadMessagesLength !== undefined) {
+        if (cachedThreadMessagesLength === this.messageCount) { // No need to update cache.
+          this.isLoading = false
+          return
+        }
+        if (!this.messages) {
+          messageLimit = this.messageCount - cachedThreadMessagesLength
+        }
+      }
+    }
+
+    if (!this.messages) {
+      const result = await fetchThreadDetail({
+        jar: ctx.jar, thread: this, $set: $set, messageLimit
+      })
+      this.messages = (_get(cachedThread, 'messages') || []).concat(result)
+      this.characterCount = Thread.culCharacterCount(this.messages)
+      this.analyzeMessages()
+      ctx.db.put({ id: this.id, messages: this.messages })
+      this.needUpdate = false
+    }
+    this.isLoading = false
     return this
   }
 }
