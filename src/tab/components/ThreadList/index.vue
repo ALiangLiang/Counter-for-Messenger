@@ -15,12 +15,13 @@
       :data="tableData.slice((this.currentPage - 1) * this.threadsPerPage, this.currentPage * this.threadsPerPage)"
       :max-height="720"
       show-summary
+      border
       :summary-method="getSummaries"
       @selection-change="onSelect"
       @row-click.self="onRowClick"
       style="width: 100%">
       <el-table-column type="selection" width="55"></el-table-column>
-      <el-table-column type="expand" label="Customize" width="60">
+      <el-table-column type="expand" width="60">
         <template slot-scope="{ row }">
           <detail-template :thread="row" @change="onChange" />
         </template>
@@ -37,7 +38,8 @@
         width="90"
         :filters="typeFilters"
         :filter-method="typeFilterMethod"
-        filter-placement="bottom-end">
+        filter-placement="bottom-end"
+        align="center">
         <template slot-scope="{ row }">
           <el-tag
             :type="determineThreadType(row.type).tagType"
@@ -49,7 +51,8 @@
       <el-table-column
         prop="tag"
         :label="__('threadTag')"
-        width="90">
+        width="90"
+        align="center">
         <template slot-scope="{ row }">
           <el-tag
             :type="determineThreadTag(row.tag).tagType"
@@ -59,9 +62,9 @@
         </template>
       </el-table-column>
       <el-table-column prop="messageCount" sortable :label="__('threadMessageCount')"
-        width="120"> </el-table-column>
+        width="120" align="center"> </el-table-column>
       <el-table-column prop="characterCount" sortable :label="__('threadCharacterCount')"
-        width="120"> </el-table-column>
+        width="120" align="center"> </el-table-column>
       <el-table-column :label="__('threadOperation')" width="300">
         <template slot-scope="{ row, $index }">
           <operation-button
