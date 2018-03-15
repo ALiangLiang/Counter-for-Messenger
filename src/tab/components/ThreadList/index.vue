@@ -26,7 +26,7 @@
           <detail-template :thread="row" @change="onChange" />
         </template>
       </el-table-column>
-      <el-table-column prop="id" sortable label="#" width="150"></el-table-column>
+      <el-table-column prop="id" label="#" width="150"></el-table-column>
       <el-table-column prop="name" :label="__('threadName')" width="210">
         <template slot-scope="{ row }">
           <name-template :thread="row" @change="onChange" />
@@ -61,9 +61,9 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="messageCount" sortable :label="__('threadMessageCount')"
+      <el-table-column prop="messageCount" :label="__('threadMessageCount')"
         width="120" align="center"> </el-table-column>
-      <el-table-column prop="characterCount" sortable :label="__('threadCharacterCount')"
+      <el-table-column prop="characterCount" :label="__('threadCharacterCount')"
         width="120" align="center"> </el-table-column>
       <el-table-column :label="__('threadOperation')" width="300">
         <template slot-scope="{ row, $index }">
