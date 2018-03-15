@@ -52,8 +52,8 @@ module.exports = {
   QA1Content: { message: '甭擔心，這支擴充功能僅會替您將資料從 Messenger 抓到您的本機裝置中，如果您使用的是公共裝置，建議離開前將此擴充功能刪除，或是按下「重置」鈕並關閉頁面。' },
   QA2Title: { message: '如何幫助這支擴充功能？' },
   QA2Content: {
-    message: '歡迎各種捐款來協助我提神改程式XD，或是告訴其他朋友來使用它；如果你也是個開發者或是熱愛新科技，歡迎使用 <a href="$beta_url$" target="_blank">公開測試版本</a>來協助我們在正式發布前，找到錯誤。',
-    placeholders: { beta_url: { content: '$1' } }
+    message: '歡迎各種<a href="$donation_url$" target="_blank">捐款</a>來協助我提神改程式XD，或是告訴其他朋友來使用它；如果你也是個開發者或是熱愛新科技，歡迎使用 <a href="$beta_url$" target="_blank">公開測試版本</a>來協助我們在正式發布前，找到錯誤。',
+    placeholders: { donation_url: { content: '$1' }, beta_url: { content: '$2' } }
   },
   QA3Title: { message: '如何變更 Facebook 帳號' },
   QA3Content: { message: '只要打開 Facebook 頁面，登出並使用另一個帳號登入，再重新整理或開啟這個頁面就可以囉。' },

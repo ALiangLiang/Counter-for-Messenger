@@ -12,7 +12,7 @@
     <h3>{{ __('QA1Title') }}</h3>
     <p>{{ __('QA1Content') }}</p>
     <h3>{{ __('QA2Title') }}</h3>
-    <p v-html="__('QA2Content', [ 'https://chrome.google.com/webstore/detail/flkejcheidpcclcdokndihmnlejfabil' ])"></p>
+    <p v-html="__('QA2Content', [ 'https://www.buymeacoffee.com/ALiangLiang', 'https://chrome.google.com/webstore/detail/flkejcheidpcclcdokndihmnlejfabil' ])"></p>
     <h3>{{ __('QA3Title') }}</h3>
     <p>{{ __('QA3Content') }}</p>
 

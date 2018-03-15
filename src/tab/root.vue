@@ -35,6 +35,12 @@
       <a href="https://github.com/ALiangLiang" target="_blank">
         <icon name="user"></icon> Author: ALiangLiang
       </a>
+      <a href="https://www.paypal.me/ALiangLiang/3" target="_blank">
+        <icon name="paypal"></icon> Donate: Paypel
+      </a>
+      <a href="https://www.buymeacoffee.com/ALiangLiang" target="_blank">
+        <icon name="coffee"></icon> Donate: Buy me a coffee
+      </a>
     </el-footer>
     <div id="fb-root"></div>
   </el-container>
@@ -44,6 +50,8 @@
 import 'vue-awesome/icons/facebook-square'
 import 'vue-awesome/icons/github'
 import 'vue-awesome/icons/user'
+import 'vue-awesome/icons/coffee'
+import 'vue-awesome/icons/paypal'
 import Icon from 'vue-awesome/components/Icon'
 
 export default {

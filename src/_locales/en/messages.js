@@ -52,8 +52,8 @@ module.exports = {
   QA1Content: { message: 'This extension only fetches your data from Messenger to your local device. If your device is not public, your information is safe. On the other hand, if you\'re using a public device, be sure to remove this extension after you finish using this extension. ' },
   QA2Title: { message: 'How can I help Counter of Messenger?' },
   QA2Content: {
-    message: 'You can donate to support our work. You can tell others to try Counter of Messenger. And, if you\'re technically-savvy, you can <a href="$beta_url$" target="_blank">use our beta version</a> and help us find bugs before they\'re released to the public.',
-    placeholders: { beta_url: { content: '$1' } }
+    message: 'You can <a href="$donation_url$" target="_blank">donate</a> to support our work. You can tell others to try Counter of Messenger. And, if you\'re technically-savvy, you can <a href="$beta_url$" target="_blank">use our beta version</a> and help us find bugs before they\'re released to the public.',
+    placeholders: { donation_url: { content: '$1' }, beta_url: { content: '$2' } }
   },
   QA3Title: { message: 'How to switch FB account?' },
   QA3Content: { message: 'Just changing your account in Facebook page and reload this extension page.' },
