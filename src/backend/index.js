@@ -34,6 +34,14 @@ chrome.browserAction.onClicked.addListener(async () => {
   chrome.tabs.create({ url: '/pages/app.html' })
 })
 
+// directly launch app on installed.
+chrome.runtime.onInstalled.addListener(({ reason }) => {
+  if (reason === 'install') {
+    // create app page
+    chrome.tabs.create({ url: '/pages/app.html' })
+  }
+})
+
 // Mark beta version by badge.
 const isRelease = !process.env.ALPHA && !process.env.BETA
 if (!isRelease) {
