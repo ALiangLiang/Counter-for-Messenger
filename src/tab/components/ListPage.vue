@@ -58,6 +58,8 @@ export default {
       return this.$refs['threadList'].fetchSelectedThreads()
     },
     reset () {
+      this.$ga.event('Threads', 'reset')
+
       return this.$confirm(__('resetConfirmContent'), __('resetConfirmTitle'), {
         confirmButtonText: __('sure'),
         showCancelButton: true,

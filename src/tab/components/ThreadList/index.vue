@@ -371,14 +371,6 @@ export default {
     typeFilterMethod (value, row, column) {
       const property = column['property']
       return row[property] === value
-    },
-    reset () {
-      return this.$confirm(__('resetConfirmContent'), __('resetConfirmTitle'), {
-        confirmButtonText: __('sure'),
-        showCancelButton: true,
-        cancelButtonText: __('cancel'),
-        center: true
-      }).then(() => this.db.destroy(), () => null)
     }
   }
 }

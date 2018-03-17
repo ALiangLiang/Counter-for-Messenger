@@ -153,6 +153,8 @@ export default {
       itemVm.$emit('input', !itemVm.value)
     },
     generateSharingDialog () {
+      this.$ga.event('SharingImage', 'generate')
+
       this.$refs.sharingDialog.canvas = this.$refs.barChart.canvas
       this.$refs.sharingDialog.show()
     },

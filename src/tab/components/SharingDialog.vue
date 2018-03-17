@@ -53,6 +53,8 @@ export default {
       this.isVisibled = !this.isVisibled
     },
     async download () {
+      this.$ga.event('SharingImage', 'download')
+
       try {
         const blob = await new Promise((resolve, reject) => this.canvas.toBlob(resolve))
         chrome.downloads.download({
