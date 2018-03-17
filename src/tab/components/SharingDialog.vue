@@ -9,6 +9,10 @@
         <icon name="facebook-f"></icon>
         Share to Facebook
       </el-button>
+      <el-button type="primary" @click="download">
+        <icon name="download"></icon>
+        Download
+      </el-button>
     </div>
     <img :src="src" />
   </el-dialog>
@@ -16,6 +20,7 @@
 
 <script>
 import 'vue-awesome/icons/facebook-f'
+import 'vue-awesome/icons/download'
 import Icon from 'vue-awesome/components/Icon'
 
 export default {
@@ -23,10 +28,9 @@ export default {
 
   components: { Icon },
 
-  props: [ 'canvas' ],
-
   data () {
     return {
+      canvas: null,
       isVisibled: false,
       src: (this.canvas) ? this.canvas.toDataURL() : null
     }
@@ -47,6 +51,17 @@ export default {
     },
     toggle () {
       this.isVisibled = !this.isVisibled
+    },
+    async download () {
+      try {
+        const blob = await new Promise((resolve, reject) => this.canvas.toBlob(resolve))
+        chrome.downloads.download({
+          filename: 'achievement.png',
+          url: URL.createObjectURL(blob)
+        })
+      } catch (err) {
+        console.error(err)
+      }
     }
   }
 }
