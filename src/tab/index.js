@@ -25,6 +25,8 @@ import { getJar } from './lib/util.js'
 import Indexeddb from '../ext/Indexeddb.js'
 import storage from '../ext/storage.js'
 import Queue from 'promise-queue'
+import SocialSharing from 'vue-social-sharing'
+import Icon from 'vue-awesome/components/Icon'
 
 const _queue = new Queue(10, Infinity)
 
@@ -57,6 +59,9 @@ Vue.use(VueAnalytics, {
   set: gaSet,
   router
 })
+
+Vue.component('icon', Icon)
+Vue.use(SocialSharing)
 
 Vue.prototype.$message = MessageBox
 Vue.prototype.$alert = MessageBox.alert

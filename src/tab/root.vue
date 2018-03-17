@@ -15,10 +15,46 @@
         <el-menu-item index="/list">{{ __('listPage') }}</el-menu-item>
         <el-menu-item index="/chart">{{ __('chartPage') }}</el-menu-item>
         <el-menu-item index="">
-          <a class="share-link" target="_blank"
-            href="https://www.facebook.com/sharer/sharer.php?u=https%3A//chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca">
-            <icon name="facebook-square" scale="2" label="Share on Facebook"></icon> {{ __('shareOnFacebook') }}
-          </a>
+          <social-sharing url="https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca"
+            network-tag="div"
+            inline-template>
+            <div>
+              <network network="weibo">
+                <icon name="weibo" label="Share on Weibo"></icon> Weibo
+              </network>
+            </div>
+          </social-sharing>
+        </el-menu-item>
+        <el-menu-item index="">
+          <social-sharing url="https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca"
+            network-tag="div"
+            inline-template>
+            <div>
+              <network network="reddit">
+                <icon name="reddit-square" label="Share on Reddit"></icon> Reddit
+              </network>
+            </div>
+          </social-sharing>
+        </el-menu-item>
+        <el-menu-item index="">
+          <social-sharing url="https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca"
+            network-tag="div"
+            inline-template>
+            <div>
+              <network network="twitter">
+                <icon name="twitter-square" label="Share on Twitter"></icon> Twitter
+              </network>
+            </div>
+          </social-sharing>
+        </el-menu-item>
+        <el-menu-item index="">
+          <social-sharing url="https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca"
+            network-tag="div"
+            inline-template>
+            <network network="facebook">
+              <icon name="facebook-square" label="Share on Facebook"></icon> Facebook
+            </network>
+          </social-sharing>
         </el-menu-item>
       </el-menu>
     </el-header>
@@ -42,24 +78,32 @@
         <icon name="coffee"></icon> Donate: Buy me a coffee
       </a>
     </el-footer>
-    <div id="fb-root"></div>
   </el-container>
 </template>
 
 <script>
 import 'vue-awesome/icons/facebook-square'
+import 'vue-awesome/icons/reddit-square'
+import 'vue-awesome/icons/twitter-square'
+import 'vue-awesome/icons/weibo'
 import 'vue-awesome/icons/github'
 import 'vue-awesome/icons/user'
 import 'vue-awesome/icons/coffee'
 import 'vue-awesome/icons/paypal'
-import Icon from 'vue-awesome/components/Icon'
+
+(function (d, s, id) {
+  var js
+  var fjs = d.getElementsByTagName(s)[0]
+  if (d.getElementById(id)) return
+  js = d.createElement(s); js.id = id
+  js.src = 'https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.12&appId=168178573969360&autoLogAppEvents=1'
+  fjs.parentNode.insertBefore(js, fjs)
+}(document, 'script', 'facebook-jssdk'))
 
 export default {
   name: 'Root',
-  props: [ 'ctx' ],
-  components: {
-    Icon
-  }
+
+  props: [ 'ctx' ]
 }
 </script>
 
@@ -110,7 +154,7 @@ body {
 .share-link>.fa-icon {
   padding-bottom: 5px;
 }
-.el-menu>li:last-child {
+.el-menu>li:nth-last-child(-n+4) {
   float: right;
 }
 </style>
