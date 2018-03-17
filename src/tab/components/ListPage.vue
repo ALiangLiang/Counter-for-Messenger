@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="page">
     <div style="margin: 20px">
       <el-form :inline="true" @submit.native.prevent>
         <el-form-item :label="__('searchInputLabel') + __('colon')">
@@ -73,5 +73,13 @@ export default {
 .el-table__expand-icon>.el-icon-arrow-right:before {
   color: #f03c24;
   font-size: 16px;
+}
+</style>
+
+<style scoped>
+.page {
+  min-width: 1080px;
+  max-width: 70%;
+  margin: auto;
 }
 </style>

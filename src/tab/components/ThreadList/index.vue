@@ -16,22 +16,30 @@
       :max-height="720"
       show-summary
       border
+      class="thread-list-table"
+      header-cell-class-name="thread-list-cell"
+      cell-class-name="thread-list-cell"
       :summary-method="getSummaries"
       @selection-change="onSelect"
       @row-click.self="onRowClick"
       style="width: 100%">
+
       <el-table-column type="selection" width="55"></el-table-column>
+
       <el-table-column type="expand" width="60">
         <template slot-scope="{ row }">
           <detail-template :thread="row" @change="onChange" />
         </template>
       </el-table-column>
+
       <el-table-column prop="id" label="#" width="150"></el-table-column>
-      <el-table-column prop="name" :label="__('threadName')" width="210">
+
+      <el-table-column prop="name" :label="__('threadName')">
         <template slot-scope="{ row }">
           <name-template :thread="row" @change="onChange" />
         </template>
       </el-table-column>
+
       <el-table-column
         prop="type"
         :label="__('threadType')"
@@ -48,6 +56,7 @@
           </el-tag>
         </template>
       </el-table-column>
+
       <el-table-column
         prop="tag"
         :label="__('threadTag')"
@@ -61,16 +70,24 @@
           </el-tag>
         </template>
       </el-table-column>
+
       <el-table-column prop="messageCount" :label="__('threadMessageCount')"
         width="120" align="center"> </el-table-column>
+
       <el-table-column prop="characterCount" :label="__('threadCharacterCount')"
         width="120" align="center"> </el-table-column>
-      <el-table-column :label="__('threadOperation')" width="300">
+
+      <el-table-column :label="__('threadOperation')" width="150">
         <template slot-scope="{ row, $index }">
+          <operation-button
+            @click="generateImage(row, $index)"
+            icon="image"
+            :text="__('generateSharingImage')">
+          </operation-button>
           <operation-button
             @click="shareOnFb(row, $index)"
             icon="share-alt"
-            text="Share on Facebook">
+            :text="__('shareToFb')">
           </operation-button>
           <operation-button
             @click="fetchMessages(row)"
@@ -85,8 +102,10 @@
             :text="__('downloadMessageHistory')">
           </operation-button>
         </template>
+
       </el-table-column>
     </el-table>
+    <sharing-dialog ref="sharingDialog" />
   </div>
 </template>
 
@@ -97,6 +116,7 @@ import downloadMessages from '../../lib/downloadMessages.js'
 import DetailTemplate from './DetailTemplate'
 import NameTemplate from './NameTemplate'
 import OperationButton from './OperationButton'
+import SharingDialog from './../SharingDialog.vue'
 import {
   changeThreadName,
   changeThreadNickname,
@@ -113,7 +133,7 @@ export default {
 
   props: [ 'value', 'keyword', 'page', 'jar', 'db' ],
 
-  components: { DetailTemplate, NameTemplate, OperationButton },
+  components: { DetailTemplate, NameTemplate, OperationButton, SharingDialog },
 
   data () {
     return {
@@ -207,7 +227,14 @@ export default {
         .then(() => thread.reload(this.jar))
         .catch((err) => console.error(err))
     },
-    async shareOnFb (thread, index) {
+    async generateImage (thread, index) {
+      /** @see https://developers.facebook.com/docs/sharing/best-practices/#images **/
+      const imageSize = { width: 1200, height: 630 }
+
+      this.$refs.sharingDialog.canvas = await this.generateCanvas(thread, index, imageSize)
+      this.$refs.sharingDialog.show()
+    },
+    async generateCanvas (thread, index, imageSize) {
       function loadImage (src) {
         const img = new Image()
         img.crossOrigin = 'Anonymous'
@@ -216,9 +243,6 @@ export default {
       }
 
       try {
-        /** @see https://developers.facebook.com/docs/sharing/best-practices/#images **/
-        const imageSize = { width: 1200, height: 630 }
-
         const avatarWidth = 150
         const userNameSize = 40
         const avatarPosition = [ [ 100, 220 ], [ imageSize.width - avatarWidth - 100, 220 ] ]
@@ -256,6 +280,18 @@ export default {
         ctx.fillText('messages!!', imageSize.width / 2, textOffsetY += 60 + lineHeight)
         // write rank
         ctx.fillText(`${leftUser.name} is #${index + 1} of ${rightUser.name}'s friends`, imageSize.width / 2, textOffsetY += 60 + 30)
+
+        return canvas
+      } catch (err) {
+        console.error(err)
+      }
+    },
+    async shareOnFb (thread, index) {
+      /** @see https://developers.facebook.com/docs/sharing/best-practices/#images **/
+      const imageSize = { width: 1200, height: 630 }
+
+      try {
+        const canvas = await this.generateCanvas(thread, index, imageSize)
 
         // output blob
         const blob = await new Promise((resolve, reject) => canvas.toBlob(resolve))
@@ -356,16 +392,7 @@ export default {
   color: #f03c24;
   font-size: 16px;
 }
-.collapse {
-  transition: all 500ms ease;
-  width: 0px;
-  overflow: hidden;
-  display: inline-block;
+.thread-list-cell, .thread-list-table {
+  border-color: #dcdfe6 !important;
 }
-.collapse.active {
-  width: auto;
-}
-</style>
-
-<style scoped>
 </style>
