@@ -3,6 +3,7 @@
     <el-header>
       <el-menu
         router
+        class="navbar"
         mode="horizontal"
         background-color="#0083FF"
         text-color="#f1f1f1"
@@ -18,39 +19,33 @@
           <social-sharing url="https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca"
             network-tag="div"
             inline-template>
-            <div>
-              <network network="weibo">
-                <icon name="share-alt"></icon>
-                Weibo
-                <icon name="weibo" label="Share on Weibo"></icon>
-              </network>
-            </div>
+            <network network="weibo">
+              <icon name="share-alt"></icon>
+              Weibo
+              <icon name="weibo" label="Share on Weibo"></icon>
+            </network>
           </social-sharing>
         </el-menu-item>
         <el-menu-item index="">
           <social-sharing url="https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca"
             network-tag="div"
             inline-template>
-            <div>
-              <network network="reddit">
-                <icon name="share-alt"></icon>
-                Reddit
-                <icon name="reddit-square" label="Share on Reddit"></icon>
-              </network>
-            </div>
+            <network network="reddit">
+              <icon name="share-alt"></icon>
+              Reddit
+              <icon name="reddit-square" label="Share on Reddit"></icon>
+            </network>
           </social-sharing>
         </el-menu-item>
         <el-menu-item index="">
           <social-sharing url="https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca"
             network-tag="div"
             inline-template>
-            <div>
-              <network network="twitter">
-                <icon name="share-alt"></icon>
-                Twitter
-                <icon name="twitter-square" label="Share on Twitter"></icon>
-              </network>
-            </div>
+            <network network="twitter">
+              <icon name="share-alt"></icon>
+              Twitter
+              <icon name="twitter-square" label="Share on Twitter"></icon>
+            </network>
           </social-sharing>
         </el-menu-item>
         <el-menu-item index="">
@@ -163,7 +158,7 @@ body {
 .share-link>.fa-icon {
   padding-bottom: 5px;
 }
-.el-menu>li:nth-last-child(-n+4) {
+.navbar>li:nth-last-child(-n+4) {
   float: right;
 }
 </style>
