@@ -86,6 +86,8 @@ module.exports = {
   emoji: { message: '表情符號' },
   color: { message: '顏色' },
   participants: { message: '成員' },
+  generateSharingImage: { message: '產生分享圖' },
+  shareToFb: { message: '分享到 Facebook' },
   // MuteUntil 元件
   muteUntil: { message: '關閉通知直到' },
   muteForever: { message: '世界末日' },

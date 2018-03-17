@@ -45,7 +45,7 @@
       :height="chartHeight"
       :options="barOption">
     </bar-chart>
-    <sharing-dialog ref="sharingDialog" :canvas="sharingCanvas" />
+    <sharing-dialog ref="sharingDialog" />
     <el-aside width="50px">
       <el-tooltip class="item" effect="dark" :content="__('drapToLookOtherUsers')" placement="left">
         <el-slider
@@ -112,8 +112,7 @@ export default {
           xAxes: [{ stacked: true }],
           yAxes: [{ stacked: true, barPercentage: 0.7 }]
         }
-      },
-      sharingCanvas: null
+      }
     }
   },
 
@@ -154,8 +153,7 @@ export default {
       itemVm.$emit('input', !itemVm.value)
     },
     generateSharingDialog () {
-      this.sharingCanvas = this.$refs.barChart.canvas
-      console.log(this.sharingCanvas)
+      this.$refs.sharingDialog.canvas = this.$refs.barChart.canvas
       this.$refs.sharingDialog.show()
     },
     async renderChart () {

@@ -86,6 +86,8 @@ module.exports = {
   emoji: { message: 'Emoji' },
   color: { message: 'Color' },
   participants: { message: 'Participants' },
+  generateSharingImage: { message: 'Generate Shaing Image' },
+  shareToFb: { message: 'Share on Facebook' },
   // MuteUntil component
   muteUntil: { message: 'Mute until' },
   muteForever: { message: 'End of the world' },
