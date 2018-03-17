@@ -20,7 +20,9 @@
             inline-template>
             <div>
               <network network="weibo">
-                <icon name="weibo" label="Share on Weibo"></icon> Weibo
+                <icon name="share-alt"></icon>
+                Weibo
+                <icon name="weibo" label="Share on Weibo"></icon>
               </network>
             </div>
           </social-sharing>
@@ -31,7 +33,9 @@
             inline-template>
             <div>
               <network network="reddit">
-                <icon name="reddit-square" label="Share on Reddit"></icon> Reddit
+                <icon name="share-alt"></icon>
+                Reddit
+                <icon name="reddit-square" label="Share on Reddit"></icon>
               </network>
             </div>
           </social-sharing>
@@ -42,7 +46,9 @@
             inline-template>
             <div>
               <network network="twitter">
-                <icon name="twitter-square" label="Share on Twitter"></icon> Twitter
+                <icon name="share-alt"></icon>
+                Twitter
+                <icon name="twitter-square" label="Share on Twitter"></icon>
               </network>
             </div>
           </social-sharing>
@@ -52,7 +58,9 @@
             network-tag="div"
             inline-template>
             <network network="facebook">
-              <icon name="facebook-square" label="Share on Facebook"></icon> Facebook
+              <icon name="share-alt"></icon>
+              Facebook
+              <icon name="facebook-square" label="Share on Facebook"></icon>
             </network>
           </social-sharing>
         </el-menu-item>
@@ -82,6 +90,7 @@
 </template>
 
 <script>
+import 'vue-awesome/icons/share-alt'
 import 'vue-awesome/icons/facebook-square'
 import 'vue-awesome/icons/reddit-square'
 import 'vue-awesome/icons/twitter-square'
