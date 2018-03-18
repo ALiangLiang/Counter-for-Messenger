@@ -12,7 +12,9 @@
     </div>
     <el-table
       ref="thread-list"
-      :data="tableData.slice((this.currentPage - 1) * this.threadsPerPage, this.currentPage * this.threadsPerPage)"
+      :data="tableData.slice(
+        (this.currentPage - 1) * this.threadsPerPage,
+        this.currentPage * this.threadsPerPage)"
       :max-height="720"
       show-summary
       border
@@ -24,7 +26,12 @@
       @row-click.self="onRowClick"
       style="width: 100%">
 
-      <el-table-column type="selection" width="55"></el-table-column>
+      <el-table-column
+        type="selection"
+        width="55"
+        class-name="select-box-cell"
+        label-class-name="select-box-cell">
+      </el-table-column>
 
       <el-table-column type="expand" width="60">
         <template slot-scope="{ row }">
@@ -462,6 +469,9 @@ export default {
 }
 .thread-list-cell, .thread-list-table {
   border-color: #dcdfe6 !important;
+}
+.select-box-cell {
+  text-align: center;
 }
 </style>
 
