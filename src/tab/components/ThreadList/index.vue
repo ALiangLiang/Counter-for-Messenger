@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="margin: 20px">
+    <div class="pagination" style="padding: 20px">
       <el-pagination
         @size-change="(val) => (threadsPerPage = val)"
         :current-page.sync="currentPage"
@@ -462,5 +462,13 @@ export default {
 }
 .thread-list-cell, .thread-list-table {
   border-color: #dcdfe6 !important;
+}
+</style>
+
+<style scoped>
+.pagination {
+  padding: 20px;
+  border: 1px solid #dcdfe6;
+  border-bottom: none;
 }
 </style>
