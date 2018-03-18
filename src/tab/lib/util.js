@@ -56,6 +56,12 @@ export function uploadImage (jar, image) {
   return graphql('https://upload.facebook.com/ajax/mercury/upload.php?' + querystring, formData, {})
 }
 
+export async function getAvatar (jar, user) {
+  const response = await get(`https://graph.facebook.com/v2.12/${user.id}/picture?type=large&redirect=false&width=400&height=400&access_token`)
+    .then((res) => res.json())
+  return response.data.url
+}
+
 export function getMessengerApiForm (form, jar) {
   return Object.assign({
     fb_dtsg: jar.token, // It's required!!
@@ -166,4 +172,25 @@ export function generateOfflineThreadingID () {
   const str = ('0000000000000000000000' + value.toString(2)).slice(-22)
   const msgs = ret.toString(2) + str
   return binaryToDecimal(msgs)
+}
+
+export function getTextWidth (text, font) {
+  // shamely copy from https://stackoverflow.com/questions/118241/calculate-text-width-with-javascript#answer-21015393
+  const canvas = getTextWidth.canvas || (getTextWidth.canvas = document.createElement('canvas'))
+  const context = canvas.getContext('2d')
+  context.font = font
+  const metrics = context.measureText(text)
+  return metrics.width
+  // End shamely copy
+}
+
+export function adjustTextSize (text, initialSize, maxTextWidth, fontSet = '',
+  minSize = 30, step = 1) {
+  let fontSize = initialSize
+  while (getTextWidth(text, `${fontSize}px ${fontSet}`) >= maxTextWidth &&
+    fontSize >= minSize) {
+    fontSize -= step
+    console.log(fontSize)
+  }
+  return fontSize
 }

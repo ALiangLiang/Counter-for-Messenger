@@ -25,8 +25,7 @@
       v-model="ctx.threads"
       :keyword="keyword"
       :page="page"
-      :jar="ctx.jar"
-      :db="ctx.db">
+      :ctx="ctx">
     </thread-list>
   </div>
 </template>

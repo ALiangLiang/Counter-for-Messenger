@@ -2,6 +2,7 @@ module.exports = {
   // 擴充套件資訊
   extName: { message: 'Messenger 計數器' },
   extDescription: { message: '統計並排名你在 Messenger 中與朋友的訊息量！也可以順便打包下載訊息記錄。' },
+  unofficial: { message: '非官方' },
 
   // 路由
   listPage: { message: '清單' },
@@ -113,6 +114,16 @@ module.exports = {
   character: { message: '文字數量' },
   me: { message: '我' },
   other: { message: '其他人' },
+
+  // 分享對話視窗
+  countPrefix: { message: '他們之間有' },
+  countPostfix: { message: '  則訊息！！' },
+  rank: {
+    message: '$friend$ 是 $self$ 好友之中的第 $rank$ 名',
+    placeholders: { friend: { content: '$1' }, rank: { content: '$2' }, self: { content: '$3' } }
+  },
+  generatedByPrefix: { message: '使用' },
+  generatedByPostfix: { message: '統計' },
 
   // 錯誤訊息
   fetchError: { message: '啊！撈取資料時發生錯誤。' },
