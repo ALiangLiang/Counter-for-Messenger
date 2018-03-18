@@ -68,18 +68,30 @@
     </el-main>
     <el-footer height="30px" class="offset-footer"></el-footer>
     <el-footer height="30px">
-      <a href="https://github.com/ALiangLiang/Counter-for-Messenger" target="_blank">
-        <icon name="github"></icon> Github
-      </a>
-      <a href="https://github.com/ALiangLiang" target="_blank">
-        <icon name="user"></icon> Author: ALiangLiang
-      </a>
-      <a href="https://www.paypal.me/ALiangLiang/3" target="_blank">
-        <icon name="paypal"></icon> Donate: Paypel
-      </a>
-      <a href="https://www.buymeacoffee.com/ALiangLiang" target="_blank">
-        <icon name="coffee"></icon> Donate: Buy me a coffee
-      </a>
+      <div class="footer-button">
+        <a href="https://github.com/ALiangLiang/Counter-for-Messenger" target="_blank">
+          <icon name="github"></icon>
+          <span>Github</span>
+        </a>
+      </div>
+      <div class="footer-button">
+        <a href="https://github.com/ALiangLiang" target="_blank">
+          <icon name="user"></icon>
+          <span>Author: ALiangLiang</span>
+        </a>
+      </div>
+      <div class="footer-button">
+        <a href="https://www.paypal.me/ALiangLiang/3" target="_blank">
+          <icon name="paypal"></icon>
+          <span>Donate: Paypel</span>
+        </a>
+      </div>
+      <div class="footer-button">
+        <a href="https://www.buymeacoffee.com/ALiangLiang" target="_blank">
+          <icon name="coffee"></icon>
+          <span>Donate: Buy me a coffee</span>
+        </a>
+      </div>
     </el-footer>
   </el-container>
 </template>
@@ -232,5 +244,12 @@ body {
 }
 #define {
   text-align:center;
+}
+.footer-button {
+  display: inline-block;
+  padding-top: 3px;
+}
+.footer-button > a {
+  display: inline-flex;
 }
 </style>

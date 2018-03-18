@@ -59,7 +59,4 @@ export default {
   display: inline-block;
   vertical-align: middle;
 }
-.thread-name {
-  max-width: 150px;
-}
 </style>

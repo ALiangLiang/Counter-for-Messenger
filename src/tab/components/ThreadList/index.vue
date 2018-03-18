@@ -255,7 +255,10 @@ export default {
         const padding = [ 20, 25 ]
         const lineHeight = 15
         const avatarPaddingAside = 70
-        const avatarPos = [ [ avatarPaddingAside, paddingTop ], [ imageSize.width - avatarWidth - avatarPaddingAside, paddingTop ] ]
+        const avatarPos = [
+          [ avatarPaddingAside, paddingTop ],
+          [ imageSize.width - avatarWidth - avatarPaddingAside, paddingTop ]
+        ]
         const fontSet = 'Verdana, Microsoft JhengHei'
         let textOffsetY = paddingTop + 40
 
@@ -416,7 +419,7 @@ export default {
     getSummaries ({ columns, data }) {
       const totalMessageCount = data.reduce((sum, row) => row.messageCount + sum, 0)
       const totalTextCount = data.reduce((sum, row) => row.characterCount + sum, 0)
-      return ['', '', '', '', '', totalMessageCount, totalTextCount]
+      return ['', '', '', '', '', '', totalMessageCount, totalTextCount]
     },
     onSelect (items) {
       this.selectedThreads = items
