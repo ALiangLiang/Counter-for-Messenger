@@ -1,7 +1,13 @@
 <template>
   <div>
-    <div class="pagination" style="padding: 20px">
+    <div
+      :class="{
+        'operation-bar': true,
+        'show-operation-buttons': selectedThreads.length
+      }"
+      style="padding: 20px">
       <el-pagination
+        v-if="!selectedThreads.length"
         @size-change="(val) => (threadsPerPage = val)"
         :current-page.sync="currentPage"
         :page-sizes="[5, 10, 20, 40]"
@@ -9,12 +15,35 @@
         layout="total, sizes, prev, pager, next, jumper"
         :total="tableData.length">
       </el-pagination>
+      <div
+        v-if="selectedThreads.length">
+        <el-button type="primary" class="operation-bar-button" size="small">Clear</el-button>
+        Already select {{ selectedThreads.length }} threads
+        <div class="operation-bar-float-right">
+          <operation-button
+            @click=""
+            type="primary"
+            icon="cloud-download"
+            :text="__('importMessageHistory')"
+            size="mini"
+            class="operation-bar-button"
+            round>
+          </operation-button>
+          <operation-button
+            @click=""
+            type="primary"
+            icon="download"
+            :text="__('downloadMessageHistory')"
+            size="mini"
+            class="operation-bar-button"
+            round>
+          </operation-button>
+        </div>
+      </div>
     </div>
     <el-table
       ref="thread-list"
-      :data="tableData.slice(
-        (this.currentPage - 1) * this.threadsPerPage,
-        this.currentPage * this.threadsPerPage)"
+      :data="slicedTableData"
       :max-height="720"
       show-summary
       border
@@ -117,6 +146,9 @@
 </template>
 
 <script>
+import 'vue-awesome/icons/cloud-download'
+import 'vue-awesome/icons/download'
+import Icon from 'vue-awesome/components/Icon'
 import _get from 'lodash/get'
 import {
   toQuerystring,
@@ -146,7 +178,7 @@ export default {
 
   props: [ 'value', 'keyword', 'page', 'ctx' ],
 
-  components: { DetailTemplate, NameTemplate, OperationButton, SharingDialog },
+  components: { Icon, DetailTemplate, NameTemplate, OperationButton, SharingDialog },
 
   data () {
     return {
@@ -169,6 +201,10 @@ export default {
   },
 
   computed: {
+    slicedTableData () {
+      return this.tableData.slice((this.currentPage - 1) * this.threadsPerPage,
+        this.currentPage * this.threadsPerPage)
+    },
     tableData () {
       const regexPattern = new RegExp(this.keyword, 'i')
       // filter
@@ -476,9 +512,25 @@ export default {
 </style>
 
 <style scoped>
-.pagination {
+.operation-bar {
+  min-height: 32px;
   padding: 20px;
   border: 1px solid #dcdfe6;
   border-bottom: none;
+  transition: color .15s ease, background-color .15s ease;
+}
+.show-operation-buttons {
+  color: white;
+  background-color: rgb(0, 131, 255);
+  transition: color .15s ease, background-color .15s ease;
+}
+.operation-bar-float-right {
+  display: inline-block;
+  float: right;
+  margin-right: 25px;
+}
+.operation-bar-button {
+  padding: 6px;
+  margin-left: 0px;
 }
 </style>
