@@ -1,5 +1,5 @@
 const path = require('path')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const { extract } = require('extract-text-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 exports.htmlPage = (title, filename, chunks, template) => new HtmlWebpackPlugin({
@@ -37,14 +37,13 @@ exports.cssLoaders = (options = {}) => {
         options: Object.assign({}, prePprocessors[key].options, { sourceMap: options.sourceMap })
       })
     }
-    if (options.extract) {
-      loaders[key] = ExtractTextPlugin.extract({ use: loader, fallback: 'vue-style-loader' })
-    } else {
-      loaders[key] = ['vue-style-loader'].concat(loader)
-    }
+    loaders[key] = (options.extract)
+      ? extract({ use: loader, fallback: 'vue-style-loader' })
+      : loaders[key] = ['vue-style-loader'].concat(loader)
   }
   return loaders
 }
+
 exports.styleLoaders = function (options) {
   const output = []
   const loaders = exports.cssLoaders(options)

@@ -19,9 +19,8 @@ function genPlugins (isFirefox) {
 
 module.exports = (env) =>
   merge(baseWebpack(env), {
-    // cheap-module-eval-source-map быстрее для разработки
     watch: true,
     module: { rules: styleLoaders({ sourceMap: false }) },
-    devtool: '#cheap-module-eval-source-map',
+    devtool: '#cheap-module-source-map',
     plugins: genPlugins(env.FIREFOX)
   })

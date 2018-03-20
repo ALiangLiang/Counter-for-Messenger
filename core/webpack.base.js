@@ -6,7 +6,10 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const GenerateLocaleJsonPlugin = require('../plugins/GenerateLocaleJsonPlugin')
 
-let resolve = (dir) => path.join(__dirname, '..', 'src', dir)
+const rootDir = path.resolve(__dirname, '..')
+
+let resolve = (dir) => path.join(rootDir, 'src', dir)
+
 module.exports = (env) => {
   Object.assign(process.env, env)
   return {
@@ -17,25 +20,21 @@ module.exports = (env) => {
       background: resolve('./backend')
     },
     output: {
-      path: path.join(__dirname, '..', 'build', (!env.FIREFOX) ? 'chrome' : 'firefox'),
+      path: path.join(rootDir, 'build', (!env.FIREFOX) ? 'chrome' : 'firefox'),
       publicPath: '/',
       filename: 'js/[name].js',
       chunkFilename: 'js/[id].[name].js?[hash]',
       library: '[name]'
     },
     resolve: {
-      extensions: ['.js', '.vue', '.json'],
-      alias: {
-        'vue$': 'vue/dist/vue.esm.js',
-        '@': resolve('src')
-      }
+      extensions: ['.js', '.vue', '.json']
     },
     module: {
       rules: [{
         test: /\.(js|vue)$/,
         loader: 'eslint-loader',
         enforce: 'pre',
-        include: [path.join(__dirname, '..', 'src'), path.join(__dirname, '..', 'test')],
+        include: [path.join(rootDir, 'src')],
         options: {
           formatter: require('eslint-friendly-formatter')
         }
@@ -58,7 +57,12 @@ module.exports = (env) => {
       }, {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [path.join(__dirname, '..', 'src'), path.join(__dirname, '..', 'test'), path.join(__dirname, '..', 'node_modules/vue-awesome')]
+        include: [
+          path.join(rootDir, 'src'),
+          path.join(rootDir, 'node_modules', 'vue-awesome'),
+          // https://github.com/sagalbot/vue-select/issues/71#issuecomment-229453096
+          path.join(rootDir, 'node_modules', 'element-ui', 'src', 'utils')
+        ]
       }, {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
         loader: 'url-loader',
@@ -83,7 +87,8 @@ module.exports = (env) => {
       }]
     },
     plugins: [
-      new CleanWebpackPlugin([path.join('..', 'build', (env.FIREFOX) ? 'firefox' : 'chrome') + '/*.*'], { allowExternal: true }),
+      new CleanWebpackPlugin(['*'],
+        { root: path.join(rootDir, 'build', (env.FIREFOX) ? 'firefox' : 'chrome') }),
       htmlPage('Counter for Messenger', 'app', ['vendor', 'element', 'chartjs', 'tab']),
       htmlPage('options', 'options', ['vendor', 'element', 'chartjs', 'options']),
       htmlPage('background', 'background', ['vendor', 'element', 'chartjs', 'background']),
@@ -94,14 +99,15 @@ module.exports = (env) => {
         'process.env.BETA': (env.BETA) ? 'true' : 'false',
         'process.env.ALPHA': (env.ALPHA) ? 'true' : 'false'
       }),
-      new CopyWebpackPlugin([{ from: path.join(__dirname, '..', 'static') }]),
+      new CopyWebpackPlugin([{ from: path.join(rootDir, 'static') }]),
       new ChromeReloadPlugin({
         port: (!env.FIREFOX) ? 9090 : 9091,
-        manifest: path.join(__dirname, '..', 'src', 'manifest.js')
+        manifest: path.join(rootDir, 'src', 'manifest.js')
       }),
       new GenerateLocaleJsonPlugin({
-        _locales: path.join(__dirname, '..', 'src', '_locales')
+        _locales: path.join(rootDir, 'src', '_locales')
       }),
+      // Coz mozilla(firefox) addon store cannot accept single file bigger than 4mb, separate it.
       new webpack.optimize.CommonsChunkPlugin({
         name: 'vendor',
         minChunks: (m) => /node_modules/.test(m.context)
@@ -115,6 +121,7 @@ module.exports = (env) => {
         name: 'chartjs',
         minChunks: (m) => m.context.indexOf(path.join('node_modules', 'chart.js')) > -1
       }),
+      // never use locales of moment.js, so don't iclude it.
       new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
     ],
     performance: { hints: false }

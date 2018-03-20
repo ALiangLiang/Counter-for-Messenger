@@ -8,7 +8,6 @@ const { styleLoaders } = require('./tools')
 
 module.exports = (env) =>
   merge(baseWebpack(env), {
-    devtool: '#cheap-module-eval-source-map',
     module: { rules: styleLoaders({ extract: true, sourceMap: true }) },
     plugins: [
       new webpack.NoEmitOnErrorsPlugin(),

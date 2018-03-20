@@ -10,7 +10,6 @@ const { styleLoaders } = require('./tools')
 module.exports = (env) => {
   Object.assign(process.env, env)
   return merge(baseWebpack(env), {
-    devtool: '#cheap-module-eval-source-map',
     module: { rules: styleLoaders({ extract: true, sourceMap: true }) },
     plugins: [
       new CleanWebpackPlugin(['build/*.*']),
