@@ -9,7 +9,7 @@
     "axios": "^0.17.0",
     "chart.js": "^2.7.1",
     "color-hash": "^1.0.3",
-    "element-ui": "^2.2.0",
+    "element-ui": "^2.2.2",
     "jszip": "^3.1.5",
     "lodash": "^4.17.4",
     "promise-queue": "^2.2.5",
