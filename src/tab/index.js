@@ -78,7 +78,9 @@ new Vue({
   el: '#root',
   router,
   components: { Root },
-  template: '<Root :ctx="ctx"></Root>',
+  render (h) {
+    return h('Root', { props: { ctx: this.ctx } })
+  },
   data () {
     return {
       loading: null,

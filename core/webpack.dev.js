@@ -21,6 +21,6 @@ module.exports = (env) =>
   merge(baseWebpack(env), {
     watch: true,
     module: { rules: styleLoaders({ sourceMap: false }) },
-    devtool: '#cheap-module-source-map',
+    devtool: 'cheap-module-source-map',
     plugins: genPlugins(env.FIREFOX)
   })
