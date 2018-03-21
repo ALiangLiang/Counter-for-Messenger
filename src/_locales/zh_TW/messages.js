@@ -120,10 +120,11 @@ module.exports = {
   countPostfix: { message: '  則訊息！！' },
   rank: {
     message: '$friend$ 是 $self$ 好友之中的第 $rank$ 名',
-    placeholders: { friend: { content: '$1' }, rank: { content: '$2' }, self: { content: '$3' } }
+    placeholders: { self: { content: '$1' }, rank: { content: '$2' }, friend: { content: '$3' } }
   },
   generatedByPrefix: { message: '使用' },
   generatedByPostfix: { message: '統計' },
+  download: { message: '下載' },
 
   // 錯誤訊息
   fetchError: { message: '啊！撈取資料時發生錯誤。' },

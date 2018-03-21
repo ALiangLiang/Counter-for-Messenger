@@ -45,7 +45,7 @@
       :height="chartHeight"
       :options="barOption">
     </bar-chart>
-    <sharing-dialog ref="sharingDialog" />
+    <sharing-dialog ref="sharingDialog" :jar="ctx.jar" />
     <el-aside width="50px">
       <el-tooltip class="item" effect="dark" :content="__('drapToLookOtherUsers')" placement="left">
         <el-slider

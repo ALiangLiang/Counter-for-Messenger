@@ -19,6 +19,7 @@ import 'vue-awesome/icons/image'
 import 'vue-awesome/icons/share-alt'
 import 'vue-awesome/icons/cloud-download'
 import 'vue-awesome/icons/download'
+import 'vue-awesome/icons/trash'
 import Icon from 'vue-awesome/components/Icon'
 
 export default {

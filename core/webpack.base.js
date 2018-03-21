@@ -29,19 +29,17 @@ module.exports = (env) => {
     resolve: {
       alias: {
         'vue$': 'vue/dist/vue.esm.js',
-        '@': resolve('src')
+        '@': resolve('')
       },
-      extensions: ['.js', '.vue', '.json']
+      extensions: [ '.js', '.vue', '.json' ]
     },
     module: {
       rules: [{
         test: /\.(js|vue)$/,
         loader: 'eslint-loader',
         enforce: 'pre',
-        include: [path.join(rootDir, 'src')],
-        options: {
-          formatter: require('eslint-friendly-formatter')
-        }
+        include: [ path.join(rootDir, 'src') ],
+        options: { formatter: require('eslint-friendly-formatter') }
       }, {
         test: /\.vue$/,
         loader: 'vue-loader',
@@ -63,9 +61,7 @@ module.exports = (env) => {
         loader: 'babel-loader',
         include: [
           path.join(rootDir, 'src'),
-          path.join(rootDir, 'node_modules', 'vue-awesome'),
-          // https://github.com/sagalbot/vue-select/issues/71#issuecomment-229453096
-          path.join(rootDir, 'node_modules', 'element-ui', 'src', 'utils')
+          path.join(rootDir, 'node_modules', 'vue-awesome')
         ]
       }, {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -93,10 +89,11 @@ module.exports = (env) => {
     plugins: [
       new CleanWebpackPlugin(['*'],
         { root: path.join(rootDir, 'build', (env.FIREFOX) ? 'firefox' : 'chrome') }),
-      htmlPage('Counter for Messenger', 'app', ['vendor', 'element', 'chartjs', 'tab']),
-      htmlPage('options', 'options', ['vendor', 'element', 'chartjs', 'options']),
-      htmlPage('background', 'background', ['vendor', 'element', 'chartjs', 'background']),
+      htmlPage('Counter for Messenger', 'app', [ 'vendor', 'element', 'chartjs', 'tab' ]),
+      htmlPage('options', 'options', [ 'vendor', 'element', 'chartjs', 'options' ]),
+      htmlPage('background', 'background', [ 'vendor', 'element', 'chartjs', 'background' ]),
       new webpack.DefinePlugin({
+        'process.env.NODE_ENV': `"${env.NODE_ENV}"`,
         chrome: (!env.FIREFOX) ? 'chrome' : 'browser',
         'process.env.CHROME': (env.CHROME) ? 'true' : 'false',
         'process.env.FIREFOX': (env.FIREFOX) ? 'true' : 'false',
@@ -125,7 +122,7 @@ module.exports = (env) => {
         name: 'chartjs',
         minChunks: (m) => m.context.indexOf(path.join('node_modules', 'chart.js')) > -1
       }),
-      // never use locales of moment.js, so don't iclude it.
+      // never use locales of moment.js, so don't include it.
       new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)
     ],
     performance: { hints: false }

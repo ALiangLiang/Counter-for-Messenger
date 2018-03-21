@@ -6,31 +6,56 @@
         'show-operation-buttons': selectedThreads.length
       }"
       style="padding: 20px">
-      <el-pagination
-        v-if="!selectedThreads.length"
-        @size-change="(val) => (threadsPerPage = val)"
-        :current-page.sync="currentPage"
-        :page-sizes="[5, 10, 20, 40]"
-        :page-size="10"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="tableData.length">
-      </el-pagination>
-      <div
-        v-if="selectedThreads.length">
-        <el-button type="primary" class="operation-bar-button" size="small">Clear</el-button>
+      <div v-if="!selectedThreads.length" style="display: inline-flex">
+        <el-form :inline="true" @submit.native.prevent style="display: inline-block" size="mini">
+          <el-form-item :label="__('searchInputLabel') + __('colon')" class="operation-bar-form-item">
+            <el-input
+              style="height: 30px"
+              :placeholder="__('searchInputPlaceholder')"
+              v-model="keyword"
+              :maxlength="120"></el-input>
+          </el-form-item>
+        </el-form>
+        <operation-button
+          @click="reset()"
+          type="danger"
+          icon="trash"
+          :text="__('reset')"
+          size="mini"
+          class="operation-bar-button"
+          round>
+        </operation-button>
+        <el-pagination
+          style="display: inline-block"
+          @size-change="(val) => (threadsPerPage = val)"
+          :current-page.sync="currentPage"
+          :page-sizes="[5, 10, 20, 40]"
+          :page-size="10"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="tableData.length">
+        </el-pagination>
+      </div>
+      <div v-if="selectedThreads.length">
+        <el-button
+          @click="$refs['thread-list'].clearSelection()"
+          type="primary"
+          class="operation-bar-button"
+          size="small">
+          Clear
+        </el-button>
         Already select {{ selectedThreads.length }} threads
         <div class="operation-bar-float-right">
           <operation-button
-            @click=""
+            @click="fetchSelectedThreads()"
             type="primary"
             icon="cloud-download"
-            :text="__('importMessageHistory')"
+            :text="__('fetchDetailOfselected')"
             size="mini"
             class="operation-bar-button"
             round>
           </operation-button>
           <operation-button
-            @click=""
+            @click="downloadHistory()"
             type="primary"
             icon="download"
             :text="__('downloadMessageHistory')"
@@ -117,11 +142,13 @@
         <template slot-scope="{ row, $index }">
           <operation-button
             @click="generateImage(row, $index)"
+            :disabled="row.type === 'GROUP'"
             icon="image"
             :text="__('generateSharingImage')">
           </operation-button>
           <operation-button
-            @click="shareOnFb(row, $index)"
+            @click="onShareOnFb(row, $index)"
+            :disabled="row.type === 'GROUP'"
             icon="share-alt"
             :text="__('shareToFb')">
           </operation-button>
@@ -141,7 +168,7 @@
 
       </el-table-column>
     </el-table>
-    <sharing-dialog ref="sharingDialog" />
+    <sharing-dialog ref="sharingDialog" :jar="ctx.jar" />
   </div>
 </template>
 
@@ -150,14 +177,7 @@ import 'vue-awesome/icons/cloud-download'
 import 'vue-awesome/icons/download'
 import Icon from 'vue-awesome/components/Icon'
 import _get from 'lodash/get'
-import {
-  toQuerystring,
-  uploadImage,
-  getAvatar,
-  getTextWidth,
-  adjustTextSize
-} from '../../lib/util.js'
-import downloadMessages from '../../lib/downloadMessages.js'
+import downloadMessages from '@/tab/lib/downloadMessages.js'
 import DetailTemplate from './DetailTemplate'
 import NameTemplate from './NameTemplate'
 import OperationButton from './OperationButton'
@@ -169,19 +189,21 @@ import {
   muteThread,
   changeThreadColor,
   changeThreadEmoji
-} from '../../lib/changeThreadSetting.js'
-import { fb } from '../../../../core/.env.js'
+} from '@/tab/lib/changeThreadSetting.js'
+import generateCanvas from '@/tab/lib/generateCanvas.js'
+import shareOnFb from '@/tab/lib/shareOnFb.js'
 const __ = chrome.i18n.getMessage
 
 export default {
   name: 'ThreadList',
 
-  props: [ 'value', 'keyword', 'page', 'ctx' ],
+  props: [ 'value', 'page', 'ctx' ],
 
   components: { Icon, DetailTemplate, NameTemplate, OperationButton, SharingDialog },
 
   data () {
     return {
+      keyword: this.$route.query.keyword || '',
       threadsPerPage: 10,
       currentPage: this.page,
       selectedThreads: [],
@@ -226,7 +248,7 @@ export default {
       this.$ga.event('ThreadDetails', 'fetch', 'length', this.selectedThreads.length)
 
       const ctx = { db: this.ctx.db, jar: this.ctx.jar }
-      return this.selectedThreads.map((thread) => thread.loadDetail(ctx, this.$set))
+      return Promise.all(this.selectedThreads.map((thread) => thread.loadDetail(ctx, this.$set)))
     },
     async fetchMessages (thread) {
       this.$ga.event('ThreadDetails', 'fetch', 'length', 1)
@@ -237,17 +259,23 @@ export default {
     async downloadHistory (thread) {
       this.$ga.event('Thread', 'download')
 
-      if (thread.messages) {
-        return downloadMessages(thread, this.ctx.jar.selfId)
-      } else {
-        const cachedThread = await this.ctx.db.get(thread.id)
-        if (cachedThread) {
-          thread.messages = cachedThread.messages
-          return downloadMessages(thread, this.ctx.jar.selfId)
+      const threads = (thread) ? [thread] : this.selectedThreads
+
+      const loadedThreads = await Promise.all(threads.map(async (thread) => {
+        if (thread.messages) {
+          return thread
         } else {
-          return downloadMessages(await this.fetchMessages(thread), this.ctx.jar.selfId)
+          const cachedThread = await this.ctx.db.get(thread.id)
+          if (cachedThread) {
+            thread.messages = cachedThread.messages
+            return thread
+          } else {
+            return this.fetchMessages(thread)
+          }
         }
-      }
+      }))
+
+      return downloadMessages(loadedThreads, this.ctx.jar.selfId)
     },
     onChange (type, thread, ...args) {
       function determinFunc () {
@@ -280,184 +308,24 @@ export default {
       /** @see https://developers.facebook.com/docs/sharing/best-practices/#images **/
       const imageSize = { width: 1200, height: 630 }
 
-      this.$refs.sharingDialog.canvas = await this.generateCanvas(thread, index, imageSize)
+      this.$refs.sharingDialog.canvas = await generateCanvas(thread, index, imageSize, this.ctx.jar)
       this.$refs.sharingDialog.show()
     },
-    async generateCanvas (thread, index, imageSize) {
-      function loadImage (src) {
-        const img = new Image()
-        img.crossOrigin = 'Anonymous'
-        img.src = src
-        return new Promise((resolve, reject) => (img.onload = () => resolve(img)))
-      }
-
-      try {
-        const paddingTop = 70
-        const avatarWidth = 250
-        const userNameSize = 40
-        const padding = [ 20, 25 ]
-        const lineHeight = 15
-        const avatarPaddingAside = 70
-        const avatarPos = [
-          [ avatarPaddingAside, paddingTop ],
-          [ imageSize.width - avatarWidth - avatarPaddingAside, paddingTop ]
-        ]
-        const fontSet = 'Verdana, Microsoft JhengHei'
-        let textOffsetY = paddingTop + 40
-
-        // draw sharing image
-        const canvas = document.createElement('canvas')
-        canvas.width = imageSize.width
-        canvas.height = imageSize.height
-        const ctx = canvas.getContext('2d')
-
-        // paste background
-        ctx.fillStyle = 'rgb(0, 131, 255, 0.8)'
-        ctx.fillRect(0, 0, imageSize.width, imageSize.height)
-
-        // set logo
-        const logoText = `${__('extName')} (${__('unofficial')})`
-        const logoTextSize = 40
-        const logoTextPosY = canvas.height - padding[1]
-        const generatedByPostfixPosX = canvas.width - padding[0]
-        const generatedByFontSet = `30px ${fontSet}`
-        const logoTextRightPosX = generatedByPostfixPosX -
-          ((__('generatedByPostfix')) ? getTextWidth(__('generatedByPostfix'), generatedByFontSet) + 20 : 0)
-        ctx.font = `${logoTextSize}px ${fontSet}`
-        ctx.fillStyle = '#fff'
-        ctx.textAlign = 'right'
-        ctx.fillText(logoText, logoTextRightPosX, logoTextPosY)
-        const logoWidth = 50
-        const logoPos = [
-          logoTextRightPosX - getTextWidth(logoText, ctx.font) - logoWidth - 15,
-          canvas.height - logoWidth + (logoWidth - logoTextSize) / 2 - padding[1] + 5
-        ]
-        ctx.drawImage(await loadImage('../icons/128.png'), logoPos[0], logoPos[1], logoWidth, logoWidth)
-        // write "generate by"
-        ctx.font = generatedByFontSet
-        ctx.fillText(__('generatedByPrefix'), logoPos[0] - 20, logoTextPosY)
-        ctx.fillText(__('generatedByPostfix'), generatedByPostfixPosX, logoTextPosY)
-
-        const users = thread.participants
-          .map((participant) => participant.user)
-          .sort((user) => (user.id === this.ctx.selfId) ? -1 : 0)
-        const images = await Promise.all(
-          users.map(async (user) => loadImage(await getAvatar(this.ctx.jar, user))))
-        const [ leftUser, rightUser ] = users
-
-        // write user name
-        ctx.fillStyle = '#fff'
-        ctx.textAlign = 'center'
-        users.forEach((user, i) => {
-          ctx.font = `${adjustTextSize(user.name, userNameSize, avatarWidth, fontSet)}px ${fontSet}`
-          ctx.fillText(user.name
-            , avatarPos[i][0] + avatarWidth / 2
-            , avatarPos[i][1] + avatarWidth + userNameSize + 30)
-        })
-
-        // write message count
-        // "They have"
-        ctx.font = `60px ${fontSet}`
-        ctx.fillStyle = '#fff'
-        ctx.textAlign = 'center'
-        ctx.fillText(__('countPrefix'), imageSize.width / 2, textOffsetY += 60 + lineHeight)
-        // message count background
-        const barHeight = 120
-        ctx.fillStyle = '#fff'
-        ctx.fillRect(0, textOffsetY + lineHeight * 2, imageSize.width, barHeight)
-        // message count text
-        ctx.fillStyle = 'rgb(0, 131, 255)'
-        ctx.font = `${barHeight}px ${fontSet}`
-        ctx.fillText(thread.messageCount, imageSize.width / 2, textOffsetY += barHeight + lineHeight)
-        // "messages!"
-        ctx.fillStyle = '#fff'
-        ctx.font = `60px ${fontSet}`
-        ctx.fillText(__('countPostfix'), imageSize.width / 2, textOffsetY += 60 + lineHeight)
-        // rank
-        const rankText = __('rank', [ leftUser.name, index + 1, rightUser.name ])
-        ctx.font = `bold ${adjustTextSize(rankText, 60, canvas.width - 100, fontSet)}px ${fontSet}`
-        ctx.fillText(rankText, imageSize.width / 2, textOffsetY += 60 + 50)
-
-        // placed avatars
-        images.forEach((image, i) => {
-          const outerBorderWidth = 2
-          const borderWidth = 8
-          // draw black outter border
-          ctx.fillStyle = 'rgba(0, 0, 0, .4)'
-          ctx.fillRect(
-            avatarPos[i][0] - borderWidth - outerBorderWidth,
-            avatarPos[i][1] - borderWidth - outerBorderWidth,
-            avatarWidth + borderWidth * 2 + outerBorderWidth * 2,
-            avatarWidth + borderWidth * 2 + outerBorderWidth * 2)
-          // draw white inner border
-          ctx.fillStyle = '#fff'
-          ctx.fillRect(
-            avatarPos[i][0] - borderWidth,
-            avatarPos[i][1] - borderWidth,
-            avatarWidth + borderWidth * 2,
-            avatarWidth + borderWidth * 2)
-          // paste avatar
-          ctx.drawImage(image, avatarPos[i][0], avatarPos[i][1], avatarWidth, avatarWidth)
-        })
-
-        return canvas
-      } catch (err) {
-        console.error(err)
-      }
-    },
-    async shareOnFb (thread, index) {
+    async onShareOnFb (thread, index) {
       /** @see https://developers.facebook.com/docs/sharing/best-practices/#images **/
       const imageSize = { width: 1200, height: 630 }
+      const canvas = await generateCanvas(thread, index, imageSize, this.ctx.jar)
+      return shareOnFb(canvas, this.ctx.jar)
+    },
+    reset () {
+      this.$ga.event('Threads', 'reset')
 
-      try {
-        const canvas = await this.generateCanvas(thread, index, imageSize)
-
-        // output blob
-        const blob = await new Promise((resolve, reject) => canvas.toBlob(resolve))
-
-        // upload image to fb
-        const metadata = (await uploadImage(this.ctx.jar, blob)).payload.metadata[0]
-
-        // construct fb sharing dialog url
-        const channelUrlHash = toQuerystring({
-          cb: 'f2c3a60a05f73a4',
-          domain: fb.domain,
-          origin: fb.website,
-          relation: 'opener'
-        })
-        const channelUrl = 'http://staticxx.facebook.com/connect/xd_arbiter/r/Ms1VZf1Vg1J.js?version=42#' + channelUrlHash
-        const next = `${channelUrl}&relation=opener&frame=f236fd3a78b853&result=%22xxRESULTTOKENxx%22`
-        const qs = toQuerystring({
-          action_properties: {
-            object: {
-              'og:url': fb.website,
-              'og:title': __('extName'),
-              'og:description': __('extDescription'),
-              'og:image': metadata.src,
-              'og:image:width': imageSize.width,
-              'og:image:height': imageSize.height,
-              'og:image:type': metadata.filetype
-            }
-          },
-          action_type: 'og.likes', // Coz "og.shares" cannot show bigger preview image, use "og.likes" instead of "og.shares".
-          app_id: fb.id,
-          channel_url: channelUrl,
-          e2e: {},
-          locale: __('@@ui_locale'),
-          mobile_iframe: false,
-          next,
-          sdk: 'joey',
-          version: fb.version
-        })
-        const url = `https://www.facebook.com/${fb.version}/dialog/share_open_graph?${qs}`
-
-        // create fb dialog page
-        chrome.tabs.create({
-          url
-        })
-      } catch (err) {
-        console.error(err)
-      }
+      return this.$confirm(__('resetConfirmContent'), __('resetConfirmTitle'), {
+        confirmButtonText: __('sure'),
+        showCancelButton: true,
+        cancelButtonText: __('cancel'),
+        center: true
+      }).then(() => this.ctx.db.destroy(), () => null)
     },
     getSummaries ({ columns, data }) {
       const totalMessageCount = data.reduce((sum, row) => row.messageCount + sum, 0)
@@ -532,5 +400,8 @@ export default {
 .operation-bar-button {
   padding: 6px;
   margin-left: 0px;
+}
+.operation-bar-form-item {
+  margin-bottom: 0px
 }
 </style>

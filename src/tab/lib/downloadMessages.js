@@ -23,50 +23,54 @@ export default async function downloadMessages (info, selfId) {
   if (!selfId) {
     return _errorHandler()
   }
+  const threads = (info instanceof Array) ? info : [info]
   const zip = new JSZip()
   const folderName = __('extName')
   const padLeft = (str, len) => String(str).padStart(len, '0')
   const date = new Date()
   const time = `${date.getFullYear()}${padLeft(date.getMonth() + 1, 2)}${padLeft(date.getDate(), 2)}`
-  const title = `${folderName} - ${info.threadName} - ${time}`
-  const { messages, participants } = info
-  _chunk(messages, 10000) // split every 10000 messages into chunks
-    .forEach((messageChunk, i) => {
-      const html = new Vue({
-        components: { HtmlElement: HtmlComponenet },
-        render (h) {
-          return (
-            <html-element
-              title={ title }
-              messages-data={ messageChunk }
-              participants={ participants }
-              self-id={ selfId }></html-element>
-          )
-        }
-      }).$mount().$el
+  threads.forEach((thread) => {
+    const { messages, participants } = thread
+    const title = `${folderName} - ${thread.threadName} - ${time}`
+    return _chunk(messages, 10000) // split every 10000 messages into chunks
+      .forEach((messageChunk, i) => {
+        const html = new Vue({
+          components: { HtmlElement: HtmlComponenet },
+          render (h) {
+            return (
+              <html-element
+                title={ title }
+                messages-data={ messageChunk }
+                participants={ participants }
+                self-id={ selfId }></html-element>
+            )
+          }
+        }).$mount().$el
 
-      // Create a empty document which is independant. Used to avoid load resource
-      // like image, audio, video...
-      const doc = document.implementation.createDocument(null, '', null)
+        // Create a empty document which is independant. Used to avoid load resource
+        // like image, audio, video...
+        const doc = document.implementation.createDocument(null, '', null)
 
-      // initial a html element in document
-      doc.appendChild(document.createElement('html'))
+        // initial a html element in document
+        doc.appendChild(document.createElement('html'))
 
-      // extract html element from document.
-      const docHtml = doc.lastElementChild
+        // extract html element from document.
+        const docHtml = doc.lastElementChild
 
-      // append rendered head and body to independant document.
-      Array.from(html.children).forEach((child) => docHtml.appendChild(child))
+        // append rendered head and body to independant document.
+        Array.from(html.children).forEach((child) => docHtml.appendChild(child))
 
-      // html -> string -> blob<text/html>
-      const pageBlob = new Blob([
-        '<!DOCTYPE html>',
-        docHtml.outerHTML
-      ], { type: 'text/html' })
+        // html -> string -> blob<text/html>
+        const pageBlob = new Blob([
+          '<!DOCTYPE html>',
+          docHtml.outerHTML
+        ], { type: 'text/html' })
 
-      // put file blob into zip
-      zip.file(`${folderName} - ${info.threadName} - ${time} - ${i + 1}.html`, pageBlob)
-    })
+        // put file blob into zip
+        const filename = `${folderName} - ${thread.threadName} - ${time} - ${i + 1}.html`.replace('(/|\\)', '')
+        return zip.file(filename, pageBlob)
+      })
+  })
 
   try {
     // fetch assets into blob
@@ -82,8 +86,9 @@ export default async function downloadMessages (info, selfId) {
     })
 
     // start download
+    const filename = `${folderName} - ${time}.zip`
     chrome.downloads.download({
-      filename: `${folderName} - ${info.threadName} - ${time}.zip`,
+      filename,
       url: URL.createObjectURL(zipBlob)
     })
   } catch (err) {

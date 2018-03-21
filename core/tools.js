@@ -1,4 +1,4 @@
-const path = require('path')
+const { resolve } = require('path')
 const { extract } = require('extract-text-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
@@ -8,7 +8,7 @@ exports.htmlPage = (title, filename, chunks, template) => new HtmlWebpackPlugin(
   cache: true,
   inject: 'body',
   filename: './pages/' + filename + '.html',
-  template: template || path.resolve(__dirname, './page.ejs'),
+  template: template || resolve(__dirname, './page.ejs'),
   appMountId: 'app',
   chunks
 })
@@ -27,9 +27,7 @@ exports.cssLoaders = (options = {}) => {
   for (let key in prePprocessors) {
     let loader = [{
       loader: 'css-loader',
-      options: {
-        minimize: process.env.NODE_ENV === 'production'
-      }
+      options: { minimize: process.env.NODE_ENV === 'production' }
     }]
     if (prePprocessors[key].loader) {
       loader.push({

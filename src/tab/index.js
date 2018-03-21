@@ -79,7 +79,7 @@ new Vue({
   router,
   components: { Root },
   render (h) {
-    return h('Root', { props: { ctx: this.ctx } })
+    return <Root ctx={ this.ctx } />
   },
   data () {
     return {

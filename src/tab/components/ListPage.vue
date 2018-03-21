@@ -1,29 +1,8 @@
 <template>
   <div class="page">
-    <div style="margin: 0 20px">
-      <el-form :inline="true" @submit.native.prevent>
-        <el-form-item :label="__('searchInputLabel') + __('colon')">
-          <el-input
-            :placeholder="__('searchInputPlaceholder')"
-            v-model="keyword"
-            :maxlength="120"></el-input>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="primary" @click="fetchSelectedThreads()">
-            {{ __('fetchDetailOfselected') }}
-          </el-button>
-        </el-form-item>
-        <el-form-item>
-          <el-button type="danger" @click="reset()">
-            {{ __('reset') }}
-          </el-button>
-        </el-form-item>
-      </el-form>
-    </div>
     <thread-list
       ref="threadList"
       v-model="ctx.threads"
-      :keyword="keyword"
       :page="page"
       :ctx="ctx">
     </thread-list>
@@ -32,7 +11,6 @@
 
 <script>
 import ThreadList from './ThreadList'
-const __ = chrome.i18n.getMessage
 
 export default {
   name: 'ListPage',
@@ -43,30 +21,11 @@ export default {
 
   data () {
     return {
-      keyword: '',
       page: 1
     }
   },
 
-  mounted () {
-    this.keyword = this.$route.query.keyword || ''
-  },
-
-  methods: {
-    fetchSelectedThreads () {
-      return this.$refs['threadList'].fetchSelectedThreads()
-    },
-    reset () {
-      this.$ga.event('Threads', 'reset')
-
-      return this.$confirm(__('resetConfirmContent'), __('resetConfirmTitle'), {
-        confirmButtonText: __('sure'),
-        showCancelButton: true,
-        cancelButtonText: __('cancel'),
-        center: true
-      }).then(() => this.ctx.db.destroy(), () => null)
-    }
-  }
+  methods: {}
 }
 </script>
 

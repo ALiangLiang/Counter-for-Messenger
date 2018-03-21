@@ -1,14 +1,13 @@
 const webpack = require('webpack')
 const merge = require('webpack-merge')
-const baseWebpack = require('./webpack.base')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { styleLoaders } = require('./tools')
+const baseWebpack = require('./webpack.base')
 
-function genPlugins (isFirefox) {
+function genPlugins () {
   const plugins = [
     new webpack.NoEmitOnErrorsPlugin(),
-    new webpack.DefinePlugin({ 'process.env.NODE_ENV': '"development"' }),
     new FriendlyErrorsPlugin()
   ]
   if (process.env.ANALYZER) {
@@ -17,10 +16,13 @@ function genPlugins (isFirefox) {
   return plugins
 }
 
-module.exports = (env) =>
-  merge(baseWebpack(env), {
+module.exports = (env) => {
+  env.NODE_ENV = 'development'
+  return merge(baseWebpack(env), {
     watch: true,
     module: { rules: styleLoaders({ sourceMap: false }) },
-    devtool: 'cheap-module-source-map',
-    plugins: genPlugins(env.FIREFOX)
+    devtool: '#cheap-module-eval-source-map',
+    // devtool: '#cheap-module-source-map',
+    plugins: genPlugins()
   })
+}
