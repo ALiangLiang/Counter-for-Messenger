@@ -61,7 +61,13 @@ module.exports = (env) => {
         loader: 'babel-loader',
         include: [
           path.join(rootDir, 'src'),
-          path.join(rootDir, 'node_modules', 'vue-awesome')
+          path.join(rootDir, 'node_modules', 'vue-awesome'),
+          path.join(rootDir, 'node_modules', 'element-ui', 'src/utils/popup/popup-manager.js'),
+          path.join(rootDir, 'node_modules', 'element-ui', 'src/utils/popup/index.js'),
+          path.join(rootDir, 'node_modules', 'element-ui', 'src/utils/merge.js'),
+          path.join(rootDir, 'node_modules', 'element-ui', 'src/utils/scrollbar-width.js'),
+          path.join(rootDir, 'node_modules', 'element-ui', 'src/utils/vue-popper.js'),
+          path.join(rootDir, 'node_modules', 'element-ui', 'src/utils/clickoutside.js')
         ]
       }, {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -93,8 +99,8 @@ module.exports = (env) => {
       htmlPage('options', 'options', [ 'vendor', 'element', 'chartjs', 'options' ]),
       htmlPage('background', 'background', [ 'vendor', 'element', 'chartjs', 'background' ]),
       new webpack.DefinePlugin({
-        'process.env.NODE_ENV': `"${env.NODE_ENV}"`,
         chrome: (!env.FIREFOX) ? 'chrome' : 'browser',
+        'process.env.NODE_ENV': `"${env.NODE_ENV}"`,
         'process.env.CHROME': (env.CHROME) ? 'true' : 'false',
         'process.env.FIREFOX': (env.FIREFOX) ? 'true' : 'false',
         'process.env.BETA': (env.BETA) ? 'true' : 'false',

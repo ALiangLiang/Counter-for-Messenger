@@ -10,6 +10,7 @@ module.exports = (env) => {
   env.NODE_ENV = 'production'
   return merge(baseWebpack(env), {
     module: { rules: styleLoaders({ extract: true, sourceMap: true }) },
+    devtool: '#cheap-module-source-map',
     plugins: [
       new webpack.NoEmitOnErrorsPlugin(),
       new OptimizeCSSPlugin({ cssProcessorOptions: { safe: true } }),
