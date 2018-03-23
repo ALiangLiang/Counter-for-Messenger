@@ -20,14 +20,6 @@ export default {
 
   props: { value: Number },
 
-  mounted () {
-    const value = this.value
-    if (value) {
-      this.color.fromString(value)
-    }
-    this.popperElm = this.$refs.dropdown.$el
-  },
-
   data () {
     const text = this.makeText()
     const ce = this.chortcutEvent
