@@ -48,16 +48,17 @@ const elements = [ Slider, Loading, Button, Table, TableColumn, Tag, Tooltip,
   Main, Footer, Input, Form, FormItem, Dialog ]
 elements.forEach((el) => Vue.use(el, { locale }))
 
-// In Chrome extension, must close checking protocol.
-const gaSet = [{ field: 'checkProtocolTask', value: null }]
-if (process.env.NODE_ENV !== 'production') {
-  // If not in production mode, don't send any data to ga service.
-  gaSet.push({ field: 'sendHitTask', value: null })
-}
+const isInProduction = process.env.NODE_ENV === 'production'
 Vue.use(VueAnalytics, {
-  id: (!process.env.BETA) ? 'UA-114347247-1' : 'UA-114347247-3',
-  set: gaSet,
-  router
+  id: (isInProduction && !process.env.BETA) ? 'UA-114347247-1' : 'UA-114347247-3',
+  // In Chrome extension, must close checking protocol.
+  set: [{ field: 'checkProtocolTask', value: null }],
+  router,
+  autoTracking: { exception: true },
+  debug: {
+    enabled: !isInProduction,
+    sendHitTask: isInProduction
+  }
 })
 
 Vue.component('icon', Icon)
@@ -76,11 +77,13 @@ g("google.payments.inapp.consumePurchase",function(a){a.method="consumePurchase"
 /* eslint-disable no-new */
 new Vue({
   el: '#root',
+
   router,
+
   components: { Root },
-  render (h) {
-    return <Root ctx={ this.ctx } />
-  },
+
+  render (h) { return <Root ctx={ this.ctx } /> },
+
   data () {
     return {
       loading: null,
@@ -92,11 +95,13 @@ new Vue({
       iSee: storage.get('iSee', false)
     }
   },
+
   watch: {
     iSee (value) {
       storage.set('iSee', value)
     }
   },
+
   async created () {
     this.loading = this.$loading({
       lock: true,
