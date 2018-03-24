@@ -2,8 +2,8 @@ const config = require('../core/.env')
 
 const manifest = {
   name: '__MSG_extName__',
-  version: '0.2.4.2',
-  version_name: '0.2.5-beta.2',
+  version: '0.2.5',
+  version_name: '0.2.5',
   description: '__MSG_extDescription__',
   author: 'ALiangLiang',
   manifest_version: 2,
