@@ -3,6 +3,7 @@
     <el-header>
       <el-menu
         router
+        class="navbar"
         mode="horizontal"
         background-color="#0083FF"
         text-color="#f1f1f1"
@@ -15,10 +16,48 @@
         <el-menu-item index="/list">{{ __('listPage') }}</el-menu-item>
         <el-menu-item index="/chart">{{ __('chartPage') }}</el-menu-item>
         <el-menu-item index="">
-          <a class="share-link" target="_blank"
-            href="https://www.facebook.com/sharer/sharer.php?u=https%3A//chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca">
-            <icon name="facebook-square" scale="2" label="Share on Facebook"></icon> {{ __('shareOnFacebook') }}
-          </a>
+          <social-sharing url="https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca"
+            network-tag="div"
+            inline-template>
+            <network network="weibo">
+              <icon name="share-alt"></icon>
+              Weibo
+              <icon name="weibo" label="Share on Weibo"></icon>
+            </network>
+          </social-sharing>
+        </el-menu-item>
+        <el-menu-item index="">
+          <social-sharing url="https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca"
+            network-tag="div"
+            inline-template>
+            <network network="reddit">
+              <icon name="share-alt"></icon>
+              Reddit
+              <icon name="reddit-square" label="Share on Reddit"></icon>
+            </network>
+          </social-sharing>
+        </el-menu-item>
+        <el-menu-item index="">
+          <social-sharing url="https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca"
+            network-tag="div"
+            inline-template>
+            <network network="twitter">
+              <icon name="share-alt"></icon>
+              Twitter
+              <icon name="twitter-square" label="Share on Twitter"></icon>
+            </network>
+          </social-sharing>
+        </el-menu-item>
+        <el-menu-item index="">
+          <social-sharing url="https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca"
+            network-tag="div"
+            inline-template>
+            <network network="facebook">
+              <icon name="share-alt"></icon>
+              Facebook
+              <icon name="facebook-square" label="Share on Facebook"></icon>
+            </network>
+          </social-sharing>
         </el-menu-item>
       </el-menu>
     </el-header>
@@ -29,37 +68,58 @@
     </el-main>
     <el-footer height="30px" class="offset-footer"></el-footer>
     <el-footer height="30px">
-      <a href="https://github.com/ALiangLiang/Counter-for-Messenger" target="_blank">
-        <icon name="github"></icon> Github
-      </a>
-      <a href="https://github.com/ALiangLiang" target="_blank">
-        <icon name="user"></icon> Author: ALiangLiang
-      </a>
+      <div class="footer-button">
+        <a href="https://github.com/ALiangLiang/Counter-for-Messenger" target="_blank">
+          <icon name="github"></icon>
+          <span>Github</span>
+        </a>
+      </div>
+      <div class="footer-button">
+        <a href="https://github.com/ALiangLiang" target="_blank">
+          <icon name="user"></icon>
+          <span>Author: ALiangLiang</span>
+        </a>
+      </div>
+      <div class="footer-button">
+        <a href="https://www.paypal.me/ALiangLiang/3" target="_blank">
+          <icon name="paypal"></icon>
+          <span>Donate: Paypel</span>
+        </a>
+      </div>
+      <div class="footer-button">
+        <a href="https://www.buymeacoffee.com/ALiangLiang" target="_blank">
+          <icon name="coffee"></icon>
+          <span>Donate: Buy me a coffee</span>
+        </a>
+      </div>
     </el-footer>
-    <div id="fb-root"></div>
   </el-container>
 </template>
 
 <script>
+import 'vue-awesome/icons/share-alt'
 import 'vue-awesome/icons/facebook-square'
+import 'vue-awesome/icons/reddit-square'
+import 'vue-awesome/icons/twitter-square'
+import 'vue-awesome/icons/weibo'
 import 'vue-awesome/icons/github'
 import 'vue-awesome/icons/user'
-import Icon from 'vue-awesome/components/Icon'
+import 'vue-awesome/icons/coffee'
+import 'vue-awesome/icons/paypal'
 
-Icon.register({
-  'facebook-messenger': {
-    width: 23.868,
-    height: 26,
-    d: 'M224 32C15.9 32-77.5 278 84.6 400.6V480l75.7-42c142.2 39.8 285.4-59.9 285.4-198.7C445.8 124.8 346.5 32 224 32zm23.4 278.1L190 250.5 79.6 311.6l121.1-128.5 57.4 59.6 110.4-61.1-121.1 128.5z'
-  }
-})
+(function (d, s, id) {
+  var js
+  var fjs = d.getElementsByTagName(s)[0]
+  if (d.getElementById(id)) return
+  js = d.createElement(s); js.id = id
+  js.src = 'https://connect.facebook.net/zh_TW/sdk.js#xfbml=1&version=v2.12&appId=168178573969360&autoLogAppEvents=1'
+  fjs.parentNode.insertBefore(js, fjs)
+}(document, 'script', 'facebook-jssdk'))
 
 export default {
   name: 'Root',
-  props: [ 'ctx' ],
-  components: {
-    Icon
-  }
+
+  props: [ 'ctx' ]
 }
 </script>
 
@@ -110,7 +170,7 @@ body {
 .share-link>.fa-icon {
   padding-bottom: 5px;
 }
-.el-menu>li:last-child {
+.navbar>li:nth-last-child(-n+4) {
   float: right;
 }
 </style>
@@ -184,5 +244,12 @@ body {
 }
 #define {
   text-align:center;
+}
+.footer-button {
+  display: inline-block;
+  padding-top: 3px;
+}
+.footer-button > a {
+  display: inline-flex;
 }
 </style>

@@ -1,41 +1,114 @@
 <template>
   <div>
-    <div style="margin: 20px">
-      <el-pagination
-        @size-change="(val) => (threadsPerPage = val)"
-        :current-page.sync="currentPage"
-        :page-sizes="[5, 10, 20, 40]"
-        :page-size="10"
-        layout="total, sizes, prev, pager, next, jumper"
-        :total="tableData.length">
-      </el-pagination>
+    <div
+      :class="{
+        'operation-bar': true,
+        'show-operation-buttons': selectedThreads.length
+      }"
+      style="padding: 20px">
+      <div v-if="!selectedThreads.length" style="display: inline-flex">
+        <el-form :inline="true" @submit.native.prevent style="display: inline-block" size="mini">
+          <el-form-item :label="__('searchInputLabel') + __('colon')" class="operation-bar-form-item">
+            <el-input
+              style="height: 30px"
+              :placeholder="__('searchInputPlaceholder')"
+              v-model="keyword"
+              :maxlength="120"></el-input>
+          </el-form-item>
+        </el-form>
+        <operation-button
+          @click="reset()"
+          type="danger"
+          icon="trash"
+          :text="__('reset')"
+          size="mini"
+          class="operation-bar-button"
+          round>
+        </operation-button>
+        <el-pagination
+          style="display: inline-block"
+          @size-change="(val) => (threadsPerPage = val)"
+          :current-page.sync="currentPage"
+          :page-sizes="[5, 10, 20, 40]"
+          :page-size="10"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="tableData.length">
+        </el-pagination>
+      </div>
+      <div v-if="selectedThreads.length">
+        <el-button
+          @click="$refs['thread-list'].clearSelection()"
+          type="primary"
+          class="operation-bar-button"
+          size="small">
+          Clear
+        </el-button>
+        Already select {{ selectedThreads.length }} threads
+        <div class="operation-bar-float-right">
+          <operation-button
+            @click="fetchSelectedThreads()"
+            type="primary"
+            icon="cloud-download"
+            :text="__('fetchDetailOfselected')"
+            size="mini"
+            class="operation-bar-button"
+            round>
+          </operation-button>
+          <operation-button
+            @click="downloadHistory()"
+            type="primary"
+            icon="download"
+            :text="__('downloadMessageHistory')"
+            size="mini"
+            class="operation-bar-button"
+            round>
+          </operation-button>
+        </div>
+      </div>
     </div>
     <el-table
-      :data="tableData.slice((this.currentPage - 1) * this.threadsPerPage, this.currentPage * this.threadsPerPage)"
+      ref="thread-list"
+      :data="slicedTableData"
       :max-height="720"
       show-summary
+      border
+      class="thread-list-table"
+      header-cell-class-name="thread-list-cell"
+      cell-class-name="thread-list-cell"
       :summary-method="getSummaries"
       @selection-change="onSelect"
+      @row-click.self="onRowClick"
       style="width: 100%">
-      <el-table-column type="selection" width="55"></el-table-column>
+
+      <el-table-column
+        type="selection"
+        width="55"
+        class-name="select-box-cell"
+        label-class-name="select-box-cell">
+      </el-table-column>
+
       <el-table-column type="expand" width="60">
         <template slot-scope="{ row }">
           <detail-template :thread="row" @change="onChange" />
         </template>
       </el-table-column>
-      <el-table-column prop="id" sortable label="#" width="150"></el-table-column>
-      <el-table-column prop="name" :label="__('threadName')" width="210">
+
+      <el-table-column prop="id" label="#" width="150"></el-table-column>
+
+      <el-table-column prop="name" :label="__('threadName')">
         <template slot-scope="{ row }">
           <name-template :thread="row" @change="onChange" />
         </template>
       </el-table-column>
+
       <el-table-column
         prop="type"
         :label="__('threadType')"
         width="90"
         :filters="typeFilters"
         :filter-method="typeFilterMethod"
-        filter-placement="bottom-end">
+        filter-placement="bottom-end"
+        align="center">
         <template slot-scope="{ row }">
           <el-tag
             :type="determineThreadType(row.type).tagType"
@@ -44,10 +117,12 @@
           </el-tag>
         </template>
       </el-table-column>
+
       <el-table-column
         prop="tag"
         :label="__('threadTag')"
-        width="90">
+        width="90"
+        align="center">
         <template slot-scope="{ row }">
           <el-tag
             :type="determineThreadTag(row.tag).tagType"
@@ -56,44 +131,57 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column prop="messageCount" sortable :label="__('threadMessageCount')"
-        width="120"> </el-table-column>
-      <el-table-column prop="characterCount" sortable :label="__('threadCharacterCount')"
-        width="120"> </el-table-column>
-      <el-table-column :label="__('threadOperation')" width="300">
-        <template slot-scope="{ row }">
-          <el-button
-            :disabled="!row.needUpdate"
-            :loading="row.isLoading"
+
+      <el-table-column prop="messageCount" :label="__('threadMessageCount')"
+        width="120" align="center"> </el-table-column>
+
+      <el-table-column prop="characterCount" :label="__('threadCharacterCount')"
+        width="120" align="center"> </el-table-column>
+
+      <el-table-column :label="__('threadOperation')" width="150">
+        <template slot-scope="{ row, $index }">
+          <operation-button
+            @click="generateImage(row, $index)"
+            :disabled="row.type === 'GROUP'"
+            icon="image"
+            :text="__('generateSharingImage')">
+          </operation-button>
+          <operation-button
+            @click="onShareOnFb(row, $index)"
+            :disabled="row.type === 'GROUP'"
+            icon="share-alt"
+            :text="__('shareToFb')">
+          </operation-button>
+          <operation-button
             @click="fetchMessages(row)"
-            type="text" size="small">
-            <icon name="cloud-download"></icon>
-            {{ (row.needUpdate) ? __('importMessageHistory') : __('importedMessageHistory')}}
-          </el-button>
-          <el-button
+            icon="cloud-download"
+            :text="(row.needUpdate) ? __('importMessageHistory') : __('importedMessageHistory')"
+            :disabled="!row.needUpdate"
+            :loading="row.isLoading">
+          </operation-button>
+          <operation-button
             @click="downloadHistory(row)"
-            type="text"
-            size="small">
-            <icon name="download"></icon>
-            {{ __('downloadMessageHistory') }}
-          </el-button>
+            icon="download"
+            :text="__('downloadMessageHistory')">
+          </operation-button>
         </template>
+
       </el-table-column>
     </el-table>
+    <sharing-dialog ref="sharingDialog" :jar="ctx.jar" />
   </div>
 </template>
 
 <script>
-import 'vue-awesome/icons/spinner'
 import 'vue-awesome/icons/cloud-download'
 import 'vue-awesome/icons/download'
 import Icon from 'vue-awesome/components/Icon'
 import _get from 'lodash/get'
-import Thread from '../../classes/Thread.js'
-import fetchThreadDetail from '../../lib/fetchThreadDetail.js'
-import downloadMessages from '../../lib/downloadMessages.js'
+import downloadMessages from '@/tab/lib/downloadMessages.js'
 import DetailTemplate from './DetailTemplate'
 import NameTemplate from './NameTemplate'
+import OperationButton from './OperationButton'
+import SharingDialog from './../SharingDialog.vue'
 import {
   changeThreadName,
   changeThreadNickname,
@@ -101,21 +189,25 @@ import {
   muteThread,
   changeThreadColor,
   changeThreadEmoji
-} from '../../lib/changeThreadSetting.js'
+} from '@/tab/lib/changeThreadSetting.js'
+import generateCanvas from '@/tab/lib/generateCanvas.js'
+import shareOnFb from '@/tab/lib/shareOnFb.js'
 const __ = chrome.i18n.getMessage
 
 export default {
   name: 'ThreadList',
 
-  props: [ 'value', 'keyword', 'page', 'jar', 'db' ],
+  props: [ 'value', 'page', 'ctx' ],
 
-  components: { Icon, DetailTemplate, NameTemplate },
+  components: { Icon, DetailTemplate, NameTemplate, OperationButton, SharingDialog },
 
   data () {
     return {
+      keyword: this.$route.query.keyword || '',
       threadsPerPage: 10,
       currentPage: this.page,
       selectedThreads: [],
+      test: false,
       typeFilters: [ 'GROUP', 'USER', 'PAGE', 'REDUCEDMESSAGINGACTOR' ]
         .map((type) => ({
           text: this.determineThreadType(type).name,
@@ -131,6 +223,10 @@ export default {
   },
 
   computed: {
+    slicedTableData () {
+      return this.tableData.slice((this.currentPage - 1) * this.threadsPerPage,
+        this.currentPage * this.threadsPerPage)
+    },
     tableData () {
       const regexPattern = new RegExp(this.keyword, 'i')
       // filter
@@ -151,86 +247,35 @@ export default {
     async fetchSelectedThreads () {
       this.$ga.event('ThreadDetails', 'fetch', 'length', this.selectedThreads.length)
 
-      const allCacheThreads = await this.db.getAll()
-      const results = await Promise.all(this.selectedThreads.map(async (thread) => {
-        thread.isLoading = true
-
-        const cachedThread = allCacheThreads.find((cacheThread) =>
-          cacheThread.id === thread.id)
-
-        let messageLimit
-        if (cachedThread) {
-          const cachedThreadMessagesLength = _get(cachedThread, 'messages.length')
-          if (cachedThreadMessagesLength !== undefined) {
-            if (cachedThreadMessagesLength >= thread.messageCount) { // No need to update cache.
-              return []
-            }
-            messageLimit = thread.messageCount - cachedThreadMessagesLength
-          }
-        }
-
-        if (!thread.messages) {
-          const result = await fetchThreadDetail({
-            jar: this.jar, thread, $set: this.$set, messageLimit
-          })
-          const updatedMessages = (_get(cachedThread, 'messages') || []).concat(result)
-          this.db.put({ id: thread.id, messages: updatedMessages })
-          return [thread, updatedMessages]
-        }
-        return [thread]
-      }))
-
-      results.forEach(([thread, updatedMessages]) => {
-        if (updatedMessages) {
-          thread.characterCount = Thread.culCharacterCount(updatedMessages)
-          thread.needUpdate = false
-          thread.isLoading = false
-        }
-      })
+      const ctx = { db: this.ctx.db, jar: this.ctx.jar }
+      return Promise.all(this.selectedThreads.map((thread) => thread.loadDetail(ctx, this.$set)))
     },
     async fetchMessages (thread) {
       this.$ga.event('ThreadDetails', 'fetch', 'length', 1)
 
-      thread.isLoading = true
-      const cachedThread = await this.db.get(thread.id)
-      let messageLimit
-      if (cachedThread) {
-        const cachedThreadMessagesLength = _get(cachedThread, 'messages.length')
-        if (cachedThreadMessagesLength !== undefined) {
-          if (cachedThreadMessagesLength === thread.messageCount) { // No need to update cache.
-            thread.isLoading = false
-            return
-          }
-          messageLimit = thread.messageCount - cachedThreadMessagesLength
-        }
-      }
-
-      if (!thread.messages) {
-        const result = await fetchThreadDetail({
-          jar: this.jar, thread, $set: this.$set, messageLimit
-        })
-        thread.messages = (_get(cachedThread, 'messages') || []).concat(result)
-        thread.characterCount = Thread.culCharacterCount(thread.messages)
-        this.db.put({ id: thread.id, messages: thread.messages })
-        thread.needUpdate = false
-        thread.isLoading = false
-      }
-      return thread
+      const ctx = { db: this.ctx.db, jar: this.ctx.jar }
+      return thread.loadDetail(ctx, this.$set)
     },
     async downloadHistory (thread) {
       this.$ga.event('Thread', 'download')
 
-      if (thread.messages) {
-        return downloadMessages(thread, this.jar.selfId)
-      } else {
-        const cachedThread = await this.db.get(thread.id)
-        if (cachedThread) {
-          thread.messages = cachedThread.messages
-          return downloadMessages(thread, this.jar.selfId)
+      const threads = (thread) ? [thread] : this.selectedThreads
+
+      const loadedThreads = await Promise.all(threads.map(async (thread) => {
+        if (thread.messages) {
+          return thread
         } else {
-          return downloadMessages(await this.fetchMessages(thread), this.jar.selfId)
+          const cachedThread = await this.ctx.db.get(thread.id)
+          if (cachedThread) {
+            thread.messages = cachedThread.messages
+            return thread
+          } else {
+            return this.fetchMessages(thread)
+          }
         }
-      }
+      }))
+
+      return downloadMessages(loadedThreads, this.ctx.jar.selfId)
     },
     onChange (type, thread, ...args) {
       function determinFunc () {
@@ -246,8 +291,8 @@ export default {
       }
 
       const func = determinFunc()
-      const funcArgs = [ this.jar, thread, ...args ]
-      func(...funcArgs)
+      const funcArgs = [ this.ctx.jar, thread, ...args ]
+      return func(...funcArgs)
         .then((res) => {
           if (res.error) {
             const err = new Error(res.errorDescription)
@@ -256,16 +301,42 @@ export default {
           }
           return res
         })
-        .then(() => thread.reload(this.jar))
+        .then(() => thread.reload(this.ctx.jar))
         .catch((err) => console.error(err))
+    },
+    async generateImage (thread, index) {
+      /** @see https://developers.facebook.com/docs/sharing/best-practices/#images **/
+      const imageSize = { width: 1200, height: 630 }
+
+      this.$refs.sharingDialog.canvas = await generateCanvas(thread, index, imageSize, this.ctx.jar)
+      this.$refs.sharingDialog.show()
+    },
+    async onShareOnFb (thread, index) {
+      /** @see https://developers.facebook.com/docs/sharing/best-practices/#images **/
+      const imageSize = { width: 1200, height: 630 }
+      const canvas = await generateCanvas(thread, index, imageSize, this.ctx.jar)
+      return shareOnFb(canvas, this.ctx.jar)
+    },
+    reset () {
+      this.$ga.event('Threads', 'reset')
+
+      return this.$confirm(__('resetConfirmContent'), __('resetConfirmTitle'), {
+        confirmButtonText: __('sure'),
+        showCancelButton: true,
+        cancelButtonText: __('cancel'),
+        center: true
+      }).then(() => this.ctx.db.destroy(), () => null)
     },
     getSummaries ({ columns, data }) {
       const totalMessageCount = data.reduce((sum, row) => row.messageCount + sum, 0)
       const totalTextCount = data.reduce((sum, row) => row.characterCount + sum, 0)
-      return ['', '', '', '', '', totalMessageCount, totalTextCount]
+      return ['', '', '', '', '', '', totalMessageCount, totalTextCount]
     },
     onSelect (items) {
       this.selectedThreads = items
+    },
+    onRowClick (row, event, column) {
+      this.$refs['thread-list'].toggleRowExpansion(row)
     },
     determineThreadType (type) {
       switch (type) {
@@ -287,22 +358,50 @@ export default {
     typeFilterMethod (value, row, column) {
       const property = column['property']
       return row[property] === value
-    },
-    reset () {
-      return this.$confirm(__('resetConfirmContent'), __('resetConfirmTitle'), {
-        confirmButtonText: __('sure'),
-        showCancelButton: true,
-        cancelButtonText: __('cancel'),
-        center: true
-      }).then(() => this.db.destroy(), () => null)
     }
   }
 }
 </script>
 
 <style>
+.el-table__row {
+  cursor: pointer;
+}
 .el-table__expand-icon>.el-icon-arrow-right:before {
   color: #f03c24;
   font-size: 16px;
+}
+.thread-list-cell, .thread-list-table {
+  border-color: #dcdfe6 !important;
+}
+.select-box-cell {
+  text-align: center;
+}
+</style>
+
+<style scoped>
+.operation-bar {
+  min-height: 32px;
+  padding: 20px;
+  border: 1px solid #dcdfe6;
+  border-bottom: none;
+  transition: color .15s ease, background-color .15s ease;
+}
+.show-operation-buttons {
+  color: white;
+  background-color: rgb(0, 131, 255);
+  transition: color .15s ease, background-color .15s ease;
+}
+.operation-bar-float-right {
+  display: inline-block;
+  float: right;
+  margin-right: 25px;
+}
+.operation-bar-button {
+  padding: 6px;
+  margin-left: 0px;
+}
+.operation-bar-form-item {
+  margin-bottom: 0px
 }
 </style>

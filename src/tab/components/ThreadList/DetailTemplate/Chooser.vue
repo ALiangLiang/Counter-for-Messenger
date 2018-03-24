@@ -46,14 +46,17 @@ export default {
 
   props: { value: String, type: String },
 
-  watch: {
-    value (val) {
-      if (!val) {
-        this.showPanelColor = false
-      } else if (val && val !== this.color.value) {
-        this.color.fromString(val)
-      }
+  data () {
+    return {
+      emojis: EMOJIS,
+      colors: COLORS,
+      showChooser: false,
+      displayedColor: false
     }
+  },
+
+  mounted () {
+    this.popperElm = this.$refs.dropdown.$el
   },
 
   methods: {
@@ -68,23 +71,6 @@ export default {
     },
     hide () {
       this.showChooser = false
-    }
-  },
-
-  mounted () {
-    const value = this.value
-    if (value) {
-      this.color.fromString(value)
-    }
-    this.popperElm = this.$refs.dropdown.$el
-  },
-
-  data () {
-    return {
-      emojis: EMOJIS,
-      colors: COLORS,
-      showChooser: false,
-      displayedColor: false
     }
   }
 }

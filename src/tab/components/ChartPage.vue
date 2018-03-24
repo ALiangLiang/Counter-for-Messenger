@@ -34,13 +34,18 @@
             :inactive-text="__('showTotal')"></el-switch>
         </span>
       </el-menu-item>
+      <el-menu-item index="3" @click="generateSharingDialog">
+        Generate Image
+      </el-menu-item>
     </el-menu>
     <bar-chart
-     :chart-data="chartData"
-     :styles="chartContainerStyles"
-     :height="chartHeight"
-     :options="barOption">
+      ref="barChart"
+      :chart-data="chartData"
+      :styles="chartContainerStyles"
+      :height="chartHeight"
+      :options="barOption">
     </bar-chart>
+    <sharing-dialog ref="sharingDialog" :jar="ctx.jar" />
     <el-aside width="50px">
       <el-tooltip class="item" effect="dark" :content="__('drapToLookOtherUsers')" placement="left">
         <el-slider
@@ -57,14 +62,17 @@
 </template>
 <script>
 import { Message } from 'element-ui'
+import ColorHash from 'color-hash'
 import BarChart from './BarChart.js'
+import SharingDialog from './SharingDialog.vue'
 import fetchThreadDetail from '../lib/fetchThreadDetail.js'
 const __ = chrome.i18n.getMessage
+const colorHash = new ColorHash({lightness: [0.35, 0.5, 0.65]})
 
 export default {
   name: 'ChartPage',
 
-  components: { BarChart },
+  components: { BarChart, SharingDialog },
 
   props: [ 'ctx' ],
 
@@ -96,6 +104,10 @@ export default {
           padding: 5,
           text: ''
         },
+        legend: { display: false },
+        tooltips: {
+          filter: (tooltip) => tooltip.xLabel !== 0 && !isNaN(tooltip.xLabel)
+        },
         scales: {
           xAxes: [{ stacked: true }],
           yAxes: [{ stacked: true, barPercentage: 0.7 }]
@@ -103,12 +115,14 @@ export default {
       }
     }
   },
+
   async created () {
     this.$nextTick(() => window.addEventListener('resize', () =>
       (this.chartHeight = document.documentElement.clientHeight - 130)))
     this.renderChart()
     this.changeChartTitle()
   },
+
   watch: {
     chartHeight (height) {
       this.chartContainerStyles.height = height + 'px'
@@ -123,9 +137,9 @@ export default {
       this.renderChart()
     }
   },
-  computed: {
-    amountOfMaxDisplay () { return this.chartHeight / 20 }
-  },
+
+  computed: { amountOfMaxDisplay () { return this.chartHeight / 20 } },
+
   methods: {
     changeChartTitle () {
       const specs = [
@@ -138,12 +152,19 @@ export default {
       const itemVm = this.$refs[refName]
       itemVm.$emit('input', !itemVm.value)
     },
+    generateSharingDialog () {
+      this.$ga.event('SharingImage', 'generate')
+
+      this.$refs.sharingDialog.canvas = this.$refs.barChart.canvas
+      this.$refs.sharingDialog.show()
+    },
     async renderChart () {
       const startSliceIndex = this.threads.length - Number(this.rank)
       const splicedThreads = this.threads.slice(startSliceIndex, startSliceIndex + this.amountOfMaxDisplay)
       if (!(!this.isShowCharacter && !this.isShowDetail)) {
         await this.syncThreadDetail(splicedThreads)
       }
+      // Show Overview
       if (!this.isShowDetail) {
         this.chartData = {
           labels: splicedThreads.map((thread) => thread.threadName),
@@ -154,29 +175,66 @@ export default {
           }]
         }
       } else {
-        const participantsStatus = splicedThreads
-          .map((thread, i) => {
-            let me = 0
-            let other = 0
-            thread.participants.forEach((participant) => {
-              if (participant.user.id === this.ctx.jar.selfId) me = this.selectCountType(participant)
-              else other += this.selectCountType(participant)
+        // Show Detail
+        if (!this.ctx.purchased) {
+          const participantsStatus = splicedThreads
+            .map((thread, i) => {
+              let me = 0
+              let other = 0
+              thread.participants.forEach((participant) => {
+                if (participant.user.id === this.ctx.jar.selfId) me = this.selectCountType(participant)
+                else other += this.selectCountType(participant)
+              })
+              return [me, other]
             })
-            return [me, other]
+            .reduce((cur, row) => {
+              cur[0].push(row[0])
+              cur[1].push(row[1])
+              return cur
+            }, [[], []])
+          const datasets = participantsStatus.map((status, i) => ({
+            label: (i === 0) ? 'Me' : 'Other',
+            backgroundColor: (i === 0) ? '#4BCC1F' : '#F03C24',
+            data: status
+          }))
+          this.chartData = {
+            labels: splicedThreads.map((info) => info.threadName),
+            datasets
+          }
+        } else {
+          // Show more Detail (pro)
+          const labels = splicedThreads.map((thread) => thread.threadName)
+          const datasetsMap = new Map()
+          splicedThreads.forEach((thread, i) => {
+            const color = (thread.type !== 'GROUP') ? thread.color : null
+            thread.participants.forEach((participant) => {
+              const userId = participant.user.id
+              const userName = participant.user.name
+              if (datasetsMap.has(userId)) {
+                datasetsMap.get(userId).data[i] = this.selectCountType(participant)
+              } else {
+                const data = Array(splicedThreads.length).fill(0)
+                data[i] = this.selectCountType(participant)
+                datasetsMap.set(userId, {
+                  label: userName,
+                  backgroundColor: (userId === this.ctx.jar.selfId)
+                    ? '#4BCC1F' : (color || colorHash.hex(participant.user.name)),
+                  data
+                })
+              }
+            })
           })
-          .reduce((cur, row) => {
-            cur[0].push(row[0])
-            cur[1].push(row[1])
-            return cur
-          }, [[], []])
-        const datasets = participantsStatus.map((status, i) => ({
-          label: (i === 0) ? 'Me' : 'Other',
-          backgroundColor: (i === 0) ? '#4BCC1F' : '#F03C24',
-          data: status
-        }))
-        this.chartData = {
-          labels: splicedThreads.map((info) => info.threadName),
-          datasets
+          const datasets = [...datasetsMap]
+            .sort((a, b) => {
+              if (a[0] === this.ctx.jar.selfId) return -1
+              if (b[0] === this.ctx.jar.selfId) return 1
+              return 0
+            })
+            .map((data) => data[1])
+          this.chartData = {
+            labels,
+            datasets
+          }
         }
       }
     },

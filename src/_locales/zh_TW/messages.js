@@ -2,6 +2,7 @@ module.exports = {
   // 擴充套件資訊
   extName: { message: 'Messenger 計數器' },
   extDescription: { message: '統計並排名你在 Messenger 中與朋友的訊息量！也可以順便打包下載訊息記錄。' },
+  unofficial: { message: '非官方' },
 
   // 路由
   listPage: { message: '清單' },
@@ -52,8 +53,8 @@ module.exports = {
   QA1Content: { message: '甭擔心，這支擴充功能僅會替您將資料從 Messenger 抓到您的本機裝置中，如果您使用的是公共裝置，建議離開前將此擴充功能刪除，或是按下「重置」鈕並關閉頁面。' },
   QA2Title: { message: '如何幫助這支擴充功能？' },
   QA2Content: {
-    message: '歡迎各種捐款來協助我提神改程式XD，或是告訴其他朋友來使用它；如果你也是個開發者或是熱愛新科技，歡迎使用 <a href="$beta_url$" target="_blank">公開測試版本</a>來協助我們在正式發布前，找到錯誤。',
-    placeholders: { beta_url: { content: '$1' } }
+    message: '歡迎各種<a href="$donation_url$" target="_blank">捐款</a>來協助我提神改程式XD，或是告訴其他朋友來使用它；如果你也是個開發者或是熱愛新科技，歡迎使用 <a href="$beta_url$" target="_blank">公開測試版本</a>來協助我們在正式發布前，找到錯誤。',
+    placeholders: { donation_url: { content: '$1' }, beta_url: { content: '$2' } }
   },
   QA3Title: { message: '如何變更 Facebook 帳號' },
   QA3Content: { message: '只要打開 Facebook 頁面，登出並使用另一個帳號登入，再重新整理或開啟這個頁面就可以囉。' },
@@ -86,6 +87,8 @@ module.exports = {
   emoji: { message: '表情符號' },
   color: { message: '顏色' },
   participants: { message: '成員' },
+  generateSharingImage: { message: '產生分享圖' },
+  shareToFb: { message: '分享到 Facebook' },
   // MuteUntil 元件
   muteUntil: { message: '關閉通知直到' },
   muteForever: { message: '世界末日' },
@@ -112,10 +115,21 @@ module.exports = {
   me: { message: '我' },
   other: { message: '其他人' },
 
+  // 分享對話視窗
+  countPrefix: { message: '他們之間有' },
+  countPostfix: { message: '  則訊息！！' },
+  rank: {
+    message: '$friend$ 是 $self$ 好友之中的第 $rank$ 名',
+    placeholders: { self: { content: '$1' }, rank: { content: '$2' }, friend: { content: '$3' } }
+  },
+  generatedByPrefix: { message: '使用' },
+  generatedByPostfix: { message: '統計' },
+  download: { message: '下載' },
+
   // 錯誤訊息
   fetchError: { message: '啊！撈取資料時發生錯誤。' },
   contactDevelper: { message: '請聯絡開發者以解決問題。' },
-  messengerIsDead: { message: '你的 Messenger 暫時無法使用，請稍後再試。' },
+  loginRequired: { message: '請先登入您的 Facebook。' },
 
   // 符號
   comma: { message: '、' },

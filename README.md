@@ -57,7 +57,7 @@ Welcome every language support. Help your countryman to use this application. Re
 
 ## 📣 Declaration
 
-- **It's a unofficial project.**
+- **It's an unofficial project.**
 - **We would not collect any user data from Messenger.**
 
 ## 👨‍💻 Development

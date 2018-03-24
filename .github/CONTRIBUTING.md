@@ -9,7 +9,7 @@ If you have any questions, feel free to contact with me in English or Chinese.
 - Make sure you are using *Node.js 8*.
 - Install dependencies.
 
-### Develop
+### Development
 
 You can develop on both browser at same time.
 ```sh
@@ -19,6 +19,16 @@ npm run dev-firefox # Firefox
 
 > Hint: Going to firefox's about:config and toggling `network.websocket.allowInsecureFromHTTPS`.
 > https:// to ws:// is disallowed by default on firefox.
+
+#### Stages
+
+| Stage   | env         | cmd                  |
+|---------|-------------|----------------------|
+| Release | production  | `npm run build`      |
+| Beta    | production  | `npm run build-beta` |
+| Dev     | development | `npm run dev`        |
+
+> If you want to emulate beta stage in development mode: `npm run dev -- --env.BETA`
 
 ### Submitting Pull Request
 

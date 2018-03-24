@@ -2,7 +2,8 @@ const config = require('../core/.env')
 
 const manifest = {
   name: '__MSG_extName__',
-  version: '0.2.4',
+  version: '0.2.5',
+  version_name: '0.2.5',
   description: '__MSG_extDescription__',
   author: 'ALiangLiang',
   manifest_version: 2,
@@ -19,10 +20,13 @@ const manifest = {
   },
   permissions: [
     'tabs',
+    'identity',
     'downloads',
     'webRequest',
     'webRequestBlocking',
-    '*://*.facebook.com/*'
+    '*://*.facebook.com/*',
+    'https://www.googleapis.com/',
+    'https://www-googleapis-staging.sandbox.google.com/'
   ],
   background: {
     persistent: true,
@@ -35,22 +39,32 @@ const manifest = {
       'js/chartjs.js',
       'js/content.js'
     ],
-    matches: ['*://*.facebook.com/*'],
+    matches: ['*://*.facebook.com/'],
     run_at: 'document_end'
   }],
   default_locale: 'en',
-  content_security_policy: "script-src 'self' 'unsafe-eval' https://www.google-analytics.com https://www.google.com https://checkout.google.com; object-src 'self'"
+  content_security_policy: `script-src 'self' ${(process.env.NODE_ENV === 'development') ? '\'unsafe-eval\'' : ''} https://connect.facebook.net https://www.google-analytics.com https://www.google.com https://checkout.google.com; object-src 'self'`
 }
 
 const optionPage = 'pages/options.html'
+const stage = (process.env.ALPHA) ? 'alpha' : ((process.env.BETA) ? 'beta' : ((process.env.DEV) ? 'dev' : 'release'))
+console.info('Stage:', stage)
+const browser = (process.env.FIREFOX) ? 'Firefox' : 'Chrome'
+console.info('Browser:', browser)
 if (!process.env.FIREFOX) {
-  console.info('chrome')
   Object.assign(manifest, {
     options_page: optionPage,
-    key: config[(!process.env.BETA) ? 'release' : 'beta'].key
+    oauth2: {
+      client_id: config[stage].clientId,
+      scopes: [
+        'https://www.googleapis.com/auth/plus.login',
+        'https://www.googleapis.com/auth/chromewebstore',
+        'https://www.googleapis.com/auth/chromewebstore.readonly'
+      ]
+    },
+    key: config[stage].key
   })
 } else {
-  console.info('firefox')
   delete manifest.background.persistent // Firefox not support background.persistent
   Object.assign(manifest, {
     applications: {

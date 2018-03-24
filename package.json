@@ -1,6 +1,6 @@
 {
   "name": "counter-for-messenger",
-  "version": "0.2.4",
+  "version": "0.2.5",
   "description": "Count and rank your friends by analysing your Messenger! Check out and download the messaging history of you and your best friends!",
   "author": "ALiangLiang <me@aliangliang.top>",
   "license": "MIT",
@@ -9,7 +9,7 @@
     "axios": "^0.17.0",
     "chart.js": "^2.7.1",
     "color-hash": "^1.0.3",
-    "element-ui": "^2.2.0",
+    "element-ui": "^2.2.2",
     "jszip": "^3.1.5",
     "lodash": "^4.17.4",
     "promise-queue": "^2.2.5",
@@ -21,6 +21,7 @@
     "vue-meta": "^1.2.0",
     "vue-pouch": "^0.0.22",
     "vue-router": "^3.0.1",
+    "vue-social-sharing": "^2.3.3",
     "vuex": "^3.0.0"
   },
   "scripts": {

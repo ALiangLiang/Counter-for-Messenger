@@ -38,8 +38,9 @@ export function changeThreadNickname (jar, thread, participantId, nickname) {
 }
 
 export async function changeThreadImage (jar, thread, image) {
-  const metadata = (await uploadImage(jar, thread, image)).payload.metadata[0]
+  const metadata = (await uploadImage(jar, image)).payload.metadata[0]
   const offlineThreadingId = generateOfflineThreadingID()
+  console.log(metadata.src)
   const formData = {
     client: 'mercury',
     action_type: 'ma-type:log-message',
