@@ -18,6 +18,7 @@ function genPlugins () {
 
 module.exports = (env) => {
   env.NODE_ENV = 'development'
+  env.DEV = 'true'
   return merge(baseWebpack(env), {
     watch: true,
     module: { rules: styleLoaders({ sourceMap: false }) },

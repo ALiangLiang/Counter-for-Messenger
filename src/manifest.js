@@ -2,8 +2,8 @@ const config = require('../core/.env')
 
 const manifest = {
   name: '__MSG_extName__',
-  version: '0.2.4.1',
-  version_name: '0.2.5-beta.1',
+  version: '0.2.4.2',
+  version_name: '0.2.5-beta.2',
   description: '__MSG_extDescription__',
   author: 'ALiangLiang',
   manifest_version: 2,
@@ -47,7 +47,7 @@ const manifest = {
 }
 
 const optionPage = 'pages/options.html'
-const stage = (process.env.ALPHA) ? 'alpha' : ((process.env.BETA) ? 'beta' : 'release')
+const stage = (process.env.ALPHA) ? 'alpha' : ((process.env.BETA) ? 'beta' : ((process.env.DEV) ? 'dev' : 'release'))
 console.info('Stage:', stage)
 const browser = (process.env.FIREFOX) ? 'Firefox' : 'Chrome'
 console.info('Browser:', browser)

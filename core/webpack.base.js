@@ -95,17 +95,18 @@ module.exports = (env) => {
     plugins: [
       new CleanWebpackPlugin(['*'],
         { root: path.join(rootDir, 'build', (env.FIREFOX) ? 'firefox' : 'chrome') }),
-      htmlPage('Counter for Messenger', 'app', [ 'vendor', 'element', 'chartjs', 'tab' ]),
-      htmlPage('options', 'options', [ 'vendor', 'element', 'chartjs', 'options' ]),
-      htmlPage('background', 'background', [ 'vendor', 'element', 'chartjs', 'background' ]),
       new webpack.DefinePlugin({
         chrome: (!env.FIREFOX) ? 'chrome' : 'browser',
         'process.env.NODE_ENV': `"${env.NODE_ENV}"`,
-        'process.env.CHROME': (env.CHROME) ? 'true' : 'false',
-        'process.env.FIREFOX': (env.FIREFOX) ? 'true' : 'false',
-        'process.env.BETA': (env.BETA) ? 'true' : 'false',
-        'process.env.ALPHA': (env.ALPHA) ? 'true' : 'false'
+        'process.env.CHROME': !!env.CHROME,
+        'process.env.FIREFOX': !!env.FIREFOX,
+        'process.env.BETA': !!env.BETA,
+        'process.env.ALPHA': !!env.ALPHA,
+        'process.env.DEV': (env.NODE_ENV === 'development')
       }),
+      htmlPage('Counter for Messenger', 'app', [ 'vendor', 'element', 'chartjs', 'tab' ]),
+      htmlPage('options', 'options', [ 'vendor', 'element', 'chartjs', 'options' ]),
+      htmlPage('background', 'background', [ 'vendor', 'element', 'chartjs', 'background' ]),
       new CopyWebpackPlugin([{ from: path.join(rootDir, 'static') }]),
       new ChromeReloadPlugin({
         port: (!env.FIREFOX) ? 9090 : 9091,

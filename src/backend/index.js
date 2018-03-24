@@ -43,10 +43,10 @@ chrome.runtime.onInstalled.addListener(({ reason }) => {
 })
 
 // Mark beta version by badge.
-const isRelease = !process.env.ALPHA && !process.env.BETA
+const isRelease = !process.env.DEV && !process.env.ALPHA && !process.env.BETA
 if (!isRelease) {
-  const badgeText = (process.env.ALPHA) ? 'Alph' : 'Beta'
-  const badgeColor = (process.env.ALPHA) ? [0, 0, 255, 255] : [255, 0, 0, 255]
+  const badgeText = (process.env.ALPHA) ? 'Alph' : ((process.env.BETA) ? 'Beta' : 'Dev')
+  const badgeColor = (process.env.ALPHA) ? [0, 0, 255, 255] : ((process.env.BETA) ? [255, 0, 0, 255] : [239, 165, 15, 255])
   chrome.browserAction.setBadgeText({ text: badgeText })
   chrome.browserAction.setBadgeBackgroundColor({ color: badgeColor })
 }
