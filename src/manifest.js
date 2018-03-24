@@ -3,7 +3,7 @@ const config = require('../core/.env')
 const manifest = {
   name: '__MSG_extName__',
   version: '0.2.5',
-  version_name: '0.2.5',
+  version_name: (process.env.CHROME) ? '0.2.5' : undefined,
   description: '__MSG_extDescription__',
   author: 'ALiangLiang',
   manifest_version: 2,
