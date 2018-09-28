@@ -27,7 +27,7 @@
           class="participant-avatar">
           <el-tooltip
             v-if="participant && participant.user"
-            :content="participant.user.name + ((participant.user.nickname) ? `(${participant.user.nickname})` : '')"
+            :content="participant.user.name + ((participant.user.nickname) ? ` (${participant.user.nickname})` : '')"
             placement="top-start">
             <avatar
               v-if="participant.user.avatar"
