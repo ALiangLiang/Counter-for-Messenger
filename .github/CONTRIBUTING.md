@@ -44,7 +44,7 @@ npm run dev-firefox # Firefox
 1. Firstly, you have to fork the repository by clicking the **Fork** button.
 1. Clone your own forked repository to your workstation.
 1. Create and switch Branch by typing `git checkout -b <new branch>` where `<new branch>` is the name of the Branch you want to work with. We recommend you to name it into the language you want to translate in.
-1. Create a new directory named as a 2 letter ISO code of the language. For example `es` for Spanish, `ja` for Japanese.
+1. Create a new directory named as a 2 letter ISO code of the language. For example `es` for Spanish, `ja` for Japanese. But if we have multiple language variants, we should use xx_YY to distinguish between the two languages. (e.g. zh_TW and zh_CN)
 1. Copy `src/_locales/en/messages.js` into the directory you have created.
 1. Translate
 1. Once you finished translating, add new files to the Git index using `git add src/_locales/??/messages.js` command and commit the changes using `git commit -m '<commit message>'`, where `<commit message>` is a short description of changes you made.
