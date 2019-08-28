@@ -83,7 +83,7 @@
       <div class="footer-button">
         <a href="https://www.paypal.me/ALiangLiang/3" target="_blank">
           <icon name="paypal"></icon>
-          <span>Donate: Paypel</span>
+          <span>Donate: Paypal</span>
         </a>
       </div>
       <div class="footer-button">

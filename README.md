@@ -1,5 +1,9 @@
 # ![Logo](.github/assets/icon.png) Counter for Messenger  [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/ALiangLiang/5)
 
+### *NOTICE: Temporarily stop maintain until 2018 July*
+
+#### *I'd like to say sorry first. I'm still a student. Because this semester is a bit busy, I can't maintain this project for the time being.*
+
 Chome
 [<img src="https://img.shields.io/chrome-web-store/v/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Chrome%20Web%20Store"> ](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Users)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
