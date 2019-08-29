@@ -100,7 +100,7 @@ export default async function fetchThreads (jar, limit = 5000, tags = ['INBOX', 
     // Prepare request form body.
     const queries = {
       o0: {
-        doc_id: '2929974987072841',
+        doc_id: '1349387578499440',
         query_params: {
           limit,
           before: null,

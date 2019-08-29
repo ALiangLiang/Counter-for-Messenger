@@ -3,7 +3,7 @@ const webpack = require('webpack')
 const ChromeReloadPlugin = require('wcer')
 const { htmlPage } = require('./tools')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+// const { CleanWebpackPlugin } = require('clean-webpack-plugin')
 const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const GenerateLocaleJsonPlugin = require('../plugins/GenerateLocaleJsonPlugin')
 
@@ -37,21 +37,22 @@ module.exports = (env) => {
     optimization: {
       // Coz mozilla(firefox) addon store cannot accept single file bigger than 4mb, separate it.
       splitChunks: {
-        chunks: 'all',
+        chunks: 'initial',
         cacheGroups: {
           vendor: {
             test: /[\\/]node_modules[\\/]/,
-            chunks: 'all',
-            priority: -20
+            chunks: 'initial',
+            priority: -20,
+            reuseExistingChunk: false
           },
           element: {
             test: /[\\/]node_modules[\\/]element-ui[\\/]/,
-            chunks: 'all',
+            chunks: 'initial',
             priority: -10
           },
           chartjs: {
             test: /[\\/]node_modules[\\/]chart\.js[\\/]/,
-            chunks: 'all',
+            chunks: 'initial',
             priority: 0
           }
         }
@@ -116,7 +117,7 @@ module.exports = (env) => {
       }]
     },
     plugins: [
-      new CleanWebpackPlugin({ root: path.join(rootDir, 'build', (env.FIREFOX) ? 'firefox' : 'chrome') }),
+      // new CleanWebpackPlugin({ root: path.join(rootDir, 'build', (env.FIREFOX) ? 'firefox' : 'chrome') }),
       new webpack.DefinePlugin({
         chrome: (!env.FIREFOX) ? 'chrome' : 'browser',
         'process.env.NODE_ENV': `"${env.NODE_ENV}"`,
@@ -127,9 +128,9 @@ module.exports = (env) => {
         'process.env.DEV': (env.NODE_ENV === 'development')
       }),
       new VueLoaderPlugin(),
-      htmlPage('Counter for Messenger', 'app'),
-      htmlPage('options', 'options', ['vendor', 'element', 'chartjs', 'options']),
-      htmlPage('background', 'background'),
+      htmlPage('Counter for Messenger', 'app', ['vendors~background~tab', 'vendors~options~tab', 'vendors~tab', 'chartjs~tab', 'chartjs', 'tab']),
+      htmlPage('options', 'options', ['vendors~options~tab', 'vendors~options', 'options']),
+      htmlPage('background', 'background', ['vendors~background~tab', 'background']),
       new CopyWebpackPlugin([{ from: path.join(rootDir, 'static') }]),
       new ChromeReloadPlugin({
         port: (!env.FIREFOX) ? 9090 : 9091,

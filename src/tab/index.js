@@ -244,15 +244,15 @@ new Vue({
             fetchThreads(this.ctx.jar),
             this.ctx.db.getAll()
           ])
-          this.ctx.threads = threads.map((thread) => {
+          threads.forEach((thread) => {
             const mappingCacheThread = cachedThreads.find((cachedThread) =>
               cachedThread.id === thread.id)
             if (mappingCacheThread) {
               thread.analyzeMessages(mappingCacheThread.messages)
             }
             thread.needUpdate = (thread.messageCount !== _get(mappingCacheThread, 'messages.length'))
-            return thread
           })
+          this.ctx.threads = threads
           this.loading.close()
           return resolve()
         } catch (err) {

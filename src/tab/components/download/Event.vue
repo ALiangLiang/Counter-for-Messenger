@@ -8,7 +8,7 @@
 
 <script>
 export default {
-  name: 'Message',
+  name: 'Event',
   props: ['messageData', 'selfId'],
   data: () => ({
     align: 'right' || 'left',

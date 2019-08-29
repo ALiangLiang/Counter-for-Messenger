@@ -1,21 +1,41 @@
-// get url origin of self
-const selfOrigin = document.location.origin
-console.log('selfOrigin', selfOrigin)
-
 /**
  * 用來做偽造 origin header，模擬 www.facebook.com 網域環境。
  * Use to replace header "Origin". Simulate environment of "www.facebook.com".
  */
 function handleRequestHeaders (details) {
-  // find the origin header
-  const headerOrigin = details.requestHeaders.find((header) => header.name.toUpperCase() === 'ORIGIN')
-
   // exit on no origin found or request not send from this extension.
-  // In Chrome, origin is set as string 'null'. In firefox, origin is set as origin self extension.
-  if (!headerOrigin || (headerOrigin.value !== 'null' && headerOrigin.value !== selfOrigin)) return
+  if (details.initiator !== document.location.origin) return
 
-  // if found, set header origin with url origin of it self.
-  headerOrigin.value = new URL(details.url).origin
+  // Origin
+  const origin = details.requestHeaders.find((header) => header.name.toUpperCase() === 'ORIGIN')
+  if (origin) {
+    origin.value = 'https://www.facebook.com'
+  } else {
+    details.requestHeaders.push({
+      name: 'Origin',
+      value: 'https://www.facebook.com'
+    })
+  }
+  // Sec-Fetch-Site
+  const secFetchSite = details.requestHeaders.find((header) => header.name.toUpperCase() === 'SEC-FETCH-SITE')
+  if (secFetchSite) {
+    secFetchSite.value = 'same-origin'
+  } else {
+    details.requestHeaders.push({
+      name: 'Sec-Fetch-Site',
+      value: 'same-origin'
+    })
+  }
+  // Referer
+  details.requestHeaders.push({
+    name: 'Referer',
+    value: 'https://www.facebook.com/'
+  })
+  // Host
+  details.requestHeaders.push({
+    name: 'Host',
+    value: 'www.facebook.com'
+  })
 
   // return back. continuely send out this request
   return { requestHeaders: details.requestHeaders }
@@ -24,7 +44,7 @@ function handleRequestHeaders (details) {
 const requestFilter = { urls: ['*://*.facebook.com/*'], types: ['xmlhttprequest'] }
 
 chrome.webRequest.onBeforeSendHeaders.addListener(handleRequestHeaders,
-  requestFilter, ['blocking', 'requestHeaders'])
+  requestFilter, ['blocking', 'requestHeaders', 'extraHeaders'])
 
 /**
  * 當按下 browserAction 按鈕實，觸發開啟 Counter 頁面的事件。
@@ -45,7 +65,6 @@ chrome.runtime.onInstalled.addListener(({ reason }) => {
 
 // Mark beta version by badge.
 const isRelease = !process.env.DEV && !process.env.ALPHA && !process.env.BETA
-console.log('isRelease', isRelease)
 if (!isRelease) {
   const badgeText = (process.env.ALPHA) ? 'Alph' : ((process.env.BETA) ? 'Beta' : 'Dev')
   const badgeColor = (process.env.ALPHA) ? [0, 0, 255, 255] : ((process.env.BETA) ? [255, 0, 0, 255] : [239, 165, 15, 255])

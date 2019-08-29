@@ -44,6 +44,16 @@ export function graphql (url, form, headers = {
     .then((res) => res.text())
     // handle graphql response.
     .then((body) => JSON.parse(body.replace(/for\s*\(\s*;\s*;\s*\)\s*;\s*/, '').split('\n')[0]))
+    .then((parsedBody) => {
+      if (parsedBody.error) {
+        const error = new Error(parsedBody.errorSummary)
+        error.code = parsedBody.error
+        error.description = parsedBody.errorDescription
+        throw error
+      }
+
+      return parsedBody
+    })
 }
 
 export function uploadImage (jar, image) {
@@ -64,7 +74,7 @@ export async function getAvatar (jar, user) {
 }
 
 export function getMessengerApiForm (form, jar) {
-  let ttstamp = '2'
+  var ttstamp = '2'
   for (var i = 0; i < jar.token.length; i++) {
     ttstamp += jar.token.charCodeAt(i)
   }
@@ -93,7 +103,9 @@ export function getFrom (str, startToken, endToken) {
   var lastHalf = str.substring(start)
   var end = lastHalf.indexOf(endToken)
   if (end === -1) {
-    throw Error('Could not find endTime `' + endToken + '` in the given string.')
+    throw Error(
+      'Could not find endTime `' + endToken + '` in the given string.'
+    )
   }
   return lastHalf.substring(0, end)
 }
