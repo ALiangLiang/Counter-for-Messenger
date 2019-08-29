@@ -1,13 +1,15 @@
 # ![Logo](.github/assets/icon.png) Counter for Messenger  [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/ALiangLiang/5)
 
-Chome
-[<img src="https://img.shields.io/chrome-web-store/v/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Chrome%20Web%20Store"> ](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
+Chrome
+
+[<img src="https://img.shields.io/chrome-web-store/v/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Chrome%20Web%20Store">](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store Users](https://img.shields.io/chrome-web-store/users/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Users)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/rating/ldlagicdigidgnhniajpmoddkoakdoca.svg?label=Rating&colorB=dfb317)](https://chrome.google.com/webstore/detail/ldlagicdigidgnhniajpmoddkoakdoca)
 [![Chrome Web Store BETA](https://img.shields.io/chrome-web-store/v/flkejcheidpcclcdokndihmnlejfabil.svg?label=Beta)](https://chrome.google.com/webstore/detail/flkejcheidpcclcdokndihmnlejfabil)
 
 Firefox
-[<img src="https://img.shields.io/amo/v/counter-for-messenger.svg?label=Mozilla%20Add-on"> ](https://addons.mozilla.org/firefox/addon/counter-for-messenger/)
+
+[<img src="https://img.shields.io/amo/v/counter-for-messenger.svg?label=Mozilla%20Add-on">](https://addons.mozilla.org/firefox/addon/counter-for-messenger/)
 [![Mozilla Add-on](https://img.shields.io/amo/users/counter-for-messenger.svg)](https://addons.mozilla.org/firefox/addon/counter-for-messenger/)
 [![Mozilla Add-on](https://img.shields.io/amo/rating/counter-for-messenger.svg)](https://addons.mozilla.org/firefox/addon/counter-for-messenger/)
 
@@ -38,6 +40,7 @@ Take a look what you and your best friend chat!!
 - ⚙️ **Customize** your threads. (color, emoji, name...)
 
 ## 📄 Instructions
+
 After installed, click the logo <img width="20" alt="Logo" src=".github/assets/icon.png"> on the top right of Chrome browser.  
 If no any icon there, click "three dot" button and you can found the logo.  
 ![click logo](.github/assets/click_icon1.png)
@@ -62,7 +65,7 @@ Welcome every language support. Help your countryman to use this application. Re
 
 ## 👨‍💻 Development
 
-```
+```bash
 yarn # install dependencies
 # Chrome
 npm run dev # for development
