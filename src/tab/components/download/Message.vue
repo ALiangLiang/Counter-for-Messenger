@@ -50,7 +50,7 @@ const __ = chrome.i18n.getMessage
 
 export default {
   name: 'Message',
-  props: [ 'messageData', 'participants', 'selfId' ],
+  props: ['messageData', 'participants', 'selfId'],
   data: () => ({
     align: 'right' || 'left',
     boxAlign: 'box_r' || 'box_l',

@@ -4,9 +4,9 @@ const { reactiveProp } = mixins
 export default {
   extends: HorizontalBar,
 
-  mixins: [ reactiveProp ],
+  mixins: [reactiveProp],
 
-  props: [ 'chartData', 'options' ],
+  props: ['chartData', 'options'],
 
   data () {
     return {

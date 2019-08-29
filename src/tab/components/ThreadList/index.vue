@@ -197,7 +197,7 @@ const __ = chrome.i18n.getMessage
 export default {
   name: 'ThreadList',
 
-  props: [ 'value', 'page', 'ctx' ],
+  props: ['value', 'page', 'ctx'],
 
   components: { Icon, DetailTemplate, NameTemplate, OperationButton, SharingDialog },
 
@@ -208,7 +208,7 @@ export default {
       currentPage: this.page,
       selectedThreads: [],
       test: false,
-      typeFilters: [ 'GROUP', 'USER', 'PAGE', 'REDUCEDMESSAGINGACTOR' ]
+      typeFilters: ['GROUP', 'USER', 'PAGE', 'REDUCEDMESSAGINGACTOR']
         .map((type) => ({
           text: this.determineThreadType(type).name,
           value: type
@@ -291,7 +291,7 @@ export default {
       }
 
       const func = determinFunc()
-      const funcArgs = [ this.ctx.jar, thread, ...args ]
+      const funcArgs = [this.ctx.jar, thread, ...args]
       return func(...funcArgs)
         .then((res) => {
           if (res.error) {
@@ -356,7 +356,7 @@ export default {
       return { name: __('unknown'), tagType: 'danger' }
     },
     typeFilterMethod (value, row, column) {
-      const property = column['property']
+      const property = column.property
       return row[property] === value
     }
   }

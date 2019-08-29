@@ -18,12 +18,12 @@ export default async function generateCanvas (thread, index, imageSize, jar) {
     const paddingTop = 70
     const avatarWidth = 250
     const userNameSize = 40
-    const padding = [ 20, 25 ]
+    const padding = [20, 25]
     const lineHeight = 15
     const avatarPaddingAside = 70
     const avatarPos = [
-      [ avatarPaddingAside, paddingTop ],
-      [ imageSize.width - avatarWidth - avatarPaddingAside, paddingTop ]
+      [avatarPaddingAside, paddingTop],
+      [imageSize.width - avatarWidth - avatarPaddingAside, paddingTop]
     ]
     const fontSet = 'Verdana, Microsoft JhengHei'
     let textOffsetY = paddingTop + 40
@@ -67,7 +67,7 @@ export default async function generateCanvas (thread, index, imageSize, jar) {
       .reverse()
     const images = await Promise.all(
       users.map(async (user) => loadImage(await getAvatar(jar, user))))
-    const [ leftUser, rightUser ] = users
+    const [leftUser, rightUser] = users
 
     // write user name
     ctx.fillStyle = '#fff'
@@ -98,7 +98,7 @@ export default async function generateCanvas (thread, index, imageSize, jar) {
     ctx.font = `60px ${fontSet}`
     ctx.fillText(__('countPostfix'), imageSize.width / 2, textOffsetY += 60 + lineHeight)
     // rank
-    const rankText = __('rank', [ leftUser.name, index + 1, rightUser.name ])
+    const rankText = __('rank', [leftUser.name, index + 1, rightUser.name])
     ctx.font = `bold ${adjustTextSize(rankText, 60, canvas.width - 100, fontSet)}px ${fontSet}`
     ctx.fillText(rankText, imageSize.width / 2, textOffsetY += 60 + 50)
 

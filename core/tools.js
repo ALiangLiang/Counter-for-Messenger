@@ -1,5 +1,5 @@
 const { resolve } = require('path')
-const { extract } = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 exports.htmlPage = (title, filename, chunks, template) => new HtmlWebpackPlugin({
@@ -14,8 +14,8 @@ exports.htmlPage = (title, filename, chunks, template) => new HtmlWebpackPlugin(
 })
 
 exports.cssLoaders = (options = {}) => {
-  let loaders = {}
-  let prePprocessors = {
+  const loaders = {}
+  const prePprocessors = {
     css: {},
     postcss: {},
     less: { loader: 'less' },
@@ -24,10 +24,10 @@ exports.cssLoaders = (options = {}) => {
     stylus: { loader: 'stylus' },
     styl: { loader: 'stylus' }
   }
-  for (let key in prePprocessors) {
-    let loader = [{
-      loader: 'css-loader',
-      options: { minimize: process.env.NODE_ENV === 'production' }
+  for (const key in prePprocessors) {
+    const loader = [{
+      loader: 'css-loader'
+      // options: { minimize: process.env.NODE_ENV === 'production' }
     }]
     if (prePprocessors[key].loader) {
       loader.push({
@@ -35,9 +35,7 @@ exports.cssLoaders = (options = {}) => {
         options: Object.assign({}, prePprocessors[key].options, { sourceMap: options.sourceMap })
       })
     }
-    loaders[key] = (options.extract)
-      ? extract({ use: loader, fallback: 'vue-style-loader' })
-      : loaders[key] = ['vue-style-loader'].concat(loader)
+    loaders[key] = ['vue-style-loader', ...loader]
   }
   return loaders
 }

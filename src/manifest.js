@@ -8,14 +8,14 @@ const manifest = {
   author: 'ALiangLiang',
   manifest_version: 2,
   icons: {
-    '16': 'icons/16.png',
-    '19': 'icons/19.png',
-    '38': 'icons/38.png',
-    '64': 'icons/64.png',
-    '128': 'icons/128.png'
+    16: 'icons/16.png',
+    19: 'icons/19.png',
+    38: 'icons/38.png',
+    64: 'icons/64.png',
+    128: 'icons/128.png'
   },
   browser_action: {
-    default_icon: { '16': 'icons/16.png' },
+    default_icon: { 16: 'icons/16.png' },
     default_title: '__MSG_extName__'
   },
   permissions: [
@@ -34,9 +34,6 @@ const manifest = {
   },
   content_scripts: [{
     js: [
-      'js/vendor.js',
-      'js/element.js',
-      'js/chartjs.js',
       'js/content.js'
     ],
     matches: ['*://*.facebook.com/'],

@@ -1,14 +1,15 @@
 const path = require('path')
 const webpack = require('webpack')
 const ChromeReloadPlugin = require('wcer')
-const { cssLoaders, htmlPage } = require('./tools')
+const { htmlPage } = require('./tools')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const CleanWebpackPlugin = require('clean-webpack-plugin')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin')
+const VueLoaderPlugin = require('vue-loader/lib/plugin')
 const GenerateLocaleJsonPlugin = require('../plugins/GenerateLocaleJsonPlugin')
 
 const rootDir = path.resolve(__dirname, '..')
 
-let resolve = (dir) => path.join(rootDir, 'src', dir)
+const resolve = (dir) => path.join(rootDir, 'src', dir)
 
 module.exports = (env) => {
   Object.assign(process.env, env)
@@ -28,17 +29,40 @@ module.exports = (env) => {
     },
     resolve: {
       alias: {
-        'vue$': 'vue/dist/vue.esm.js',
+        vue$: 'vue/dist/vue.esm.js',
         '@': resolve('')
       },
-      extensions: [ '.js', '.vue', '.json' ]
+      extensions: ['.js', '.vue', '.json']
+    },
+    optimization: {
+      // Coz mozilla(firefox) addon store cannot accept single file bigger than 4mb, separate it.
+      splitChunks: {
+        chunks: 'all',
+        cacheGroups: {
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            chunks: 'all',
+            priority: -20
+          },
+          element: {
+            test: /[\\/]node_modules[\\/]element-ui[\\/]/,
+            chunks: 'all',
+            priority: -10
+          },
+          chartjs: {
+            test: /[\\/]node_modules[\\/]chart\.js[\\/]/,
+            chunks: 'all',
+            priority: 0
+          }
+        }
+      }
     },
     module: {
       rules: [{
         test: /\.(js|vue)$/,
         loader: 'eslint-loader',
         enforce: 'pre',
-        include: [ path.join(rootDir, 'src') ],
+        include: [path.join(rootDir, 'src')],
         options: { formatter: require('eslint-friendly-formatter') }
       }, {
         test: /\.vue$/,
@@ -46,7 +70,6 @@ module.exports = (env) => {
         options: {
           extractCSS: true,
           loaders: {
-            ...cssLoaders(),
             js: { loader: 'babel-loader' }
           },
           transformToRequire: {
@@ -93,8 +116,7 @@ module.exports = (env) => {
       }]
     },
     plugins: [
-      new CleanWebpackPlugin(['*'],
-        { root: path.join(rootDir, 'build', (env.FIREFOX) ? 'firefox' : 'chrome') }),
+      new CleanWebpackPlugin({ root: path.join(rootDir, 'build', (env.FIREFOX) ? 'firefox' : 'chrome') }),
       new webpack.DefinePlugin({
         chrome: (!env.FIREFOX) ? 'chrome' : 'browser',
         'process.env.NODE_ENV': `"${env.NODE_ENV}"`,
@@ -104,9 +126,10 @@ module.exports = (env) => {
         'process.env.ALPHA': !!env.ALPHA,
         'process.env.DEV': (env.NODE_ENV === 'development')
       }),
-      htmlPage('Counter for Messenger', 'app', [ 'vendor', 'element', 'chartjs', 'tab' ]),
-      htmlPage('options', 'options', [ 'vendor', 'element', 'chartjs', 'options' ]),
-      htmlPage('background', 'background', [ 'vendor', 'element', 'chartjs', 'background' ]),
+      new VueLoaderPlugin(),
+      htmlPage('Counter for Messenger', 'app'),
+      htmlPage('options', 'options', ['vendor', 'element', 'chartjs', 'options']),
+      htmlPage('background', 'background'),
       new CopyWebpackPlugin([{ from: path.join(rootDir, 'static') }]),
       new ChromeReloadPlugin({
         port: (!env.FIREFOX) ? 9090 : 9091,
@@ -114,20 +137,6 @@ module.exports = (env) => {
       }),
       new GenerateLocaleJsonPlugin({
         _locales: path.join(rootDir, 'src', '_locales')
-      }),
-      // Coz mozilla(firefox) addon store cannot accept single file bigger than 4mb, separate it.
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
-        minChunks: (m) => /node_modules/.test(m.context)
-      }),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'element',
-        minChunks: (m) => m.context.indexOf(path.join('node_modules', 'element-ui')) > -1 ||
-          m.context.indexOf(path.join('node_modules', 'chart.js')) > -1
-      }),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'chartjs',
-        minChunks: (m) => m.context.indexOf(path.join('node_modules', 'chart.js')) > -1
       }),
       // never use locales of moment.js, so don't include it.
       new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/)

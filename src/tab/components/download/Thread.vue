@@ -22,6 +22,6 @@ import EventElement from './Event.vue'
 export default {
   name: 'Thread',
   components: { Message: MessageElement, Event: EventElement },
-  props: [ 'messagesData', 'participants', 'selfId' ]
+  props: ['messagesData', 'participants', 'selfId']
 }
 </script>

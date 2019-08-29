@@ -20,6 +20,7 @@ module.exports = (env) => {
   env.NODE_ENV = 'development'
   env.DEV = 'true'
   return merge(baseWebpack(env), {
+    mode: 'development',
     watch: true,
     module: { rules: styleLoaders({ sourceMap: false }) },
     devtool: '#cheap-module-eval-source-map',

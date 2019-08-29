@@ -22,16 +22,16 @@ import ThreadName from './ThreadName.vue'
 export default {
   name: 'DetailTemplate',
 
-  props: [ 'thread' ],
+  props: ['thread'],
 
   components: { Avatar, ThreadName },
 
   methods: {
-    onChangeThreadName (thread, [ threadName ]) {
+    onChangeThreadName (thread, [threadName]) {
       this.$ga.event('Thread', 'set', 'name')
       return this.$emit('change', 'name', thread, threadName)
     },
-    onChangeNickname (thread, [ nickname, otherUserId ]) {
+    onChangeNickname (thread, [nickname, otherUserId]) {
       this.$ga.event('Thread', 'set', 'nickname')
       return this.$emit('change', 'nickname', thread, otherUserId, nickname)
     },

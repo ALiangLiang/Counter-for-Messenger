@@ -20,6 +20,6 @@ import ThreadComponenet from './Thread.vue'
 export default {
   name: 'Html',
   components: { Thread: ThreadComponenet },
-  props: [ 'title', 'messagesData', 'participants', 'selfId' ]
+  props: ['title', 'messagesData', 'participants', 'selfId']
 }
 </script>

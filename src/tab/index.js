@@ -3,9 +3,30 @@ import Vue from 'vue'
 // Google analytics
 import VueAnalytics from 'vue-analytics'
 // Import element-ui components.
-import { Slider, Loading, Button, Table, TableColumn, Tag, Tooltip, DatePicker,
-  Pagination, Switch, Container, Menu, MenuItem, Header, Aside, Main, Footer,
-  MessageBox, Input, Form, FormItem, Dialog } from 'element-ui'
+import {
+  Slider,
+  Loading,
+  Button,
+  Table,
+  TableColumn,
+  Tag,
+  Tooltip,
+  DatePicker,
+  Pagination,
+  Switch,
+  Container,
+  Menu,
+  MenuItem,
+  Header,
+  Aside,
+  Main,
+  Footer,
+  MessageBox,
+  Input,
+  Form,
+  FormItem,
+  Dialog
+} from 'element-ui'
 // Customize element-ui theme. Let this style more like FB.
 import '../../element-variables.scss'
 /**
@@ -43,9 +64,29 @@ const mainLangName = chrome.i18n.getUILanguage().split('-')[0]
 locale.use((mainLangName === 'zh') ? zhLocale : enLocale)
 
 // Import element-ui components.
-const elements = [ Slider, Loading, Button, Table, TableColumn, Tag, Tooltip,
-  DatePicker, Pagination, Switch, Container, Menu, MenuItem, Header, Aside,
-  Main, Footer, Input, Form, FormItem, Dialog ]
+const elements = [
+  Slider,
+  Loading,
+  Button,
+  Table,
+  TableColumn,
+  Tag,
+  Tooltip,
+  DatePicker,
+  Pagination,
+  Switch,
+  Container,
+  Menu,
+  MenuItem,
+  Header,
+  Aside,
+  Main,
+  Footer,
+  Input,
+  Form,
+  FormItem,
+  Dialog
+]
 elements.forEach((el) => Vue.use(el, { locale }))
 
 const isInProduction = process.env.NODE_ENV === 'production'
@@ -124,7 +165,7 @@ new Vue({
     try {
       const getPurchasesResult = await new Promise(function (resolve, reject) {
         window.google.payments.inapp.getPurchases({
-          parameters: {env: 'prod'},
+          parameters: { env: 'prod' },
           success: resolve,
           failure: reject
         })
@@ -145,19 +186,20 @@ new Vue({
       await createJar()
     } catch (err) {
       this.$ga.event('Login', 'need')
-      await new Promise(async (resolve, reject) => {
-        // not login yet
-        this.loading.text = __('loginRequired')
-        try {
-          await this.$alert(__('loginRequired'), __('loginRequired'), {
-            type: 'warning'
-          })
-        } catch (err) {}
 
-        // assist user to login
-        let retryCount = 0
-        const appTabId = (await new Promise((resolve, reject) =>
-          chrome.tabs.getCurrent(resolve))).id
+      // not login yet
+      this.loading.text = __('loginRequired')
+      try {
+        await this.$alert(__('loginRequired'), __('loginRequired'), {
+          type: 'warning'
+        })
+      } catch (err) {}
+
+      // assist user to login
+      let retryCount = 0
+      const appTabId = (await new Promise((resolve, reject) => chrome.tabs.getCurrent(resolve))).id
+
+      await new Promise((resolve, reject) => {
         const onMessage = (request, sender, sendResponse) => {
           chrome.tabs.update(appTabId, { active: true })
           const retry = async () => {
@@ -198,7 +240,7 @@ new Vue({
     await new Promise((resolve, reject) => {
       this.ctx.db.onload = async () => {
         try {
-          const [ threads, cachedThreads ] = await Promise.all([
+          const [threads, cachedThreads] = await Promise.all([
             fetchThreads(this.ctx.jar),
             this.ctx.db.getAll()
           ])

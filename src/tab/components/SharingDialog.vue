@@ -29,7 +29,7 @@ export default {
 
   components: { Icon },
 
-  props: [ 'jar' ],
+  props: ['jar'],
 
   data () {
     return {

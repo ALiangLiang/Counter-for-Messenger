@@ -1,4 +1,4 @@
-<template>
+<template functional>
   <el-container>
     <el-menu
       default-active=""
@@ -67,14 +67,14 @@ import BarChart from './BarChart.js'
 import SharingDialog from './SharingDialog.vue'
 import fetchThreadDetail from '../lib/fetchThreadDetail.js'
 const __ = chrome.i18n.getMessage
-const colorHash = new ColorHash({lightness: [0.35, 0.5, 0.65]})
+const colorHash = new ColorHash({ lightness: [0.35, 0.5, 0.65] })
 
 export default {
   name: 'ChartPage',
 
   components: { BarChart, SharingDialog },
 
-  props: [ 'ctx' ],
+  props: ['ctx'],
 
   data () {
     const threads = this.ctx.threads

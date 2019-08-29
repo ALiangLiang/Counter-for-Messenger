@@ -27,7 +27,7 @@ function handleFetch ({ jar, senderID, messageCount, messageLimit = 7500, before
 // Shamely copy from https://github.com/KevinSalmon/facebook-chat-api/blob/6cb19d038a35c92dc8ac6d6250c0ed34981e86ea/src/getThreadHistoryGraphQL.js
 function formatAttachmentsGraphQLResponse (attachment) {
   switch (attachment.__typename) {
-    case 'MessageImage':
+    case 'MessageImage': {
       return {
         // You have to query for the real image. See below.
         url: '',
@@ -72,6 +72,7 @@ function formatAttachmentsGraphQLResponse (attachment) {
         largePreviewHeight: attachment.large_preview.height,
         largePreviewWidth: attachment.large_preview.width
       }
+    }
     case 'MessageAnimatedImage':
       return {
         type: 'image',
@@ -278,7 +279,7 @@ function formatMessagesGraphQLResponse (messageThread) {
 
   const messages = messageThread.messages.nodes.map(function (d) {
     switch (d.__typename) {
-      case 'UserMessage':
+      case 'UserMessage': {
         // Give priority to stickers. They're seen as normal messages but we've
         // been considering them as attachments.
         let maybeStickerAttachment
@@ -318,6 +319,7 @@ function formatMessagesGraphQLResponse (messageThread) {
           snippet: d.snippet,
           timestamp: d.timestamp_precise
         }
+      }
       case 'ThreadNameMessage':
         return {
           type: 'event',

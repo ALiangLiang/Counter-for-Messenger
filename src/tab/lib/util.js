@@ -1,6 +1,7 @@
 import Queue from 'promise-queue'
 
 const _queue = new Queue(40, Infinity)
+let reqCounter = 1
 
 // http get
 export function get (url) {
@@ -63,19 +64,24 @@ export async function getAvatar (jar, user) {
 }
 
 export function getMessengerApiForm (form, jar) {
+  let ttstamp = '2'
+  for (var i = 0; i < jar.token.length; i++) {
+    ttstamp += jar.token.charCodeAt(i)
+  }
+
   return Object.assign({
-    fb_dtsg: jar.token, // It's required!!
+    __req: (reqCounter++).toString(36),
     __rev: jar.revision, // optional
     __user: jar.selfId,
-    jazoest: '2' + Array.from(jar.token).map((char) => char.charCodeAt(0)).join(''),
-    __a: 1
+    __a: 1,
+    fb_dtsg: jar.token, // It's required!!
+    jazoest: ttstamp
   }, form)
 }
 
 export function getQraphqlForm (form, jar) {
   return Object.assign(getMessengerApiForm(form, jar), {
-    batch_name: 'MessengerGraphQLThreadFetcher',
-    client: 'mercury'
+    batch_name: 'MessengerGraphQLThreadlistFetcher'
   }, form)
 }
 

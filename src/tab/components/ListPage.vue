@@ -15,7 +15,7 @@ import ThreadList from './ThreadList'
 export default {
   name: 'ListPage',
 
-  props: [ 'ctx' ],
+  props: ['ctx'],
 
   components: { ThreadList },
 

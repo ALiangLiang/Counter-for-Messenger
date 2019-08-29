@@ -1,5 +1,6 @@
 // get url origin of self
 const selfOrigin = document.location.origin
+console.log('selfOrigin', selfOrigin)
 
 /**
  * 用來做偽造 origin header，模擬 www.facebook.com 網域環境。
@@ -44,6 +45,7 @@ chrome.runtime.onInstalled.addListener(({ reason }) => {
 
 // Mark beta version by badge.
 const isRelease = !process.env.DEV && !process.env.ALPHA && !process.env.BETA
+console.log('isRelease', isRelease)
 if (!isRelease) {
   const badgeText = (process.env.ALPHA) ? 'Alph' : ((process.env.BETA) ? 'Beta' : 'Dev')
   const badgeColor = (process.env.ALPHA) ? [0, 0, 255, 255] : ((process.env.BETA) ? [255, 0, 0, 255] : [239, 165, 15, 255])

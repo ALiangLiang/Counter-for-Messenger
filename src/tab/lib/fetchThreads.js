@@ -95,16 +95,17 @@ function createThreadObject (threadNode, createdUsers, tag) {
   return new Thread(Object.assign({ tag }, thread))
 }
 
-export default async function fetchThreads (jar, limit = 5000, tags = [ 'INBOX', 'ARCHIVED', 'PENDING' ]) {
+export default async function fetchThreads (jar, limit = 5000, tags = ['INBOX', 'ARCHIVED', 'PENDING']) {
   const threadsData = (await Promise.all(tags.map(async (tag) => {
     // Prepare request form body.
     const queries = {
       o0: {
-        doc_id: '1475048592613093',
+        doc_id: '2929974987072841',
         query_params: {
           limit,
           before: null,
           tags: [tag],
+          isWorkUser: false,
           includeDeliveryReceipts: true,
           includeSeqID: false
         }

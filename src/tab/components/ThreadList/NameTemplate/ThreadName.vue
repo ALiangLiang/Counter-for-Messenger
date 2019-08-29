@@ -75,7 +75,7 @@ export default {
     onChange (value) {
       this.isEdit = false
       const isGroup = this.thread.type === 'GROUP'
-      this.$emit('change', [ value, (!isGroup) ? this.getOtherUser().user.id : void 0 ])
+      this.$emit('change', [value, (!isGroup) ? this.getOtherUser().user.id : undefined])
     },
     hide () {
       this.isEdit = false

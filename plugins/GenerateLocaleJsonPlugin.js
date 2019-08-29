@@ -34,11 +34,11 @@ module.exports = class GenerateLocaleJsonPlugin {
     })
   }
 
-  generate (comp, done) {
-    if (!this._locales.length) return done()
+  generate (comp) {
+    if (!this._locales.length) return comp
 
-    for (let locale of this._locales) {
-      comp.fileDependencies.push(locale.src)
+    for (const locale of this._locales) {
+      comp.fileDependencies.add(locale.src)
       const source = JSON.stringify(locale.content)
       comp.assets[join('_locales', locale.localeName, 'messages.json')] = {
         source: () => source,
@@ -46,11 +46,11 @@ module.exports = class GenerateLocaleJsonPlugin {
       }
     }
 
-    return done()
+    return comp
   }
 
   apply (compiler) {
-    compiler.plugin('compile', (comp) => this.compile(comp))
-    compiler.plugin('emit', (comp, done) => this.generate(comp, done))
+    compiler.hooks.compile.tap('compile', (comp) => this.compile(comp))
+    compiler.hooks.emit.tap('emit', (comp) => this.generate(comp))
   }
 }

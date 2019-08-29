@@ -10,7 +10,7 @@
         default-active="/list"
         active-text-color="#ffffff">
         <el-menu-item index="/about">
-          <img src="../../static/icons/38.png"></img>
+          <img src="../../static/icons/38.png" />
           <span> {{ __('extName') }}</span>
         </el-menu-item>
         <el-menu-item index="/list">{{ __('listPage') }}</el-menu-item>
@@ -119,7 +119,7 @@ import 'vue-awesome/icons/paypal'
 export default {
   name: 'Root',
 
-  props: [ 'ctx' ]
+  props: ['ctx']
 }
 </script>
 

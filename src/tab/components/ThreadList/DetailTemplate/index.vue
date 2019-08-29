@@ -57,7 +57,7 @@ const __ = chrome.i18n.getMessage
 export default {
   name: 'DetailTemplate',
 
-  props: [ 'thread' ],
+  props: ['thread'],
 
   components: { Chooser, MuteUntil, Avatar },
 
@@ -87,7 +87,7 @@ export default {
           this.$emit('change', 'nickname', thread, userId, newNickname))
         .catch(() => {})
     },
-    onChangeNickname (thread, [ nickname, otherUserId ]) {
+    onChangeNickname (thread, [nickname, otherUserId]) {
       this.$ga.event('Thread', 'set', 'nickname')
       return this.$emit('change', 'nickname', thread, otherUserId, nickname)
     }

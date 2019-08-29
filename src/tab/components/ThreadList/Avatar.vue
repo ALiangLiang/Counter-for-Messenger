@@ -27,7 +27,7 @@
 export default {
   name: 'Avatar',
 
-  props: { 'images': Array, 'allowUpload': Boolean },
+  props: { images: Array, allowUpload: Boolean },
 
   methods: {
     onClick () {

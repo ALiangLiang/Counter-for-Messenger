@@ -1,7 +1,7 @@
 const fs = require('fs')
 const WebStore = require('chrome-webstore-upload')
 const env = require('./.env')
-let config = env['release'] // Use release env by default.
+let config = env.release // Use release env by default.
 
 let mode = 'release'
 if (env.beta) { // if "beta" env exist and use beta mode.
