@@ -6,7 +6,6 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "axios": "^0.19.0",
     "chart.js": "^2.7.1",
     "color-hash": "^1.0.3",
     "element-ui": "^2.11.1",
