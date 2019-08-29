@@ -4,7 +4,6 @@ export default class Threads extends Array {
    * @param {Array<Object>} threadsData threads with Array.
    */
   constructor (threadsData) {
-    console.trace(threadsData)
     super(...threadsData)
   }
 
