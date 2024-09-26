@@ -1,3 +1,5 @@
+# ⚠ This project has been discontinued for maintenance. If you are interested in this, you can refer the [spiritual successor](https://github.com/Kubis10/CounterForMessenger).
+
 # ![Logo](.github/assets/icon.png) Counter for Messenger  [![Donate](https://img.shields.io/badge/Donate-PayPal-green.svg)](https://www.paypal.me/ALiangLiang/5)
 
 Chrome
