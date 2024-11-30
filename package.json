@@ -6,7 +6,7 @@
   "license": "MIT",
   "private": false,
   "dependencies": {
-    "chart.js": "^2.7.1",
+    "chart.js": "^2.9.4",
     "color-hash": "^1.0.3",
     "element-ui": "^2.11.1",
     "jszip": "^3.1.5",
